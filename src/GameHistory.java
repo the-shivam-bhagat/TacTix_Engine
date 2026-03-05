@@ -24,7 +24,7 @@ final class GameHistory {
             for (int i = 0; i < sessions.size(); i++)
                 System.out.println(sessions.get(i).summaryLine(i + 1));
 
-        PlayerRegistry.trimToMaxPlayers();
+        GameEngine.playerRegistry.trimToMaxPlayers();
         System.out.println("\n🏆 Updated Global Leaderboard:\n");
         GameEngine.displayLeaderboard();
 
@@ -139,12 +139,12 @@ final class GameSession {
                 if (winCheck) {
                     System.out.printf("%n🏆 Congratulations, %s! You WON this round! 🎉%n%n", first);
                     recordWin(first);
-                    PlayerRegistry.incrementWin(first);
+                    GameEngine.playerRegistry.incrementWin(first);
 
                 } else {
                     System.out.printf("%n🏆 Congratulations, %s! You WON this round! 🎉%n%n", second);
                     recordWin(second);
-                    PlayerRegistry.incrementWin(second);
+                    GameEngine.playerRegistry.incrementWin(second);
                 }
                 return;
             }

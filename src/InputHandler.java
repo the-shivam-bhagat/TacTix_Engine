@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Scanner;
 
 /// Centralises all console I/O and handles the 'exit' command.
@@ -14,16 +15,23 @@ final class InputHandler {
         String line = sc.nextLine().trim();
         if (line.equalsIgnoreCase("exit")) {
             System.out.println("\nExiting game. Goodbye!");
-            PlayerRegistry.trimToMaxPlayers();
+            GameEngine.playerRegistry.trimToMaxPlayers();
             System.exit(0);
         }
         if (line.equalsIgnoreCase("manage")) {
-            System.out.print("Provide Password :");
+            System.out.print("\nProvide Password : ");
             String password = sc.nextLine().trim();
             if (password.equalsIgnoreCase("123456")) {
                 manage();
             } else System.out.println("Wrong password!");
-            System.out.println("Continue Your Game!");
+            System.out.println("""
+                    
+                    (Your Last Input has been made an Yes or Continue)
+                    
+                    Continue Your Game!
+                    
+                    """);
+            return "";
         }
         return line;
     }
@@ -58,11 +66,19 @@ final class InputHandler {
                 ╔══════════════════════════════╗
                 ║     🔧 PLAYER MANAGEMENT     ║
                 ╚══════════════════════════════╝
+                
+                List of All the Players :-
                 """);
+        int rank = 0;
+        for (Player player : GameEngine.playerRegistry.ranking) {
+            System.out.printf("%3d) Name : %-20s , Lifetime Wins : %10d%n", ++rank, player.name, player.getLifetimeWins());
+        }
+
+        System.out.println("\n" + "-".repeat(40));
 
         while (true) {
 
-            System.out.print("\nEnter player name to delete (or type 'exit'): ");
+            System.out.print("\nEnter player name to delete : ");
             String name = sc.nextLine().trim().toUpperCase();
 
             if (name.isEmpty()) {
@@ -70,7 +86,7 @@ final class InputHandler {
                 continue;
             }
 
-            if (PlayerRegistry.deletePlayerByName(name)) {
+            if (GameEngine.playerRegistry.deletePlayerByName(name)) {
                 System.out.printf("✅ Player '%s' deleted successfully.%n", name);
             } else {
                 System.out.printf("❌ Player '%s' not found.%n", name);

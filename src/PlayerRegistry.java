@@ -2,12 +2,12 @@ import java.util.*;
 
 final class PlayerRegistry {
     // Fast lookup by player name
-    static final Map<String, Player> players;
+    final Map<String, Player> players;
 
     // Sorted ranking (highest wins first)
-    static final TreeSet<Player> ranking;
+    final TreeSet<Player> ranking;
 
-    static {
+    public PlayerRegistry() {
         players = new HashMap<>();
         ranking = new TreeSet<>();
         // In the future: load from file/database
@@ -18,18 +18,18 @@ final class PlayerRegistry {
     private static final int MAX_PLAYERS = 50;
 
     // Add a new player (if not already present)
-    static void addPlayer(Player player) {
+    void addPlayer(Player player) {
         if (players.containsKey(player.name)) return;
         players.put(player.name, player);
         ranking.add(player);
     }
 
-    private static void removePlayer(Player player) {
+    private void removePlayer(Player player) {
         players.remove(player.name);
         ranking.remove(player);
     }
 
-    static boolean deletePlayerByName(String name) {
+    boolean deletePlayerByName(String name) {
         Player player = players.get(name);
         if (player == null) return false;
 
@@ -37,14 +37,14 @@ final class PlayerRegistry {
         return true;
     }
 
-    static void incrementWin(Player player) {
+    void incrementWin(Player player) {
         if (player == null) return;
         ranking.remove(player);             // remove first
         player.incrementLifetimeWins();     // update safely
         ranking.add(player);                // reinsert
     }
 
-    static void trimToMaxPlayers() {
+    void trimToMaxPlayers() {
         while (ranking.size() > MAX_PLAYERS) {
             Player lowest = ranking.pollLast();
             if (lowest != null) players.remove(lowest.name);
@@ -54,11 +54,11 @@ final class PlayerRegistry {
         savePlayers();
     }
 
-    private static void loadPlayers() {
+    private void loadPlayers() {
         //dp something here
     }
 
-    private static void savePlayers() {
+    private void savePlayers() {
         // do something here
     }
 }

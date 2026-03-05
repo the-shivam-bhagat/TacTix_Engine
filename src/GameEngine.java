@@ -3,6 +3,8 @@ import java.util.Scanner;
 
 
 public final class GameEngine {
+    static PlayerRegistry playerRegistry;
+
     private static void runIntroSequence(InputHandler input) {
         System.out.println("""
                 
@@ -69,7 +71,7 @@ public final class GameEngine {
 
     // Print Top 10 Leaderboard
     static void displayLeaderboard() {
-        if (PlayerRegistry.ranking.isEmpty()) {
+        if (playerRegistry.ranking.isEmpty()) {
             System.out.println("""
                     
                     ╔════════════════════════╗
@@ -81,11 +83,11 @@ public final class GameEngine {
             return;
         }
 
-        int noOfPlayers = Math.min(PlayerRegistry.TOP_PLAYERS, PlayerRegistry.ranking.size());
-        Iterator<Player> itr = PlayerRegistry.ranking.iterator();
+        int noOfPlayers = Math.min(PlayerRegistry.TOP_PLAYERS, playerRegistry.ranking.size());
+        Iterator<Player> itr = playerRegistry.ranking.iterator();
 
         // ---- compute max widths ----
-        int maxWinsLen = Math.max(5, Integer.toString(PlayerRegistry.ranking.first().getLifetimeWins()).length());
+        int maxWinsLen = Math.max(5, Integer.toString(playerRegistry.ranking.first().getLifetimeWins()).length());
         int maxNameLen = 5, count = 0;
         while (itr.hasNext() && count < noOfPlayers) {
             Player p = itr.next();
@@ -131,7 +133,7 @@ public final class GameEngine {
         );
 
         // ---- ROWS ----
-        itr = PlayerRegistry.ranking.iterator();
+        itr = playerRegistry.ranking.iterator();
         int rank = 1;
 
         while (itr.hasNext() && rank <= noOfPlayers) {
@@ -154,7 +156,7 @@ public final class GameEngine {
     /// if players exists returns it, if not then create and return
     static Player getPlayer(String name) {
         // Case 1: Player exists
-        Player existing = PlayerRegistry.players.get(name);
+        Player existing = playerRegistry.players.get(name);
         if (existing != null) {
             if (flip) System.out.printf("""
                     🎮 Welcome back, %s! Lifetime Wins: %d,
@@ -173,7 +175,7 @@ public final class GameEngine {
         if (name == null || name.isEmpty()) {
             for (int i = 1; i <= 60; i++) {
                 String newName = "PLAYER_" + i;
-                if (!PlayerRegistry.players.containsKey(newName)) {
+                if (!playerRegistry.players.containsKey(newName)) {
                     name = newName;
                     break;
                 }
@@ -181,7 +183,7 @@ public final class GameEngine {
         }
 
         Player newPlayer = new Player(name);
-        PlayerRegistry.addPlayer(newPlayer);
+        playerRegistry.addPlayer(newPlayer);
 
         if (flip) System.out.printf("""
                 🎮 Welcome to the arena, %s!
@@ -213,6 +215,7 @@ public final class GameEngine {
     public static void main(String[] args) {
         InputHandler input = new InputHandler(new Scanner(System.in));
         GameHistory history = new GameHistory();
+        playerRegistry = new PlayerRegistry();
         runIntroSequence(input);
 
         boolean playAnother;
