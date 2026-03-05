@@ -3,9 +3,14 @@ final class Player implements Comparable<Player> {
     final String name;
     private int lifetimeWins;
 
-    Player(String name) {
+    public Player(String name) {
         this.name = name;
         lifetimeWins = 0;
+    }
+
+    Player(String name, int lifetimeWins) {
+        this.name = name;
+        this.lifetimeWins = lifetimeWins;
     }
 
     @Override

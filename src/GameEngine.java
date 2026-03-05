@@ -3,63 +3,19 @@ import java.util.Scanner;
 
 
 public final class GameEngine {
+    private static InputHandler input;
     static PlayerRegistry playerRegistry;
 
+
     private static void runIntroSequence(InputHandler input) {
-        System.out.println("""
-                
-                
-                ████████╗██╗ ██████╗      ████████╗ █████╗  ██████╗      ████████╗ ██████╗ ███████╗
-                ╚══██╔══╝██║██╔════╝      ╚══██╔══╝██╔══██╗██╔════╝      ╚══██╔══╝██╔═══██╗██╔════╝
-                   ██║   ██║██║              ██║   ███████║██║              ██║   ██║   ██║█████╗
-                   ██║   ██║██║              ██║   ██╔══██║██║              ██║   ██║   ██║██╔══╝
-                   ██║   ██║╚██████╗         ██║   ██║  ██║╚██████╗         ██║   ╚██████╔╝███████╗
-                   ╚═╝   ╚═╝ ╚═════╝         ╚═╝   ╚═╝  ╚═╝ ╚═════╝         ╚═╝    ╚═════╝ ╚══════╝
-                ════════════════════════════════════════════════════════════════════════════════════
-                
-                ╔═════════════════════════════════════════════════════════════════════════╗
-                ║                          👋 WELCOME TO THE GAME!                        ║
-                ╠═════════════════════════════════════════════════════════════════════════╣
-                ║                                                                         ║
-                ║  🎮 This is a fun and interactive Tic Tac Toe experience                ║
-                ║     built with clean logic and structured design.                       ║
-                ║                                                                         ║
-                ║  👨‍💻 Developed with passion by Shivam Bhagat                             ║
-                ║     B.Tech CSE Student | Java Development & DSA Enthusiast              ║
-                ║                                                                         ║
-                ║  🚀 This project reflects dedication to learning,                       ║
-                ║     problem-solving, and building real-world systems.                   ║
-                ║                                                                         ║
-                ║  😄 Now relax, focus, and enjoy the battle of X and O!                  ║
-                ║                                                                         ║
-                ╚═════════════════════════════════════════════════════════════════════════╝
-                """);
+        System.out.println(Strings.INTRO_STRING);
+
+        System.out.print("\nDiscover the game features before we begin? (Y/N): ");
+        if (input.readYesNo_Specific()) System.out.println(Strings.FEATURES_STRING);
 
         System.out.print("Let's see the instructions... (Press ENTER to continue)");
         input.waitForEnter();
-        System.out.println("""
-                
-                ╔═════════════════════════════════════════════════════════════════════════╗
-                ║                        ⚡ INSTRUCTIONS / GUIDE ⚡                         ║
-                ╠═════════════════════════════════════════════════════════════════════════╣
-                ║  1) Please turn on Full-Screen mode to properly view the game board.    ║
-                ║                                                                         ║
-                ║  2) At any moment (input), if you want to exit the game,                ║
-                ║     type 'exit' and press Enter.                                        ║
-                ║                                                                         ║
-                ║  3) It is not necessary to enter player names;                          ║
-                ║     you can just press Enter to use default names.                      ║
-                ║                                                                         ║
-                ║  4) For any input, if you just press Enter,                             ║
-                ║     it will be accepted as 'Y' (for inputs that accept Y/N).            ║
-                ║                                                                         ║
-                ║  5) All games played will be listed at the end.                         ║
-                ║                                                                         ║
-                ║  6) The scores of the current match are shown after each round ends.    ║
-                ║                                                                         ║
-                ║  7) Before providing input, please read the prompt carefully.           ║
-                ╚═════════════════════════════════════════════════════════════════════════╝
-                """);
+        System.out.println(Strings.ISTRUCTION_STRING);
 
         System.out.print("Let's take look at Current Global Leaderboard..... (Press ENTER to continue)");
         input.waitForEnter();
@@ -72,14 +28,7 @@ public final class GameEngine {
     // Print Top 10 Leaderboard
     static void displayLeaderboard() {
         if (playerRegistry.ranking.isEmpty()) {
-            System.out.println("""
-                    
-                    ╔════════════════════════╗
-                    ║   🏆 LEADERBOARD 🏆    ║
-                    ╠════════════════════════╣
-                    ║  No registered players ║
-                    ╚════════════════════════╝
-                    """);
+            System.out.println(Strings.NO_PLAYERS_LEADERBOARD);
             return;
         }
 
@@ -158,14 +107,8 @@ public final class GameEngine {
         // Case 1: Player exists
         Player existing = playerRegistry.players.get(name);
         if (existing != null) {
-            if (flip) System.out.printf("""
-                    🎮 Welcome back, %s! Lifetime Wins: %d,
-                    Ready for another victory? 🚀%n%n
-                    """, name, existing.getLifetimeWins());
-            else System.out.printf("""
-                    🏆 Welcome back, %s! You’ve conquered %d battles,
-                    Let’s add one more! 💥%n%n
-                    """, name, existing.getLifetimeWins());
+            if (flip) System.out.printf(Strings.WELCOME_NEW_PLAYER_1, name, existing.getLifetimeWins());
+            else System.out.printf(Strings.WELCOME_NEW_PLAYER_2, name, existing.getLifetimeWins());
             flip = !flip;
             return existing;
         }
@@ -185,21 +128,15 @@ public final class GameEngine {
         Player newPlayer = new Player(name);
         playerRegistry.addPlayer(newPlayer);
 
-        if (flip) System.out.printf("""
-                🎮 Welcome to the arena, %s!
-                You're officially registered as a NEW player! 🚀%n%n
-                """, name);
-        else System.out.printf("""
-                💥 Welcome %s! You're now in the game,
-                Time to claim your first victory! 🏆%n%n
-                """, name);
+        if (flip) System.out.printf(Strings.WELCOME_REGISTERED_PLAYER_1, name);
+        else System.out.printf(Strings.WELCOME_REGISTERED_PLAYER_2, name);
 
         flip = !flip;
         return newPlayer;
     }
 
     /// assign different players
-    private static Player createPlayer(InputHandler input, String pre, int number) {
+    private static Player createPlayer(String pre, int number) {
         String name = null;
         while (true) {
             System.out.printf("Enter name of Player_%d : ", number);
@@ -213,9 +150,9 @@ public final class GameEngine {
 
     /// Entry point
     public static void main(String[] args) {
-        InputHandler input = new InputHandler(new Scanner(System.in));
+        GameEngine.input = new InputHandler(new Scanner(System.in));
         GameHistory history = new GameHistory();
-        playerRegistry = new PlayerRegistry();
+        GameEngine.playerRegistry = new PlayerRegistry();
         runIntroSequence(input);
 
         boolean playAnother;
@@ -228,8 +165,8 @@ public final class GameEngine {
             } else System.out.println();
             System.out.println();
 
-            Player p1 = createPlayer(input, "", 1);
-            Player p2 = createPlayer(input, p1.name, 2);
+            Player p1 = createPlayer("", 1);
+            Player p2 = createPlayer(p1.name, 2);
 
             GameSession session = new GameSession(p1, p2, input);
             session.play();
@@ -241,5 +178,23 @@ public final class GameEngine {
         } while (playAnother);
 
         history.print(input);
+    }
+
+    public static void restart() {
+
+        System.out.printf("""
+                
+                ⚠ A system error occurred.
+                Do you want to restart the game (Y/N) ? :%1s""", "");
+
+        if (GameEngine.input.readYesNo()) {
+            System.out.print("\nRestarting the game..... (Press ENTER to continue) ");
+            GameEngine.input.waitForEnter();
+
+            main(new String[0]);   // restart program
+        } else {
+            System.out.print("\nProgram terminated. Thank you for playing! (Press ENTER to exit) ");
+            System.exit(0);
+        }
     }
 }

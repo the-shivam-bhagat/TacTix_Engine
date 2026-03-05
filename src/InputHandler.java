@@ -1,4 +1,3 @@
-import java.util.Iterator;
 import java.util.Scanner;
 
 /// Centralises all console I/O and handles the 'exit' command.
@@ -47,6 +46,11 @@ final class InputHandler {
         return line.isEmpty() || Character.toUpperCase(line.charAt(0)) == 'Y';
     }
 
+    boolean readYesNo_Specific() {
+        String line = readLine().trim();
+        return !line.isEmpty() && Character.toUpperCase(line.charAt(0)) == 'Y';
+    }
+
     /// Reads & validates board cell number 1–9 (non-zero means occupied)
     int readCellChoice(int[] freq) {
         while (true) {
@@ -61,14 +65,7 @@ final class InputHandler {
     }
 
     public void manage() {
-        System.out.println("""
-                
-                ╔══════════════════════════════╗
-                ║     🔧 PLAYER MANAGEMENT     ║
-                ╚══════════════════════════════╝
-                
-                List of All the Players :-
-                """);
+        System.out.println(Strings.PLAYER_MANAGEMENT_BOARD);
         int rank = 0;
         for (Player player : GameEngine.playerRegistry.ranking) {
             System.out.printf("%3d) Name : %-20s , Lifetime Wins : %10d%n", ++rank, player.name, player.getLifetimeWins());

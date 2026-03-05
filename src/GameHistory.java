@@ -11,12 +11,7 @@ final class GameHistory {
 
     void print(InputHandler input) {
 
-        System.out.println("""
-                
-                ╔════════════════════════════════════╗
-                ║            📜 GAME SUMMARY         ║
-                ╚════════════════════════════════════╝
-                """);
+        System.out.println(Strings.GAME_SUMMARY_BOARD);
 
         if (sessions.isEmpty())
             System.out.println("📋 No games recorded yet.\n");
@@ -166,14 +161,7 @@ final class GameSession {
     private void declareMatchResult() {
 
         if (wins1 == wins2) {
-            System.out.println("""
-                    
-                    ╔════════════════════════════════════╗
-                    ║           🤝 MATCH DRAW!           ║
-                    ╠════════════════════════════════════╣
-                    ║  What a battle! It's a tie! 🎮     ║
-                    ╚════════════════════════════════════╝
-                    """);
+            System.out.println(Strings.MATCH_DRAW_BOARD);
             result = "DRAW";
 
         } else {
