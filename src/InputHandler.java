@@ -1,3 +1,4 @@
+import java.util.Iterator;
 import java.util.Scanner;
 
 /// Centralises all console I/O and handles the 'exit' command.
@@ -66,8 +67,10 @@ final class InputHandler {
 
     public void manage() {
         System.out.println(Strings.PLAYER_MANAGEMENT_BOARD);
+        Iterator<Player> players = GameEngine.playerRegistry.iterator();
         int rank = 0;
-        for (Player player : GameEngine.playerRegistry.ranking) {
+        while (players.hasNext()) {
+            Player player = players.next();
             System.out.printf("%3d) Name : %-20s , Lifetime Wins : %10d%n", ++rank, player.name, player.getLifetimeWins());
         }
 

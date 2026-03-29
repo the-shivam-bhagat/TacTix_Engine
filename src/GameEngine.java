@@ -27,16 +27,16 @@ public final class GameEngine {
 
     // Print Top 10 Leaderboard
     static void displayLeaderboard() {
-        if (playerRegistry.ranking.isEmpty()) {
+        if (playerRegistry.isEmpty()) {
             System.out.println(Strings.NO_PLAYERS_LEADERBOARD);
             return;
         }
 
-        int noOfPlayers = Math.min(PlayerRegistry.TOP_PLAYERS, playerRegistry.ranking.size());
-        Iterator<Player> itr = playerRegistry.ranking.iterator();
+        int noOfPlayers = Math.min(PlayerRegistry.TOP_PLAYERS, playerRegistry.size());
+        Iterator<Player> itr = playerRegistry.iterator();
 
         // ---- compute max widths ----
-        int maxWinsLen = Math.max(5, Integer.toString(playerRegistry.ranking.first().getLifetimeWins()).length());
+        int maxWinsLen = Math.max(5, Integer.toString(playerRegistry.peekTopPlayer().getLifetimeWins()).length());
         int maxNameLen = 5, count = 0;
         while (itr.hasNext() && count < noOfPlayers) {
             Player p = itr.next();
@@ -82,7 +82,7 @@ public final class GameEngine {
         );
 
         // ---- ROWS ----
-        itr = playerRegistry.ranking.iterator();
+        itr = playerRegistry.iterator();
         int rank = 1;
 
         while (itr.hasNext() && rank <= noOfPlayers) {
@@ -99,41 +99,6 @@ public final class GameEngine {
         System.out.println("╚" + "═".repeat(innerWidth) + "╝\n");
     }
 
-    // for greeting message
-    private static boolean flip = (int) Math.floor(Math.random() * 100) % 2 == 0;
-
-    /// if players exists returns it, if not then create and return
-    static Player getPlayer(String name) {
-        // Case 1: Player exists
-        Player existing = playerRegistry.players.get(name);
-        if (existing != null) {
-            if (flip) System.out.printf(Strings.WELCOME_NEW_PLAYER_1, name, existing.getLifetimeWins());
-            else System.out.printf(Strings.WELCOME_NEW_PLAYER_2, name, existing.getLifetimeWins());
-            flip = !flip;
-            return existing;
-        }
-
-        // Case 2: New player
-        // no name;
-        if (name == null || name.isEmpty()) {
-            for (int i = 1; i <= 60; i++) {
-                String newName = "PLAYER_" + i;
-                if (!playerRegistry.players.containsKey(newName)) {
-                    name = newName;
-                    break;
-                }
-            }
-        }
-
-        Player newPlayer = new Player(name);
-        playerRegistry.addPlayer(newPlayer);
-
-        if (flip) System.out.printf(Strings.WELCOME_REGISTERED_PLAYER_1, name);
-        else System.out.printf(Strings.WELCOME_REGISTERED_PLAYER_2, name);
-
-        flip = !flip;
-        return newPlayer;
-    }
 
     /// assign different players
     private static Player createPlayer(String pre, int number) {
@@ -145,14 +110,14 @@ public final class GameEngine {
                 System.out.println(name + " is already playing!");
             else break;
         }
-        return getPlayer(name);
+        return playerRegistry.getPlayer(name);
     }
 
     /// Entry point
     public static void main(String[] args) {
         GameEngine.input = new InputHandler(new Scanner(System.in));
         GameHistory history = new GameHistory();
-        GameEngine.playerRegistry = new PlayerRegistry();
+        GameEngine.playerRegistry = PlayerRegistry.getPlayerRegistry();
         runIntroSequence(input);
 
         boolean playAnother;
