@@ -1,17 +1,20 @@
-import java.util.Iterator;
+import java.util.List;
 
 /// Read-only view of player rankings.
 public interface RankingView {
 
-    /// Iterate players in rank order (highest wins first)
-    Iterator<Player> iterator();
+    /// Top N players (usually top 10)
+    List<Player> getTopPlayers(int limit);
 
-    /// Peek at the top-ranked player without removing
+    /// All players in ranked order
+    List<Player> getAllPlayers();
+
+    /// Peek at the top-ranked player
     Player peekTopPlayer();
 
-    /// Total number of registered players
+    /// Total number of players
     int size();
 
-    /// True if no players are registered
+    /// True if empty
     boolean isEmpty();
 }

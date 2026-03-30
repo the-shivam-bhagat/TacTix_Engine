@@ -8,11 +8,13 @@ final class InputHandler {
 
     /// Manages the player management screen — triggered by 'manage' keyword
     private final AdminControl admin;
+    private final EngineRenderer engineRenderer;
 
-    InputHandler(Scanner sc, PlayerRegistry playerRegistry) {
-        this.sc             = sc;
+    InputHandler(Scanner sc, PlayerRegistry playerRegistry, PlayerBoardRenderer boardRenderer, EngineRenderer engineRenderer) {
+        this.sc = sc;
         this.playerRegistry = playerRegistry;
-        this.admin = new AdminControl(playerRegistry, this);
+        this.engineRenderer = engineRenderer;
+        this.admin = new AdminControl(playerRegistry, this, boardRenderer);
     }
 
     /// Reads a line; handles 'exit' and 'manage' keywords automatically.
@@ -23,6 +25,7 @@ final class InputHandler {
         if (line.equalsIgnoreCase("exit")) {
             System.out.println("\nExiting game. Goodbye!");
             playerRegistry.trimToMaxPlayers();
+            engineRenderer.showExitMessage();
             System.exit(0);
         }
 
@@ -76,7 +79,7 @@ final class InputHandler {
         }
     }
 
-    void endWithoudCheck() {
+    void waitForEnterWithoutCheck() {
         sc.nextLine();
     }
 }

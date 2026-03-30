@@ -99,6 +99,9 @@ final class Strings {
             ╚═════════════════════════════════════════════════════════════════════════╝
             """;
 
+    public static final String ADMIN_PLAYER_BOARD_TITLE = " 👥 ALL PLAYERS 👥 ";
+    public static final String LEADERBOARD_TITLE = " 🏆 LEADERBOARD 🏆 ";
+
     public static final String NO_PLAYERS_LEADERBOARD = """
             
             ╔════════════════════════╗

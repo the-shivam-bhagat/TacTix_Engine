@@ -1,4 +1,3 @@
-import java.util.Iterator;
 import java.util.Scanner;
 
 /// display and deletion
@@ -6,10 +5,12 @@ final class AdminControl {
 
     private final PlayerRegistry playerRegistry;
     private final InputHandler input;
+    private final PlayerBoardRenderer boardRenderer;
 
-    AdminControl(PlayerRegistry registry, InputHandler input) {
+    AdminControl(PlayerRegistry registry, InputHandler input, PlayerBoardRenderer boardRenderer) {
         this.playerRegistry = registry;
         this.input = input;
+        this.boardRenderer = boardRenderer;
     }
 
     /// Display all players and run the delete loop
@@ -23,13 +24,10 @@ final class AdminControl {
     /// Print all registered players in ranked order
     private void displayPlayers() {
         System.out.println(Strings.PLAYER_MANAGEMENT_BOARD);
-        Iterator<Player> players = playerRegistry.iterator();
-        int rank = 0;
-        while (players.hasNext()) {
-            Player player = players.next();
-            System.out.printf("%3d) Name : %-20s , Lifetime Wins : %10d%n",
-                    ++rank, player.getName(), player.getLifetimeWins());
-        }
+        boardRenderer.showBoard(
+                playerRegistry.getAllPlayers(),
+                Strings.ADMIN_PLAYER_BOARD_TITLE
+        );
     }
 
     /// Loop until the admin chooses to stop deleting

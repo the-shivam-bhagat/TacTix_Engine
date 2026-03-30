@@ -17,9 +17,9 @@ final class PlayerRegistry implements Registry, RankingView {
     private final PlayerStore store;
 
     static final int TOP_PLAYERS = 10;
-    private static final int MAX_PLAYERS = 50;
+    private static final int MAX_PLAYERS = 1000;
 
-    /// We could have also used singleton but it is too much for our project
+    /// We could have also used singleton but, it is too much for our project
     PlayerRegistry(PlayerStore store) throws IOException {
         this.store   = store;
         players = new HashMap<>();
@@ -117,10 +117,23 @@ final class PlayerRegistry implements Registry, RankingView {
     // RankingView implementation (read-only)
     // =====================================================
 
-    /// Iterate players in rank order (highest wins first)
+    /// give top players for leaderboard
     @Override
-    public Iterator<Player> iterator() {
-        return ranking.iterator();
+    public List<Player> getTopPlayers(int limit) {
+        List<Player> result = new ArrayList<>(limit);
+
+        int count = 0;
+        for (Player p : ranking) {
+            if (count++ >= limit) break;
+            result.add(p);
+        }
+
+        return result;
+    }
+    /// give list of all players
+    @Override
+    public List<Player> getAllPlayers() {
+        return new ArrayList<>(ranking);
     }
 
     /// Peek at the top-ranked player without removing
