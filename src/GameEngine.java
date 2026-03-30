@@ -66,7 +66,13 @@ public final class GameEngine {
             HistoryRenderer historyRenderer = new HistoryRenderer(output);
 
             playerRegistry = new PlayerRegistry(new FilePlayerStore());
-            input = new InputHandler(new Scanner(System.in), playerRegistry, boardRenderer, engineRenderer);
+            input = new InputHandler(
+                    new Scanner(System.in),
+                    playerRegistry,     // as Registry
+                    playerRegistry,     // as RankingView
+                    boardRenderer,
+                    engineRenderer
+            );
 
             gameHistory = new GameHistory(historyRenderer);
             runIntroSequence();
@@ -120,7 +126,7 @@ public final class GameEngine {
         playerRegistry.trimToMaxPlayers();
         boardRenderer.showBoard(
                 playerRegistry.getTopPlayers(PlayerRegistry.TOP_PLAYERS),
-                " 🏆 LEADERBOARD 🏆 "
+                Strings.LEADERBOARD_TITLE
         );
 
         // ---- Exit ----

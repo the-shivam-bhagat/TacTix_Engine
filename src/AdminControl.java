@@ -3,29 +3,38 @@ import java.util.Scanner;
 /// display and deletion
 final class AdminControl {
 
-    private final PlayerRegistry playerRegistry;
+    private final Registry registry;
     private final InputHandler input;
+    private final RankingView rankingView;
+    private final EngineRenderer renderer;
     private final PlayerBoardRenderer boardRenderer;
 
-    AdminControl(PlayerRegistry registry, InputHandler input, PlayerBoardRenderer boardRenderer) {
-        this.playerRegistry = registry;
+    AdminControl(Registry registry,
+                 RankingView rankingView,
+                 InputHandler input,
+                 PlayerBoardRenderer boardRenderer,
+                 EngineRenderer renderer) {
+
+        this.registry = registry;
+        this.rankingView = rankingView;
         this.input = input;
         this.boardRenderer = boardRenderer;
+        this.renderer = renderer;
     }
 
     /// Display all players and run the delete loop
     void show(Scanner sc) {
         displayPlayers();
-        System.out.println("\n" + "-".repeat(40));
+        renderer.prompt("\n\n" + "-".repeat(40) + "\n");
         runDeleteLoop(sc);
-        System.out.println("\n🔒 Exiting Player Management.\n");
+        renderer.prompt("\n🔒 Exiting Player Management.\n");
     }
 
     /// Print all registered players in ranked order
     private void displayPlayers() {
         System.out.println(Strings.PLAYER_MANAGEMENT_BOARD);
         boardRenderer.showBoard(
-                playerRegistry.getAllPlayers(),
+                rankingView.getAllPlayers(),
                 Strings.ADMIN_PLAYER_BOARD_TITLE
         );
     }
@@ -33,7 +42,7 @@ final class AdminControl {
     /// Loop until the admin chooses to stop deleting
     private void runDeleteLoop(Scanner sc) {
         while (true) {
-            System.out.print("\nEnter player name to delete : ");
+            renderer.prompt("\nEnter player name to delete : ");
             String name = sc.nextLine().trim().toUpperCase();
 
             if (name.isEmpty()) {
@@ -41,13 +50,13 @@ final class AdminControl {
                 continue;
             }
 
-            if (playerRegistry.deletePlayerByName(name)) {
-                System.out.printf("✅ Player '%s' deleted successfully.%n", name);
+            if (registry.deletePlayerByName(name)) {
+                renderer.prompt(String.format("✅ Player '%s' deleted successfully.%n", name));
             } else {
-                System.out.printf("❌ Player '%s' not found.%n", name);
+                renderer.prompt(String.format("❌ Player '%s' not found.%n", name));
             }
 
-            System.out.print("Delete another player? (Y/N): ");
+            renderer.prompt("Delete another player? (Y/N): ");
             if (!input.readYesNo_Specific()) break;
         }
     }

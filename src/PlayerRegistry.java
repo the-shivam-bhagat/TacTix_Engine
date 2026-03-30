@@ -136,12 +136,6 @@ final class PlayerRegistry implements Registry, RankingView {
         return new ArrayList<>(ranking);
     }
 
-    /// Peek at the top-ranked player without removing
-    @Override
-    public Player peekTopPlayer() {
-        return ranking.first();
-    }
-
     /// Total number of registered players
     @Override
     public int size() {

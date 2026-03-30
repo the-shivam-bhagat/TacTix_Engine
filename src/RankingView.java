@@ -9,9 +9,6 @@ public interface RankingView {
     /// All players in ranked order
     List<Player> getAllPlayers();
 
-    /// Peek at the top-ranked player
-    Player peekTopPlayer();
-
     /// Total number of players
     int size();
 
