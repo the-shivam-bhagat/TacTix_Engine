@@ -31,7 +31,7 @@ public class HistoryRenderer {
         out.println("╚" + "═".repeat(innerWidth) + "╝\n");
     }
 
-    public void showSessions(List<GameSession> sessions) {
+    public void showSessions(List<GameResult> sessions) {
         if (sessions == null || sessions.isEmpty()) {
             showEmptyMessage();
             return;
@@ -44,7 +44,7 @@ public class HistoryRenderer {
         int resultWidth = "Result".length();
         int leadWidth   = "Lead".length();
 
-        for (GameSession s : sessions) {
+        for (GameResult s : sessions) {
             p1Width     = Math.max(p1Width,     s.getP1Name().length());
             p2Width     = Math.max(p2Width,     s.getP2Name().length());
             resultWidth = Math.max(resultWidth, s.getResult().length());
@@ -114,7 +114,7 @@ public class HistoryRenderer {
 
         // Data rows, each followed by a light ┼ separator
         for (int i = 0; i < sessions.size(); i++) {
-            GameSession s    = sessions.get(i);
+            GameResult s    = sessions.get(i);
             int         lead = Math.abs(s.getWins1() - s.getWins2());
             out.printf(dataRowFmt,
                     i + 1,

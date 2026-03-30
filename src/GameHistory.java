@@ -3,7 +3,7 @@ import java.util.List;
 
 final class GameHistory {
 
-    private final List<GameSession> sessions = new ArrayList<>();
+    private final List<GameResult> sessions = new ArrayList<>();
     private final HistoryRenderer renderer;
 
     GameHistory(HistoryRenderer renderer) {
@@ -11,7 +11,7 @@ final class GameHistory {
     }
 
     void add(GameSession session) {
-        sessions.add(session);
+        sessions.add(session.toResult());
     }
 
     void showHistory() {

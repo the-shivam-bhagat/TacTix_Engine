@@ -117,23 +117,13 @@ public final class GameSession {
         }
     }
 
-    public String getP1Name() {
-        return p1.getName();
-    }
-
-    public String getP2Name() {
-        return p2.getName();
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public int getWins1() {
-        return wins1;
-    }
-
-    public int getWins2() {
-        return wins2;
+    public GameResult toResult() {
+        return new GameResult(
+                p1.getName(),
+                p2.getName(),
+                wins1,
+                wins2,
+                result
+        );
     }
 }

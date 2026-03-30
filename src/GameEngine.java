@@ -59,6 +59,8 @@ public final class GameEngine {
     public static void main(String[] args) {
 
         try {
+
+            // Renderers
             PrintStream output = new PrintStream(System.out);
             engineRenderer = new EngineRenderer(output);
             boardRenderer = new PlayerBoardRenderer(output);
@@ -66,14 +68,19 @@ public final class GameEngine {
             HistoryRenderer historyRenderer = new HistoryRenderer(output);
 
             playerRegistry = new PlayerRegistry(new FilePlayerStore());
-            input = new InputHandler(
-                    new Scanner(System.in),
-                    playerRegistry,     // as Registry
-                    playerRegistry,     // as RankingView
-                    boardRenderer,
-                    engineRenderer
-            );
 
+            // input blocks
+            InputReader reader = new InputReader(new Scanner(System.in));
+            CommandHandler commandHandler = new CommandHandler(
+                    playerRegistry,
+                    playerRegistry,
+                    engineRenderer,
+                    reader,
+                    boardRenderer
+            );
+            input = new InputHandler(reader, commandHandler);
+
+            // game block
             gameHistory = new GameHistory(historyRenderer);
             runIntroSequence();
 
