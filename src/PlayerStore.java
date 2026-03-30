@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.List;
 
 
@@ -5,7 +6,7 @@ import java.util.List;
 public interface PlayerStore {
 
     /// Load all persisted players. Registry handles its own internal structure.
-    List<Player> loadAll();
+    List<Player> loadAll() throws IOException;
 
     /// Persist the current player collection.
     void saveAll(Iterable<Player> players);

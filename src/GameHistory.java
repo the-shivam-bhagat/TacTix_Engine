@@ -33,6 +33,6 @@ final class GameHistory {
         GameEngine.displayLeaderboard();
 
         System.out.print("🎮 Session complete. Thank you for playing! (Press ENTER to exit) ");
-        input.waitForEnter();
+        input.endWithoudCheck();
     }
 }

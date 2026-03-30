@@ -76,7 +76,7 @@ final class InputHandler {
         }
     }
 
-    void skip() {
+    void endWithoudCheck() {
         sc.nextLine();
     }
 }

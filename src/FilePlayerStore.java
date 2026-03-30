@@ -11,20 +11,17 @@ public class FilePlayerStore implements PlayerStore {
     static final String FILE_NAME = "players.dat";
 
     @Override
-    public List<Player> loadAll() {
+    public List<Player> loadAll() throws IOException {
         List<Player> result = new ArrayList<>();
         File file = new File(FILE_NAME);
         if (!file.exists()) return result;
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Player p = decode(line);
-                if (p != null) result.add(p);
-            }
-        } catch (IOException e) {
-            System.err.println("Failed to load players from file.");
-            GameEngine.restart();
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+
+        String line;
+        while ((line = reader.readLine()) != null) {
+            Player p = decode(line);
+            if (p != null) result.add(p);
         }
 
         return result;

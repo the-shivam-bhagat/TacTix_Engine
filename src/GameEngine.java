@@ -102,7 +102,7 @@ public final class GameEngine {
 
     /// assign different players
     private static Player createPlayer(String pre, int number) {
-        String name = null;
+        String name;
         while (true) {
             System.out.printf("Enter name of Player_%d : ", number);
             name = input.readLine().trim().toUpperCase();
@@ -115,34 +115,40 @@ public final class GameEngine {
 
     /// Entry point
     public static void main(String[] args) {
-        GameEngine.playerRegistry = PlayerRegistry.getPlayerRegistry();
-        GameHistory history = new GameHistory(playerRegistry);
-        GameEngine.input = new InputHandler(new Scanner(System.in), playerRegistry);
-        runIntroSequence(input);
+        try {
+            GameEngine.playerRegistry = new PlayerRegistry(new FilePlayerStore());
+            GameHistory history = new GameHistory(playerRegistry);
+            GameEngine.input = new InputHandler(new Scanner(System.in), playerRegistry);
+            runIntroSequence(input);
 
-        boolean playAnother;
-        int gameNumber = 0;
-        do {
-            System.out.printf("%n⚔️ Game %d — Let the battle begin!%n", ++gameNumber);
-            if (gameNumber > 1) {
-                System.out.print(" ..... (Press ENTER to continue) ");
-                input.waitForEnter();
-            } else System.out.println();
-            System.out.println();
+            boolean playAnother;
+            int gameNumber = 0;
+            do {
+                System.out.printf("%n⚔️ Game %d — Let the battle begin!%n", ++gameNumber);
+                if (gameNumber > 1) {
+                    System.out.print(" ..... (Press ENTER to continue) ");
+                    input.waitForEnter();
+                } else System.out.println();
+                System.out.println();
 
-            Player p1 = createPlayer("", 1);
-            Player p2 = createPlayer(p1.getName(), 2);
+                Player p1 = createPlayer("", 1);
+                Player p2 = createPlayer(p1.getName(), 2);
 
-            GameSession session = new GameSession(p1, p2, input, playerRegistry);
-            session.play();
-            history.add(session);
+                GameSession session = new GameSession(p1, p2, input, playerRegistry);
+                session.play();
+                history.add(session);
 
-            System.out.print("\n🎮 Play another game? (Y/N): ");
-            playAnother = input.readYesNo();
-            System.out.println();
-        } while (playAnother);
+                System.out.print("\n🎮 Play another game? (Y/N): ");
+                playAnother = input.readYesNo();
+                System.out.println();
+            } while (playAnother);
 
-        history.print(input);
+            history.print(input);
+
+        } catch (Exception ex) {
+            System.out.println("\n" + ex.getMessage() + "\n");
+            restart();
+        }
     }
 
     public static void restart() {

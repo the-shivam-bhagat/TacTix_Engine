@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.*;
 
 /// Implements Registry (mutable operations) and RankingView (read-only operations).
@@ -18,26 +19,8 @@ final class PlayerRegistry implements Registry, RankingView {
     static final int TOP_PLAYERS = 10;
     private static final int MAX_PLAYERS = 50;
 
-    /// Volatile ensures double-checked locking works correctly across threads
-    private static volatile PlayerRegistry instance;
-
-    public static PlayerRegistry getPlayerRegistry() {
-        return getPlayerRegistry(new FilePlayerStore());
-    }
-
-    /// Custom factory — inject any PlayerStore (useful for testing)
-    public static PlayerRegistry getPlayerRegistry(PlayerStore store) {
-        if (instance == null) {
-            synchronized (PlayerRegistry.class) {
-                if (instance == null) {
-                    instance = new PlayerRegistry(store);
-                }
-            }
-        }
-        return instance;
-    }
-
-    private PlayerRegistry(PlayerStore store) {
+    /// We could have also used singleton but it is too much for our project
+    PlayerRegistry(PlayerStore store) throws IOException {
         this.store   = store;
         players = new HashMap<>();
         ranking = new TreeSet<>();

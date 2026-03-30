@@ -68,10 +68,6 @@ final class Utility {
         return blockXO;
     }
 
-    static char[][][] getBlocksXO() {
-        return xo;
-    }
-
     static int[][] getStartIndexesOfEachBlock_1_to_9() {
         return BLOCK_START_INDEXES;
     }
