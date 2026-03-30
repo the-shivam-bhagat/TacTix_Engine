@@ -9,7 +9,13 @@ final class Utility {
     private static final int XO_BLOCK_HEIGHT = 9;
     private static final String BOARD_TITLE = " 🎮 PLAY BOARD 🎮 ";
 
-    static final char[][][] xo = getBlocksXO();
+    static final char[][][] xo = buildBlocksXO();
+
+    private static final int[][] BLOCK_START_INDEXES = new int[][]{
+            {1, 1}, {1, 29}, {1, 57},
+            {12, 1}, {12, 29}, {12, 57},
+            {23, 1}, {23, 29}, {23, 57}
+    };
 
     static char[][] getPlayBoard() {
         char[][] playBoard = new char[BOARD_HEIGHT][BOARD_LENGTH];
@@ -33,7 +39,7 @@ final class Utility {
         return playBoard;
     }
 
-    static char[][][] getBlocksXO() {
+    private static char[][][] buildBlocksXO() {
         char[][][] blockXO = new char[2][XO_BLOCK_HEIGHT][XO_BLOCK_LENGTH];
 
         // X block
@@ -62,12 +68,12 @@ final class Utility {
         return blockXO;
     }
 
+    static char[][][] getBlocksXO() {
+        return xo;
+    }
+
     static int[][] getStartIndexesOfEachBlock_1_to_9() {
-        return new int[][]{
-                {1, 1}, {1, 29}, {1, 57},
-                {12, 1}, {12, 29}, {12, 57},
-                {23, 1}, {23, 29}, {23, 57}
-        };
+        return BLOCK_START_INDEXES;
     }
 
     /// print board

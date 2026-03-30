@@ -1,6 +1,7 @@
-/// player class.
-final class Player implements Comparable<Player> {
-    final String name;
+/// Player class.
+public final class Player implements Comparable<Player> {
+
+    private final String name;
     private int lifetimeWins;
 
     public Player(String name) {
@@ -8,6 +9,7 @@ final class Player implements Comparable<Player> {
         lifetimeWins = 0;
     }
 
+    /// Package-private — only used by FilePlayerStore when loading saved players
     Player(String name, int lifetimeWins) {
         this.name = name;
         this.lifetimeWins = lifetimeWins;
@@ -24,6 +26,10 @@ final class Player implements Comparable<Player> {
 
     @Override
     public String toString() {
+        return name;
+    }
+
+    public String getName() {
         return name;
     }
 

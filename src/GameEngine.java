@@ -41,7 +41,7 @@ public final class GameEngine {
         while (itr.hasNext() && count < noOfPlayers) {
             Player p = itr.next();
 
-            int nameLen = p.name.length();
+            int nameLen = p.getName().length();
             if (nameLen > maxNameLen) maxNameLen = nameLen;
             count++;
         }
@@ -90,7 +90,7 @@ public final class GameEngine {
 
             System.out.printf(
                     "║ %-" + rankWidth + "d │ %-" + maxNameLen + "s │ %-" + maxWinsLen + "d ║%n",
-                    rank, p.name, p.getLifetimeWins()
+                    rank, p.getName(), p.getLifetimeWins()
             );
 
             rank++;
@@ -115,9 +115,9 @@ public final class GameEngine {
 
     /// Entry point
     public static void main(String[] args) {
-        GameEngine.input = new InputHandler(new Scanner(System.in));
-        GameHistory history = new GameHistory();
         GameEngine.playerRegistry = PlayerRegistry.getPlayerRegistry();
+        GameHistory history = new GameHistory(playerRegistry);
+        GameEngine.input = new InputHandler(new Scanner(System.in), playerRegistry);
         runIntroSequence(input);
 
         boolean playAnother;
@@ -131,9 +131,9 @@ public final class GameEngine {
             System.out.println();
 
             Player p1 = createPlayer("", 1);
-            Player p2 = createPlayer(p1.name, 2);
+            Player p2 = createPlayer(p1.getName(), 2);
 
-            GameSession session = new GameSession(p1, p2, input);
+            GameSession session = new GameSession(p1, p2, input, playerRegistry);
             session.play();
             history.add(session);
 

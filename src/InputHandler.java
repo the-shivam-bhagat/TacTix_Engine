@@ -1,28 +1,37 @@
-import java.util.Iterator;
 import java.util.Scanner;
 
 /// Centralises all console I/O and handles the 'exit' command.
 final class InputHandler {
 
-    final Scanner sc;
+    private final Scanner sc;
+    private final PlayerRegistry playerRegistry;
 
-    InputHandler(Scanner sc) {
-        this.sc = sc;
+    /// Manages the player management screen — triggered by 'manage' keyword
+    private final AdminControl admin;
+
+    InputHandler(Scanner sc, PlayerRegistry playerRegistry) {
+        this.sc             = sc;
+        this.playerRegistry = playerRegistry;
+        this.admin = new AdminControl(playerRegistry, this);
     }
 
-    /// exits if user typed "exit".
+    /// Reads a line; handles 'exit' and 'manage' keywords automatically.
     String readLine() {
         String line = sc.nextLine().trim();
+
+        // exit — persist and quit
         if (line.equalsIgnoreCase("exit")) {
             System.out.println("\nExiting game. Goodbye!");
-            GameEngine.playerRegistry.trimToMaxPlayers();
+            playerRegistry.trimToMaxPlayers();
             System.exit(0);
         }
+
+        // manage — password-gated player management screen
         if (line.equalsIgnoreCase("manage")) {
             System.out.print("\nProvide Password : ");
             String password = sc.nextLine().trim();
             if (password.equalsIgnoreCase("123456")) {
-                manage();
+                admin.show(sc);
             } else System.out.println("Wrong password!");
             System.out.println("""
                     
@@ -33,6 +42,7 @@ final class InputHandler {
                     """);
             return "";
         }
+
         return line;
     }
 
@@ -47,6 +57,7 @@ final class InputHandler {
         return line.isEmpty() || Character.toUpperCase(line.charAt(0)) == 'Y';
     }
 
+    /// Reads a Y/N answer. (empty == No.)
     boolean readYesNo_Specific() {
         String line = readLine().trim();
         return !line.isEmpty() && Character.toUpperCase(line.charAt(0)) == 'Y';
@@ -65,38 +76,7 @@ final class InputHandler {
         }
     }
 
-    public void manage() {
-        System.out.println(Strings.PLAYER_MANAGEMENT_BOARD);
-        Iterator<Player> players = GameEngine.playerRegistry.iterator();
-        int rank = 0;
-        while (players.hasNext()) {
-            Player player = players.next();
-            System.out.printf("%3d) Name : %-20s , Lifetime Wins : %10d%n", ++rank, player.name, player.getLifetimeWins());
-        }
-
-        System.out.println("\n" + "-".repeat(40));
-
-        while (true) {
-
-            System.out.print("\nEnter player name to delete : ");
-            String name = sc.nextLine().trim().toUpperCase();
-
-            if (name.isEmpty()) {
-                System.out.println("⚠ Player name cannot be empty.");
-                continue;
-            }
-
-            if (GameEngine.playerRegistry.deletePlayerByName(name)) {
-                System.out.printf("✅ Player '%s' deleted successfully.%n", name);
-            } else {
-                System.out.printf("❌ Player '%s' not found.%n", name);
-            }
-
-            System.out.print("Delete another player? (Y/N): ");
-            String choice = sc.nextLine().trim().toUpperCase();
-            if (!choice.isEmpty() && Character.toUpperCase(choice.charAt(0)) != 'Y') break;
-        }
-
-        System.out.println("\n🔒 Exiting Player Management.\n");
+    void skip() {
+        sc.nextLine();
     }
 }

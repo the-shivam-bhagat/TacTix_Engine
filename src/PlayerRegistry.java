@@ -1,7 +1,10 @@
-import java.io.*;
 import java.util.*;
 
-final class PlayerRegistry {
+/// Implements Registry (mutable operations) and RankingView (read-only operations).
+/// Callers that only display rankings depend on RankingView.
+/// Callers that manage players depend on Registry.
+/// Neither needs to know about PlayerRegistry directly.
+final class PlayerRegistry implements Registry, RankingView {
 
     /// Fast lookup by player name
     private final Map<String, Player> players;
@@ -9,44 +12,61 @@ final class PlayerRegistry {
     /// Sorted ranking (highest wins first)
     private final TreeSet<Player> ranking;
 
-    /// File used for persistence
-    private static final String FILE_NAME = "players.dat";
-
-    private PlayerRegistry() {
-        players = new HashMap<>();
-        ranking = new TreeSet<>();
-
-        loadPlayers();   // load saved players
-    }
+    /// player storage
+    private final PlayerStore store;
 
     static final int TOP_PLAYERS = 10;
     private static final int MAX_PLAYERS = 50;
 
+    /// Volatile ensures double-checked locking works correctly across threads
     private static volatile PlayerRegistry instance;
 
     public static PlayerRegistry getPlayerRegistry() {
+        return getPlayerRegistry(new FilePlayerStore());
+    }
+
+    /// Custom factory — inject any PlayerStore (useful for testing)
+    public static PlayerRegistry getPlayerRegistry(PlayerStore store) {
         if (instance == null) {
             synchronized (PlayerRegistry.class) {
                 if (instance == null) {
-                    instance = new PlayerRegistry();
+                    instance = new PlayerRegistry(store);
                 }
             }
         }
         return instance;
     }
 
-    /// Add a new player (if not already present)
-    public void addPlayer(Player player) {
-        if (players.containsKey(player.name)) return;
+    private PlayerRegistry(PlayerStore store) {
+        this.store   = store;
+        players = new HashMap<>();
+        ranking = new TreeSet<>();
 
-        players.put(player.name, player);
+        // loadAll() returns a plain List — registry owns its own internal structure
+        for (Player p : store.loadAll()) {
+            players.put(p.getName(), p);
+            ranking.add(p);
+        }
+    }
+
+    // =====================================================
+    // Registry implementation (mutable operations)
+    // =====================================================
+
+    /// Add a new player (if not already present)
+    @Override
+    public void addPlayer(Player player) {
+        if (players.containsKey(player.getName())) return;
+
+        players.put(player.getName(), player);
         ranking.add(player);
     }
 
     // for greeting message
     private static boolean flip = (int) Math.floor(Math.random() * 100) % 2 == 0;
 
-    /// if players exists returns it, if not then create and return
+    /// if player exists returns it, if not then create and return
+    @Override
     public Player getPlayer(String name) {
         // Case 1: Player exists
         Player existing = players.get(name);
@@ -58,15 +78,9 @@ final class PlayerRegistry {
         }
 
         // Case 2: New player
-        // no name;
+        // no name — auto-assign the first unused PLAYER_N slot
         if (name == null || name.isEmpty()) {
-            for (int i = 1; i <= 60; i++) {
-                String newName = "PLAYER_" + i;
-                if (!players.containsKey(newName)) {
-                    name = newName;
-                    break;
-                }
-            }
+            name = generateUnusedName();
         }
 
         Player newPlayer = new Player(name);
@@ -79,15 +93,14 @@ final class PlayerRegistry {
         return newPlayer;
     }
 
-
     /// Internal removal helper
     private void removePlayer(Player player) {
-        players.remove(player.name);
+        players.remove(player.getName());
         ranking.remove(player);
     }
 
-
     /// Delete player by name
+    @Override
     public boolean deletePlayerByName(String name) {
         Player player = players.get(name);
         if (player == null) return false;
@@ -96,8 +109,8 @@ final class PlayerRegistry {
         return true;
     }
 
-
-    /// Safely update win count
+    /// Safely update win count — remove first so TreeSet re-sorts correctly
+    @Override
     public void incrementWin(Player player) {
         if (player == null) return;
         ranking.remove(player);
@@ -105,98 +118,56 @@ final class PlayerRegistry {
         ranking.add(player);
     }
 
-    /// Keep registry within max size
+    /// Keep registry within max size, then persist via the injected store
+    @Override
     public void trimToMaxPlayers() {
 
         while (ranking.size() > MAX_PLAYERS) {
             Player lowest = ranking.pollLast();
-            if (lowest != null) players.remove(lowest.name);
+            if (lowest != null) players.remove(lowest.getName());
         }
 
-        savePlayers();
+        store.saveAll(ranking);  // ranking is Iterable<Player>
     }
 
-    public boolean isEmpty() {
-        return players.isEmpty();
-    }
+    // =====================================================
+    // RankingView implementation (read-only)
+    // =====================================================
 
-    public int size() {
-        return players.size();
-    }
-
+    /// Iterate players in rank order (highest wins first)
+    @Override
     public Iterator<Player> iterator() {
         return ranking.iterator();
     }
 
+    /// Peek at the top-ranked player without removing
+    @Override
     public Player peekTopPlayer() {
         return ranking.first();
     }
 
-
-    // =====================================================
-    // LOAD PLAYERS FROM FILE
-    // =====================================================
-
-    private void loadPlayers() {
-        File file = new File(FILE_NAME);
-        if (!file.exists()) return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if ((line.length() & 1) == 1) continue;
-                StringBuilder sb = new StringBuilder(line.length() / 2);
-
-                for (int i = 1; i < line.length(); i += 2) {
-                    int a = line.charAt(i - 1) - 32;
-                    int b = line.charAt(i) - 32;
-                    sb.append((char) (a + b));
-                }
-
-                String[] parts = sb.toString().split(",");
-                if (parts.length != 2) continue;
-                String name = parts[0];
-                int wins = Integer.parseInt(parts[1]);
-
-                Player p = new Player(name, wins);
-                players.put(name, p);
-                ranking.add(p);
-            }
-
-        } catch (IOException e) {
-            System.err.println("Failed to load players from file.");
-            GameEngine.restart();
-        }
+    /// Total number of registered players
+    @Override
+    public int size() {
+        return players.size();
     }
 
+    /// True if no players are registered
+    @Override
+    public boolean isEmpty() {
+        return players.isEmpty();
+    }
 
     // =====================================================
-    // SAVE PLAYERS TO FILE
+    // Private helpers
     // =====================================================
 
-    private void savePlayers() {
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            Random r = new Random();
-            for (Player p : players.values()) {
-                String line = p.name + "," + p.getLifetimeWins();
-                StringBuilder sb = new StringBuilder(line.length() * 2);
-
-                for (int i = 0; i < line.length(); i++) {
-                    int cur = line.charAt(i);
-                    int split = r.nextInt(cur - 1) + 1; // range 0 < split < cur;
-                    // add 32 to not generate (\0, \r, \n, etc.).
-                    int a = split + 32;
-                    int b = (cur - split) + 32;
-
-                    writer.write((char) a);
-                    writer.write((char) b);
-                }
-
-                writer.newLine();
-            }
-
-        } catch (IOException e) {
-            System.err.println("Failed to save Players from this Game.");
+    /// Auto-assigns the first unused PLAYER_N name (fallback: timestamp-based)
+    private String generateUnusedName() {
+        for (int i = 1; i <= 60; i++) {
+            String newName = "PLAYER_" + i;
+            if (!players.containsKey(newName)) return newName;
         }
+        return "PLAYER_" + System.currentTimeMillis(); // fallback if all 60 slots taken
     }
 }
