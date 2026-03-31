@@ -1,5 +1,8 @@
 package player;
 
+import utility.Config;
+import utility.Logger;
+
 import java.io.*;
 import java.util.*;
 
@@ -10,15 +13,19 @@ import java.util.*;
  */
 public class FilePlayerStore implements PlayerStore {
 
-    static final String FILE_NAME = "players.dat";
+    static final String FILE_NAME = Config.PLAYER_FILE_NAME;
 
     @Override
     public List<Player> loadAll() throws IOException {
         List<Player> result = new ArrayList<>();
         File file = new File(FILE_NAME);
-        if (!file.exists()) return result;
+        if (!file.exists()) {
+            Logger.warn("Player file not found, starting fresh");
+            return result;
+        }
 
         BufferedReader reader = new BufferedReader(new FileReader(file));
+        Logger.info("Reading players from file");
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -37,8 +44,9 @@ public class FilePlayerStore implements PlayerStore {
                 writer.write(encode(p, r));
                 writer.newLine();
             }
+            Logger.info("Saving players to file");
         } catch (IOException e) {
-            System.err.println("Failed to save players to file.");
+            Logger.error("Failed to save players", e);
         }
     }
 

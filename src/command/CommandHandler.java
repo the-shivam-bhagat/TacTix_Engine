@@ -5,6 +5,7 @@ import command.impl.ExitCommand;
 import command.impl.ManageCommand;
 import player.Registry;
 import renderer.view.EngineView;
+import utility.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,7 +32,7 @@ public final class CommandHandler implements CommandProcessor {
     public boolean handle(String line) {
         Command cmd = commands.get(line.toLowerCase());
         if (cmd == null) return false;
-
+        Logger.info("Command executed: " + line.toLowerCase());
         cmd.execute();
         return true;
 

@@ -4,6 +4,7 @@ import input.Input;
 import player.Player;
 import player.Registry;
 import renderer.view.SessionView;
+import utility.Logger;
 import utility.Utility;
 
 public final class GameSession {
@@ -32,6 +33,8 @@ public final class GameSession {
     }
 
     public void play() {
+        Logger.info("New session started: " + p1.getName() + " vs " + p2.getName());
+
         int roundNumber = 0;
         boolean keepPlaying;
 
@@ -47,7 +50,7 @@ public final class GameSession {
                 second = tmp;
             }
 
-            playRound();
+            playRound(roundNumber);
 
             renderer.showScoreboard(p1, wins1, p2, wins2, ties);
             input.waitForEnter();
@@ -58,9 +61,11 @@ public final class GameSession {
         } while (keepPlaying);
 
         declareMatchResult();
+        Logger.info("Match result: " + result);
     }
 
-    private void playRound() {
+    private void playRound(int roundNumber) {
+        Logger.info("Round " + roundNumber + " started");
 
         GameBoard gameBoard = new GameBoard();
 
@@ -94,21 +99,18 @@ public final class GameSession {
             Boolean winCheck = gameBoard.checkWinner();
 
             if (winCheck != null) {
-                if (winCheck) {
-                    renderer.showWinner(first);
-                    recordWin(first);
-                    registry.incrementWin(first);
-                } else {
-                    renderer.showWinner(second);
-                    recordWin(second);
-                    registry.incrementWin(second);
-                }
+                Player winner = winCheck ? p1 : p2;
+                renderer.showWinner(winner);
+                recordWin(winner);
+                registry.incrementWin(winner);
+                Logger.info("Round winner: " + winner.getName());
                 return;
             }
 
             if (gameBoard.isFull()) {
                 renderer.showTie();
                 ties++;
+                Logger.info("Round ended in tie");
                 return;
             }
         }

@@ -4,6 +4,7 @@ import player.Registry;
 import player.RankingView;
 import renderer.view.EngineView;
 import renderer.view.PlayerTableView;
+import utility.Logger;
 import utility.Strings;
 
 import java.util.Scanner;
@@ -30,6 +31,7 @@ public final class AdminControl implements AdminService {
     /// Display all players and run the delete loop
     @Override
     public void show(Scanner sc) {
+        Logger.info("Admin panel accessed");
         displayPlayers();
         engineRenderer.prompt("\n\n" + "-".repeat(40) + "\n");
         runDeleteLoop(sc);
@@ -58,6 +60,7 @@ public final class AdminControl implements AdminService {
 
             engineRenderer.printLine();
             if (registry.deletePlayerByName(name)) {
+                Logger.info("Admin init player deletion: " + name);
                 engineRenderer.prompt(String.format("✅ Player '%s' deleted successfully.%n", name));
             } else {
                 engineRenderer.prompt(String.format("❌ Player '%s' not found.%n", name));

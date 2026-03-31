@@ -37,6 +37,10 @@ public class GameBoard {
         return Utility.winnerCheck(freq);
     }
 
+    public int[] getCopyOfFreq() {
+        return freq.clone();
+    }
+
     public boolean isFull() {
         return stepCount > 8;
     }

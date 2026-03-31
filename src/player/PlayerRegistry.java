@@ -1,5 +1,7 @@
 package player;
 
+import utility.Config;
+import utility.Logger;
 import utility.Strings;
 
 import java.io.IOException;
@@ -20,8 +22,8 @@ public final class PlayerRegistry implements Registry, RankingView {
     /// player storage
     private final PlayerStore store;
 
-    public static final int TOP_PLAYERS = 10;
-    private static final int MAX_PLAYERS = 1000;
+    public static final int TOP_PLAYERS = Config.TOP_PLAYERS;
+    private static final int MAX_PLAYERS = Config.MAX_PLAYERS;
 
     /// We could have also used singleton but, it is too much for our project
     public PlayerRegistry(PlayerStore store) throws IOException {
@@ -30,6 +32,7 @@ public final class PlayerRegistry implements Registry, RankingView {
         ranking = new TreeSet<>();
 
         // loadAll() returns a plain List — registry owns its own internal structure
+        Logger.info("Loading players from storage");
         for (Player p : store.loadAll()) {
             players.put(p.getName(), p);
             ranking.add(p);
@@ -47,6 +50,7 @@ public final class PlayerRegistry implements Registry, RankingView {
 
         players.put(player.getName(), player);
         ranking.add(player);
+        Logger.info("New player registered: " + player.getName());
     }
 
     // for greeting message
@@ -61,6 +65,7 @@ public final class PlayerRegistry implements Registry, RankingView {
             if (flip) System.out.printf(Strings.WELCOME_NEW_PLAYER_1, name, existing.getLifetimeWins());
             else System.out.printf(Strings.WELCOME_NEW_PLAYER_2, name, existing.getLifetimeWins());
             flip = !flip;
+            Logger.info("Existing player loaded: " + name);
             return existing;
         }
 
@@ -84,6 +89,7 @@ public final class PlayerRegistry implements Registry, RankingView {
     private void removePlayer(Player player) {
         players.remove(player.getName());
         ranking.remove(player);
+        Logger.warn("Player deleted: " + player.getName());
     }
 
     /// Delete player by name
@@ -102,6 +108,7 @@ public final class PlayerRegistry implements Registry, RankingView {
         if (player == null) return;
         ranking.remove(player);
         player.incrementLifetimeWins();
+        Logger.info("Win recorded for player: " + player.getName());
         ranking.add(player);
     }
 
@@ -113,7 +120,7 @@ public final class PlayerRegistry implements Registry, RankingView {
             Player lowest = ranking.pollLast();
             if (lowest != null) players.remove(lowest.getName());
         }
-
+        Logger.info("Trimming to max players");
         store.saveAll(ranking);  // ranking is Iterable<Player>
     }
 

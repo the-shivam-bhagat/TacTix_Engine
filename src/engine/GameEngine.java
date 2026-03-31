@@ -18,10 +18,11 @@ import renderer.HistoryRenderer;
 import renderer.SessionRenderer;
 import renderer.PlayerTableRenderer;
 
+import utility.Logger;
 import utility.Strings;
 
+import java.io.IOException;
 import java.io.PrintStream;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public final class GameEngine {
@@ -77,87 +78,94 @@ public final class GameEngine {
         return playerRegistry.getPlayer(name);
     }
 
-    public static void main(String[] args) {
-
+    private static void initialize() throws IOException {
         try {
-            // output blocks
-            PrintStream output = new PrintStream(System.out);
-            engineRenderer = new EngineRenderer(output);
-            boardRenderer = new PlayerTableRenderer(output);
-            SessionView sessionRenderer = new SessionRenderer(output);
-            HistoryView historyRenderer = new HistoryRenderer(output);
+            Logger.init();
+        } catch (Exception e) {
+            System.err.println("Logger initialization failed: " + e.getMessage());
+        }
 
-            // players data
-            playerRegistry = new PlayerRegistry(new FilePlayerStore());
+        Logger.info("System started");
 
-            // input blocks
-            Scanner sc = new Scanner(System.in);
-            CommandProcessor commandHandler = new CommandHandler(
-                    sc,
-                    playerRegistry,
-                    engineRenderer,
-                    new AdminControl(
-                            playerRegistry,
-                            playerRegistry,
-                            boardRenderer,
-                            engineRenderer
-                    )
-            );
-            input = new InputHandler(
-                    sc,
-                    engineRenderer,
-                    commandHandler
-            );
+        PrintStream output = new PrintStream(System.out);
 
-            // game block
-            gameHistory = new GameHistory(historyRenderer);
-            runIntroSequence();
+        engineRenderer = new EngineRenderer(output);
+        boardRenderer = new PlayerTableRenderer(output);
 
-            boolean playAnother = true;
-            int gameNumber = 0;
+        SessionView sessionRenderer = new SessionRenderer(output);
+        HistoryView historyRenderer = new HistoryRenderer(output);
 
-            while (playAnother) {
+        playerRegistry = new PlayerRegistry(new FilePlayerStore());
 
-                engineRenderer.showGameStart(++gameNumber);
+        Scanner sc = new Scanner(System.in);
 
-                if (gameNumber > 1) {
-                    engineRenderer.showContinuePrompt();
-                    input.waitForEnter();
-                } else
-                    engineRenderer.printLine();
-
-                engineRenderer.printLine();
-
-                Player p1 = createPlayer("", 1);
-                Player p2 = createPlayer(p1.getName(), 2);
-
-                GameSession session = new GameSession(
-                        p1,
-                        p2,
-                        input,
+        CommandProcessor commandHandler = new CommandHandler(
+                sc,
+                playerRegistry,
+                engineRenderer,
+                new AdminControl(
                         playerRegistry,
-                        sessionRenderer
-                );
+                        playerRegistry,
+                        boardRenderer,
+                        engineRenderer
+                )
+        );
 
-                session.play();
-                gameHistory.add(session);
+        input = new InputHandler(sc, engineRenderer, commandHandler);
 
-                engineRenderer.showPlayAgainPrompt();
-                playAnother = input.readYesNo();
+        gameHistory = new GameHistory(historyRenderer);
+
+        runIntroSequence();
+    }
+
+    private static void runGameLoop() {
+
+        boolean playAnother = true;
+        int gameNumber = 0;
+
+        Logger.info("Entering main game loop");
+
+        while (playAnother) {
+
+            engineRenderer.showGameStart(++gameNumber);
+            Logger.info("Starting Game " + gameNumber);
+
+            if (gameNumber > 1) {
+                engineRenderer.showContinuePrompt();
+                input.waitForEnter();
+            } else {
                 engineRenderer.printLine();
             }
 
-            runFinalSequence();
+            engineRenderer.printLine();
 
-        } catch (Exception ex) {
-            engineRenderer.showError(ex.getMessage());
-            StringBuilder sb = new StringBuilder();
-            for (StackTraceElement e : ex.getStackTrace())
-                sb.append(e).append("\n");
-            engineRenderer.showStackTrace(sb.toString());
+            Player p1 = createPlayer("", 1);
+            Player p2 = createPlayer(p1.getName(), 2);
 
-            restart();
+            Logger.info("Players selected: " + p1.getName() + " vs " + p2.getName());
+
+            SessionView sessionRenderer = new SessionRenderer(System.out); // or reuse if stored
+
+            GameSession session = new GameSession(
+                    p1,
+                    p2,
+                    input,
+                    playerRegistry,
+                    sessionRenderer
+            );
+
+            session.play();
+            gameHistory.add(session);
+
+            engineRenderer.showPlayAgainPrompt();
+            playAnother = input.readYesNo();
+            engineRenderer.printLine();
         }
+    }
+
+    private static void shutdown() {
+        runFinalSequence();
+        Logger.info("Game session ended");
     }
 
     private static void runFinalSequence() {
@@ -180,6 +188,23 @@ public final class GameEngine {
         input.waitForEnterWithoutCheck();
     }
 
+    private static void handleFatalError(Exception ex) {
+        Logger.error("Unhandled exception in GameEngine", ex);
+
+        if (engineRenderer != null) {
+            engineRenderer.showError(ex.getMessage());
+
+            StringBuilder sb = new StringBuilder();
+            for (StackTraceElement e : ex.getStackTrace()) {
+                sb.append(e).append("\n");
+            }
+
+            engineRenderer.showStackTrace(sb.toString());
+        } else {
+            System.err.println("Fatal Error: " + ex.getMessage());
+        }
+    }
+
     public static void restart() {
 
         engineRenderer.showRestartPrompt();
@@ -192,6 +217,17 @@ public final class GameEngine {
         } else {
             engineRenderer.showExitMessage();
             System.exit(0);
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            initialize();
+            runGameLoop();
+            shutdown();
+        } catch (Exception ex) {
+            handleFatalError(ex);
+            restart();
         }
     }
 }

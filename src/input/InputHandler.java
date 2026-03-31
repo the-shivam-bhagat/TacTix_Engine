@@ -3,6 +3,7 @@ package input;
 import command.CommandProcessor;
 import engine.GameBoard;
 import renderer.view.EngineView;
+import utility.Logger;
 
 import java.util.Scanner;
 
@@ -51,6 +52,7 @@ public final class InputHandler implements Input{
                 int idx = input.charAt(0) - '1';
                 if (board.isCellFree(idx)) return idx;
             }
+            Logger.warn("Invalid cell input attempted");
             renderer.prompt("Please enter a valid unoccupied cell no (1 - 9) : ");
         }
     }

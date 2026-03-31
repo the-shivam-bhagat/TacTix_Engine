@@ -1,6 +1,7 @@
 package utility;
 
 public final class Utility {
+    private Utility() {}
     // ====================================================================
     /// Board constants, Data builders, and Display functions
     // ====================================================================
