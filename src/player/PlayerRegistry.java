@@ -1,6 +1,6 @@
 package player;
 
-import myUtil.Strings;
+import utility.Strings;
 
 import java.io.IOException;
 import java.util.*;

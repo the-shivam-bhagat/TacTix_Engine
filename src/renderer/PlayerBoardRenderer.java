@@ -1,7 +1,7 @@
 package renderer;
 
 import player.Player;
-import myUtil.Strings;
+import utility.Strings;
 
 import java.io.PrintStream;
 import java.util.List;

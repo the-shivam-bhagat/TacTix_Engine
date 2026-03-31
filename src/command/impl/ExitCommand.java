@@ -1,5 +1,6 @@
-package input;
+package command.impl;
 
+import command.Command;
 import player.Registry;
 import renderer.EngineRenderer;
 

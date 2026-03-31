@@ -1,14 +1,14 @@
 package engine;
 
-import input.AdminControl;
-import input.CommandHandler;
-import input.InputHandler;
-import input.Input;
+import admin.AdminControl;
+import command.CommandHandler;
+import command.CommandProcessor;
+import input.*;
 import player.FilePlayerStore;
 import player.Player;
 import player.PlayerRegistry;
 import renderer.*;
-import myUtil.Strings;
+import utility.Strings;
 
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -84,7 +84,7 @@ public final class GameEngine {
 
             // input blocks
             Scanner sc = new Scanner(System.in);
-            CommandHandler commandHandler = new CommandHandler(
+            CommandProcessor commandHandler = new CommandHandler(
                     sc,
                     playerRegistry,
                     engineRenderer,

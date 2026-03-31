@@ -1,5 +1,7 @@
-package input;
+package command.impl;
 
+import admin.AdminService;
+import command.Command;
 import renderer.EngineRenderer;
 
 import java.util.Scanner;
@@ -7,10 +9,10 @@ import java.util.Scanner;
 public class ManageCommand implements Command {
 
     private final Scanner sc;
-    private final AdminControl admin;
+    private final AdminService admin;
     private final EngineRenderer renderer;
 
-    public ManageCommand(Scanner sc, AdminControl admin, EngineRenderer renderer) {
+    public ManageCommand(Scanner sc, AdminService admin, EngineRenderer renderer) {
         this.sc = sc;
         this.admin = admin;
         this.renderer = renderer;

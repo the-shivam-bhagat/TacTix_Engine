@@ -4,7 +4,7 @@ import input.Input;
 import player.Player;
 import player.Registry;
 import renderer.SessionRenderer;
-import myUtil.Utility;
+import utility.Utility;
 
 public final class GameSession {
 

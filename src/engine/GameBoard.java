@@ -1,6 +1,6 @@
 package engine;
 
-import myUtil.Utility;
+import utility.Utility;
 
 public class GameBoard {
 

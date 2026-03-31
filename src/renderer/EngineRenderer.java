@@ -1,6 +1,6 @@
 package renderer;
 
-import myUtil.Strings;
+import utility.Strings;
 
 import java.io.PrintStream;
 

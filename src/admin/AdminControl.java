@@ -1,15 +1,15 @@
-package input;
+package admin;
 
 import player.Registry;
 import player.RankingView;
 import renderer.EngineRenderer;
 import renderer.PlayerBoardRenderer;
-import myUtil.Strings;
+import utility.Strings;
 
 import java.util.Scanner;
 
 /// display and deletion
-public final class AdminControl {
+public final class AdminControl implements AdminService {
 
     private final Registry registry;
     private final RankingView rankingView;
@@ -28,7 +28,8 @@ public final class AdminControl {
     }
 
     /// Display all players and run the delete loop
-    void show(Scanner sc) {
+    @Override
+    public void show(Scanner sc) {
         displayPlayers();
         renderer.prompt("\n\n" + "-".repeat(40) + "\n");
         runDeleteLoop(sc);

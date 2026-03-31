@@ -1,5 +1,6 @@
 package input;
 
+import command.CommandProcessor;
 import engine.GameBoard;
 import renderer.EngineRenderer;
 
@@ -10,18 +11,18 @@ public final class InputHandler implements Input{
 
     final EngineRenderer renderer;
     private final Scanner sc;
-    private final CommandHandler commandHandler;
+    private final CommandProcessor commandProcessor;
 
-    public InputHandler(Scanner sc, EngineRenderer renderer, CommandHandler commandHandler) {
+    public InputHandler(Scanner sc, EngineRenderer renderer, CommandProcessor commandProcessor) {
         this.sc = sc;
         this.renderer = renderer;
-        this.commandHandler = commandHandler;
+        this.commandProcessor = commandProcessor;
     }
 
     @Override
     public String readLine() {
         String line = sc.nextLine().trim().toUpperCase();
-        if (commandHandler.handle(line)) return "";
+        if (commandProcessor.handle(line)) return "";
         return line;
     }
 
@@ -50,7 +51,7 @@ public final class InputHandler implements Input{
                 int idx = input.charAt(0) - '1';
                 if (board.isCellFree(idx)) return idx;
             }
-            renderer.prompt("Please enter a valid unoccupied cell no (1 - 9) :");
+            renderer.prompt("Please enter a valid unoccupied cell no (1 - 9) : ");
         }
     }
 

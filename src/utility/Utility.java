@@ -1,4 +1,4 @@
-package myUtil;
+package utility;
 
 public final class Utility {
     // ====================================================================

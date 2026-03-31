@@ -1,7 +1,6 @@
 package renderer;
 
 import engine.GameResult;
-import myUtil.Strings;
 
 import java.io.PrintStream;
 import java.util.List;

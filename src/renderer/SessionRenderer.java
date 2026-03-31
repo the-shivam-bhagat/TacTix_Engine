@@ -1,8 +1,8 @@
 package renderer;
 
 import player.Player;
-import myUtil.Strings;
-import myUtil.Utility;
+import utility.Strings;
+import utility.Utility;
 
 import java.io.PrintStream;
 

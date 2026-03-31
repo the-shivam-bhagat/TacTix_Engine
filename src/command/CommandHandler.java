@@ -1,5 +1,8 @@
-package input;
+package command;
 
+import admin.AdminService;
+import command.impl.ExitCommand;
+import command.impl.ManageCommand;
 import player.Registry;
 import renderer.EngineRenderer;
 
@@ -7,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public final class CommandHandler {
+public final class CommandHandler implements CommandProcessor {
 
     private final Map<String, Command> commands;
 
@@ -15,7 +18,7 @@ public final class CommandHandler {
             Scanner sc,
             Registry registry,
             EngineRenderer renderer,
-            AdminControl admin) {
+            AdminService admin) {
 
         commands = new HashMap<>();
 
@@ -24,7 +27,8 @@ public final class CommandHandler {
         commands.put("manage", new ManageCommand(sc, admin, renderer));
     }
 
-    boolean handle(String line) {
+    @Override
+    public boolean handle(String line) {
         Command cmd = commands.get(line.toLowerCase());
         if (cmd == null) return false;
 
