@@ -1,3 +1,5 @@
+package player;
+
 import java.util.List;
 
 /// Read-only view of player rankings.

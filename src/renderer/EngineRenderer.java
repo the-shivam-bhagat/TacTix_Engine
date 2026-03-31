@@ -1,3 +1,7 @@
+package renderer;
+
+import myUtil.Strings;
+
 import java.io.PrintStream;
 
 public class EngineRenderer {

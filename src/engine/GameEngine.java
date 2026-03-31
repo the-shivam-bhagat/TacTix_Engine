@@ -1,9 +1,22 @@
+package engine;
+
+import input.AdminControl;
+import input.CommandHandler;
+import input.InputHandler;
+import input.Input;
+import player.FilePlayerStore;
+import player.Player;
+import player.PlayerRegistry;
+import renderer.*;
+import myUtil.Strings;
+
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public final class GameEngine {
 
-    private static InputHandler input;
+    private static Input input;
     static PlayerRegistry playerRegistry;
     private static GameHistory gameHistory;
     private static EngineRenderer engineRenderer;
@@ -70,15 +83,25 @@ public final class GameEngine {
             playerRegistry = new PlayerRegistry(new FilePlayerStore());
 
             // input blocks
-            InputReader reader = new InputReader(new Scanner(System.in));
+            Scanner sc = new Scanner(System.in);
             CommandHandler commandHandler = new CommandHandler(
-                    playerRegistry,
+                    sc,
                     playerRegistry,
                     engineRenderer,
-                    reader,
-                    boardRenderer
+                    new AdminControl(
+                            playerRegistry,
+                            playerRegistry,
+                            boardRenderer,
+                            engineRenderer
+                    )
             );
-            input = new InputHandler(reader, commandHandler);
+
+            input = new InputHandler(
+                    sc,
+                    engineRenderer,
+                    commandHandler
+            );
+
 
             // game block
             gameHistory = new GameHistory(historyRenderer);
@@ -114,6 +137,7 @@ public final class GameEngine {
 
         } catch (Exception ex) {
             System.out.println("\n" + ex.getMessage() + "\n");
+            System.out.println("\n" + Arrays.toString(ex.getStackTrace()) + "\n");
             restart();
         }
     }

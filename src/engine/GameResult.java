@@ -1,3 +1,5 @@
+package engine;
+
 public final class GameResult {
 
     private final String p1Name;

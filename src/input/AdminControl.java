@@ -1,23 +1,28 @@
+package input;
+
+import player.Registry;
+import player.RankingView;
+import renderer.EngineRenderer;
+import renderer.PlayerBoardRenderer;
+import myUtil.Strings;
+
 import java.util.Scanner;
 
 /// display and deletion
-final class AdminControl {
+public final class AdminControl {
 
     private final Registry registry;
-    private final InputHandler input;
     private final RankingView rankingView;
     private final EngineRenderer renderer;
     private final PlayerBoardRenderer boardRenderer;
 
-    AdminControl(Registry registry,
-                 RankingView rankingView,
-                 InputHandler input,
-                 PlayerBoardRenderer boardRenderer,
-                 EngineRenderer renderer) {
+    public AdminControl(Registry registry,
+                        RankingView rankingView,
+                        PlayerBoardRenderer boardRenderer,
+                        EngineRenderer renderer) {
 
         this.registry = registry;
         this.rankingView = rankingView;
-        this.input = input;
         this.boardRenderer = boardRenderer;
         this.renderer = renderer;
     }
@@ -32,7 +37,7 @@ final class AdminControl {
 
     /// Print all registered players in ranked order
     private void displayPlayers() {
-        System.out.println(Strings.PLAYER_MANAGEMENT_BOARD);
+        renderer.prompt(Strings.PLAYER_MANAGEMENT_BOARD);
         boardRenderer.showBoard(
                 rankingView.getAllPlayers(),
                 Strings.ADMIN_PLAYER_BOARD_TITLE
@@ -46,10 +51,11 @@ final class AdminControl {
             String name = sc.nextLine().trim().toUpperCase();
 
             if (name.isEmpty()) {
-                System.out.println("⚠ Player name cannot be empty.");
+                renderer.prompt("⚠ Player name cannot be empty.\n");
                 continue;
             }
 
+            renderer.printLine();
             if (registry.deletePlayerByName(name)) {
                 renderer.prompt(String.format("✅ Player '%s' deleted successfully.%n", name));
             } else {
@@ -57,7 +63,8 @@ final class AdminControl {
             }
 
             renderer.prompt("Delete another player? (Y/N): ");
-            if (!input.readYesNo_Specific()) break;
+            String line = sc.nextLine().trim();
+            if (line.isEmpty() || Character.toUpperCase(line.charAt(0)) != 'Y') break;
         }
     }
 }

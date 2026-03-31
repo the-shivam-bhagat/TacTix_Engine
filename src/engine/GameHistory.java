@@ -1,21 +1,24 @@
+package engine;
+
+import renderer.HistoryRenderer;
+
 import java.util.ArrayList;
 import java.util.List;
 
-final class GameHistory {
+public final class GameHistory {
 
     private final List<GameResult> sessions = new ArrayList<>();
     private final HistoryRenderer renderer;
 
-    GameHistory(HistoryRenderer renderer) {
+    public GameHistory(HistoryRenderer renderer) {
         this.renderer = renderer;
     }
 
-    void add(GameSession session) {
+    public void add(GameSession session) {
         sessions.add(session.toResult());
     }
 
-    void showHistory() {
-        renderer.showSummaryHeader();
+    public void showHistory() {
         renderer.showSessions(sessions);
     }
 }

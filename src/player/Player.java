@@ -1,3 +1,5 @@
+package player;
+
 /// Player class.
 public final class Player implements Comparable<Player> {
 

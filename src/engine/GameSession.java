@@ -1,8 +1,16 @@
+package engine;
+
+import input.Input;
+import player.Player;
+import player.Registry;
+import renderer.SessionRenderer;
+import myUtil.Utility;
+
 public final class GameSession {
 
     private final Player p1;
     private final Player p2;
-    private final InputHandler input;
+    private final Input input;
     private final Registry registry;
     private final SessionRenderer renderer;
 
@@ -15,7 +23,7 @@ public final class GameSession {
 
     private String result = "[Match Abandoned]";
 
-    GameSession(Player p1, Player p2, InputHandler input, Registry registry, SessionRenderer renderer) {
+    GameSession(Player p1, Player p2, Input input, Registry registry, SessionRenderer renderer) {
         this.first = this.p1 = p1;
         this.second = this.p2 = p2;
         this.input = input;
@@ -23,7 +31,7 @@ public final class GameSession {
         this.renderer = renderer;
     }
 
-    void play() {
+    public void play() {
         int roundNumber = 0;
         boolean keepPlaying;
 
@@ -54,32 +62,36 @@ public final class GameSession {
 
     private void playRound() {
 
-        char[][] playBoard = Utility.getPlayBoard();
+        GameBoard gameBoard = new GameBoard();
+
         char[][][] xo = Utility.xo;
         int[][] idx = Utility.getStartIndexesOfEachBlock_1_to_9();
 
-        int[] freq = new int[9];
-        int stepCount = 0;
-
-        renderer.showBoard(playBoard);
+        renderer.showBoard(gameBoard.getBoard());
 
         while (true) {
+
+            int stepCount = gameBoard.getStepCount();
+
             Player current = (stepCount % 2 == 0) ? first : second;
             char mark = (stepCount % 2 == 0) ? 'X' : 'O';
 
             renderer.showMovePrompt(current, mark);
 
-            int blockNo = input.readCellChoice(freq);
+            int blockNo = input.readCellChoice(gameBoard);
 
-            freq[blockNo] = (stepCount % 2 == 0) ? 1 : -1;
-            Utility.placeXO(playBoard, xo[stepCount % 2], idx[blockNo]);
+            int playerFlag = (stepCount % 2 == 0) ? 1 : -1;
 
-            Utility.displayPlayBoard(playBoard);
+            gameBoard.makeMove(
+                    blockNo,
+                    xo[stepCount % 2],
+                    idx[blockNo],
+                    playerFlag
+            );
 
-            Boolean winCheck = null;
-            if (++stepCount >= 5) {
-                winCheck = Utility.winnerCheck(freq);
-            }
+            Utility.displayPlayBoard(gameBoard.getBoard());
+
+            Boolean winCheck = gameBoard.checkWinner();
 
             if (winCheck != null) {
                 if (winCheck) {
@@ -94,7 +106,7 @@ public final class GameSession {
                 return;
             }
 
-            if (stepCount > 8) {
+            if (gameBoard.isFull()) {
                 renderer.showTie();
                 ties++;
                 return;

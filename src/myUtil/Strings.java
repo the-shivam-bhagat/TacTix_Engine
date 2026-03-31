@@ -1,5 +1,7 @@
-final class Strings {
-    static final String INTRO_STRING = """
+package myUtil;
+
+public final class Strings {
+    public static final String INTRO_STRING = """
             
             
             ████████╗██╗ ██████╗      ████████╗ █████╗  ██████╗      ████████╗ ██████╗ ███████╗
@@ -27,7 +29,7 @@ final class Strings {
             ║                                                                         ║
             ╚═════════════════════════════════════════════════════════════════════════╝
             """;
-    static final String FEATURES_STRING = """
+    public static final String FEATURES_STRING = """
             
             ╔═════════════════════════════════════════════════════════════════════════╗
             ║                    🚀 SYSTEM HIGHLIGHTS / FEATURES 🚀                   ║
@@ -129,13 +131,6 @@ final class Strings {
     public static final String WELCOME_REGISTERED_PLAYER_2 = """
             💥 Welcome %s! You're now in the game,
             Time to claim your first victory! 🏆%n%n
-            """;
-
-    public static final String GAME_SUMMARY_BOARD = """
-            
-            ╔════════════════════════════════════╗
-            ║            📜 GAME SUMMARY         ║
-            ╚════════════════════════════════════╝
             """;
 
     public static final String MATCH_DRAW_BOARD = """

@@ -1,3 +1,8 @@
+package renderer;
+
+import engine.GameResult;
+import myUtil.Strings;
+
 import java.io.PrintStream;
 import java.util.List;
 
@@ -7,10 +12,6 @@ public class HistoryRenderer {
 
     public HistoryRenderer(PrintStream out) {
         this.out = out;
-    }
-
-    public void showSummaryHeader() {
-        out.println(Strings.GAME_SUMMARY_BOARD);
     }
 
     public void showEmptyMessage() {

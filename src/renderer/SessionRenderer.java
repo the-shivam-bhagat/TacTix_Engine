@@ -1,3 +1,9 @@
+package renderer;
+
+import player.Player;
+import myUtil.Strings;
+import myUtil.Utility;
+
 import java.io.PrintStream;
 
 public class SessionRenderer {

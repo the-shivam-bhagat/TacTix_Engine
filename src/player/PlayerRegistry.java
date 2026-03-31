@@ -1,3 +1,7 @@
+package player;
+
+import myUtil.Strings;
+
 import java.io.IOException;
 import java.util.*;
 
@@ -5,7 +9,7 @@ import java.util.*;
 /// Callers that only display rankings depend on RankingView.
 /// Callers that manage players depend on Registry.
 /// Neither needs to know about PlayerRegistry directly.
-final class PlayerRegistry implements Registry, RankingView {
+public final class PlayerRegistry implements Registry, RankingView {
 
     /// Fast lookup by player name
     private final Map<String, Player> players;
@@ -16,11 +20,11 @@ final class PlayerRegistry implements Registry, RankingView {
     /// player storage
     private final PlayerStore store;
 
-    static final int TOP_PLAYERS = 10;
+    public static final int TOP_PLAYERS = 10;
     private static final int MAX_PLAYERS = 1000;
 
     /// We could have also used singleton but, it is too much for our project
-    PlayerRegistry(PlayerStore store) throws IOException {
+    public PlayerRegistry(PlayerStore store) throws IOException {
         this.store   = store;
         players = new HashMap<>();
         ranking = new TreeSet<>();

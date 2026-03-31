@@ -1,4 +1,6 @@
-final class Utility {
+package myUtil;
+
+public final class Utility {
     // ====================================================================
     /// Board constants, Data builders, and Display functions
     // ====================================================================
@@ -9,7 +11,7 @@ final class Utility {
     private static final int XO_BLOCK_HEIGHT = 9;
     private static final String BOARD_TITLE = " 🎮 PLAY BOARD 🎮 ";
 
-    static final char[][][] xo = buildBlocksXO();
+    public static final char[][][] xo = buildBlocksXO();
 
     private static final int[][] BLOCK_START_INDEXES = new int[][]{
             {1, 1}, {1, 29}, {1, 57},
@@ -17,7 +19,7 @@ final class Utility {
             {23, 1}, {23, 29}, {23, 57}
     };
 
-    static char[][] getPlayBoard() {
+    public static char[][] getPlayBoard() {
         char[][] playBoard = new char[BOARD_HEIGHT][BOARD_LENGTH];
 
         for (int i = 0; i < BOARD_HEIGHT; i++)
@@ -68,7 +70,7 @@ final class Utility {
         return blockXO;
     }
 
-    static int[][] getStartIndexesOfEachBlock_1_to_9() {
+    public static int[][] getStartIndexesOfEachBlock_1_to_9() {
         return BLOCK_START_INDEXES;
     }
 
@@ -90,14 +92,14 @@ final class Utility {
     }
 
     /// placeXO
-    static void placeXO(char[][] playBoard, char[][] block, int[] indexes) {
+    public static void placeXO(char[][] playBoard, char[][] block, int[] indexes) {
         for (int i = 0, x = indexes[0]; i < XO_BLOCK_HEIGHT; i++, x++)
             for (int j = 0, y = indexes[1]; j < XO_BLOCK_LENGTH; j++, y++)
                 playBoard[x][y] = block[i][j];
     }
 
     /// winnerCheck
-    static Boolean winnerCheck(int[] freq) {
+    public static Boolean winnerCheck(int[] freq) {
         if ((freq[0] == freq[4] && freq[0] == freq[8]) ||
                 (freq[2] == freq[4] && freq[2] == freq[6])) {
             if (freq[4] == 1) return Boolean.TRUE;
