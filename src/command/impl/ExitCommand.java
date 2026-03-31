@@ -2,14 +2,14 @@ package command.impl;
 
 import command.Command;
 import player.Registry;
-import renderer.EngineRenderer;
+import renderer.view.EngineView;
 
 public class ExitCommand implements Command {
 
     private final Registry registry;
-    private final EngineRenderer renderer;
+    private final EngineView renderer;
 
-    public ExitCommand(Registry registry, EngineRenderer renderer) {
+    public ExitCommand(Registry registry, EngineView renderer) {
         this.registry = registry;
         this.renderer = renderer;
     }

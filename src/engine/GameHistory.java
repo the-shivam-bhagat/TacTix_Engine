@@ -1,6 +1,6 @@
 package engine;
 
-import renderer.HistoryRenderer;
+import renderer.view.HistoryView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import java.util.List;
 public final class GameHistory {
 
     private final List<GameResult> sessions = new ArrayList<>();
-    private final HistoryRenderer renderer;
+    private final HistoryView renderer;
 
-    public GameHistory(HistoryRenderer renderer) {
+    public GameHistory(HistoryView renderer) {
         this.renderer = renderer;
     }
 

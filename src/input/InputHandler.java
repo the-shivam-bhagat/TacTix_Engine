@@ -2,18 +2,18 @@ package input;
 
 import command.CommandProcessor;
 import engine.GameBoard;
-import renderer.EngineRenderer;
+import renderer.view.EngineView;
 
 import java.util.Scanner;
 
 
 public final class InputHandler implements Input{
 
-    final EngineRenderer renderer;
+    private final EngineView renderer;
     private final Scanner sc;
     private final CommandProcessor commandProcessor;
 
-    public InputHandler(Scanner sc, EngineRenderer renderer, CommandProcessor commandProcessor) {
+    public InputHandler(Scanner sc, EngineView renderer, CommandProcessor commandProcessor) {
         this.sc = sc;
         this.renderer = renderer;
         this.commandProcessor = commandProcessor;

@@ -7,7 +7,17 @@ import input.*;
 import player.FilePlayerStore;
 import player.Player;
 import player.PlayerRegistry;
-import renderer.*;
+
+import renderer.view.EngineView;
+import renderer.view.HistoryView;
+import renderer.view.PlayerTableView;
+import renderer.view.SessionView;
+
+import renderer.EngineRenderer;
+import renderer.HistoryRenderer;
+import renderer.SessionRenderer;
+import renderer.PlayerTableRenderer;
+
 import utility.Strings;
 
 import java.io.PrintStream;
@@ -19,8 +29,9 @@ public final class GameEngine {
     private static Input input;
     static PlayerRegistry playerRegistry;
     private static GameHistory gameHistory;
-    private static EngineRenderer engineRenderer;
-    private static PlayerBoardRenderer boardRenderer;
+
+    private static EngineView engineRenderer;
+    private static PlayerTableView boardRenderer;
 
     private static void runIntroSequence() {
 
@@ -37,13 +48,12 @@ public final class GameEngine {
 
         engineRenderer.prompt("Let's take look at Current Global Leaderboard..... (Press ENTER to continue)");
         input.waitForEnter();
-        displayLeaderboard(); // keep for now
+        displayLeaderboard();
 
         engineRenderer.prompt("Let's start the program..... (Press ENTER to continue) ");
         input.waitForEnter();
     }
 
-    // Print Top 10 Leaderboard (we will refactor this later)
     static void displayLeaderboard() {
         boardRenderer.showBoard(
                 playerRegistry.getTopPlayers(PlayerRegistry.TOP_PLAYERS),
@@ -51,7 +61,6 @@ public final class GameEngine {
         );
     }
 
-    // assign different players
     private static Player createPlayer(String pre, int number) {
         String name;
 
@@ -68,18 +77,17 @@ public final class GameEngine {
         return playerRegistry.getPlayer(name);
     }
 
-    // Entry point
     public static void main(String[] args) {
 
         try {
-
-            // Renderers
+            // output blocks
             PrintStream output = new PrintStream(System.out);
             engineRenderer = new EngineRenderer(output);
-            boardRenderer = new PlayerBoardRenderer(output);
-            SessionRenderer sessionRenderer = new SessionRenderer(output);
-            HistoryRenderer historyRenderer = new HistoryRenderer(output);
+            boardRenderer = new PlayerTableRenderer(output);
+            SessionView sessionRenderer = new SessionRenderer(output);
+            HistoryView historyRenderer = new HistoryRenderer(output);
 
+            // players data
             playerRegistry = new PlayerRegistry(new FilePlayerStore());
 
             // input blocks
@@ -95,13 +103,11 @@ public final class GameEngine {
                             engineRenderer
                     )
             );
-
             input = new InputHandler(
                     sc,
                     engineRenderer,
                     commandHandler
             );
-
 
             // game block
             gameHistory = new GameHistory(historyRenderer);
@@ -111,21 +117,29 @@ public final class GameEngine {
             int gameNumber = 0;
 
             while (playAnother) {
+
                 engineRenderer.showGameStart(++gameNumber);
 
                 if (gameNumber > 1) {
                     engineRenderer.showContinuePrompt();
                     input.waitForEnter();
-                } else engineRenderer.printLine();
+                } else
+                    engineRenderer.printLine();
 
                 engineRenderer.printLine();
 
                 Player p1 = createPlayer("", 1);
                 Player p2 = createPlayer(p1.getName(), 2);
 
-                GameSession session = new GameSession(p1, p2, input, playerRegistry, sessionRenderer);
-                session.play();
+                GameSession session = new GameSession(
+                        p1,
+                        p2,
+                        input,
+                        playerRegistry,
+                        sessionRenderer
+                );
 
+                session.play();
                 gameHistory.add(session);
 
                 engineRenderer.showPlayAgainPrompt();
@@ -136,21 +150,23 @@ public final class GameEngine {
             runFinalSequence();
 
         } catch (Exception ex) {
-            System.out.println("\n" + ex.getMessage() + "\n");
-            System.out.println("\n" + Arrays.toString(ex.getStackTrace()) + "\n");
+            engineRenderer.showError(ex.getMessage());
+            StringBuilder sb = new StringBuilder();
+            for (StackTraceElement e : ex.getStackTrace())
+                sb.append(e).append("\n");
+            engineRenderer.showStackTrace(sb.toString());
+
             restart();
         }
     }
 
     private static void runFinalSequence() {
 
-        // ---- History ----
         engineRenderer.showHistoryPrompt();
         input.waitForEnter();
 
         gameHistory.showHistory();
 
-        // ---- Leaderboard ----
         engineRenderer.showUpdatedLeaderboardPrompt();
         input.waitForEnterWithoutCheck();
 
@@ -160,7 +176,6 @@ public final class GameEngine {
                 Strings.LEADERBOARD_TITLE
         );
 
-        // ---- Exit ----
         engineRenderer.showEndingMessage();
         input.waitForEnterWithoutCheck();
     }

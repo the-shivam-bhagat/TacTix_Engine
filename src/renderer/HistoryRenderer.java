@@ -1,11 +1,13 @@
 package renderer;
 
 import engine.GameResult;
+import renderer.view.HistoryView;
 
+import javax.swing.*;
 import java.io.PrintStream;
 import java.util.List;
 
-public class HistoryRenderer {
+public class HistoryRenderer implements HistoryView {
 
     private final PrintStream out;
 
@@ -31,6 +33,7 @@ public class HistoryRenderer {
         out.println("╚" + "═".repeat(innerWidth) + "╝\n");
     }
 
+    @Override
     public void showSessions(List<GameResult> sessions) {
         if (sessions == null || sessions.isEmpty()) {
             showEmptyMessage();

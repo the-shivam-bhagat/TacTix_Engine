@@ -3,7 +3,7 @@ package engine;
 import input.Input;
 import player.Player;
 import player.Registry;
-import renderer.SessionRenderer;
+import renderer.view.SessionView;
 import utility.Utility;
 
 public final class GameSession {
@@ -12,7 +12,7 @@ public final class GameSession {
     private final Player p2;
     private final Input input;
     private final Registry registry;
-    private final SessionRenderer renderer;
+    private final SessionView renderer;
 
     private Player first;
     private Player second;
@@ -23,7 +23,7 @@ public final class GameSession {
 
     private String result = "[Match Abandoned]";
 
-    GameSession(Player p1, Player p2, Input input, Registry registry, SessionRenderer renderer) {
+    GameSession(Player p1, Player p2, Input input, Registry registry, SessionView renderer) {
         this.first = this.p1 = p1;
         this.second = this.p2 = p2;
         this.input = input;

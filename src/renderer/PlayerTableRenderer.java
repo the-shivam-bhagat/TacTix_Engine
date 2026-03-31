@@ -1,19 +1,21 @@
 package renderer;
 
 import player.Player;
+import renderer.view.PlayerTableView;
 import utility.Strings;
 
 import java.io.PrintStream;
 import java.util.List;
 
-public class PlayerBoardRenderer {
+public class PlayerTableRenderer implements PlayerTableView {
 
     private final PrintStream output;
 
-    public PlayerBoardRenderer(PrintStream out) {
+    public PlayerTableRenderer(PrintStream out) {
         this.output = out;
     }
 
+    @Override
     public void showBoard(List<Player> list, String title) {
         if (list == null || list.isEmpty()) {
             output.println(Strings.NO_PLAYERS_LEADERBOARD);

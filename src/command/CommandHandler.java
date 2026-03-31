@@ -4,7 +4,7 @@ import admin.AdminService;
 import command.impl.ExitCommand;
 import command.impl.ManageCommand;
 import player.Registry;
-import renderer.EngineRenderer;
+import renderer.view.EngineView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ public final class CommandHandler implements CommandProcessor {
     public CommandHandler(
             Scanner sc,
             Registry registry,
-            EngineRenderer renderer,
+            EngineView renderer,
             AdminService admin) {
 
         commands = new HashMap<>();
