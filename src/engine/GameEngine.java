@@ -146,7 +146,7 @@ public final class GameEngine {
 
             SessionView sessionRenderer = new SessionRenderer(System.out); // or reuse if stored
 
-            GameSession session = new GameSession(
+            PvPGameSession session = new PvPGameSession(
                     p1,
                     p2,
                     input,

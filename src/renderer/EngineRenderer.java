@@ -40,7 +40,7 @@ public class EngineRenderer implements EngineView {
 
     @Override
     public void showContinuePrompt() {
-        output.print(" ..... (Press ENTER to continue) ");
+        output.print(" ........... (Press ENTER to continue) ");
     }
 
     @Override

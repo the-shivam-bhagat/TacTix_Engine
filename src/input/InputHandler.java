@@ -29,7 +29,7 @@ public final class InputHandler implements Input{
 
     @Override
     public void waitForEnter() {
-        readLine();
+        sc.nextLine();
     }
 
     @Override

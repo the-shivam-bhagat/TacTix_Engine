@@ -21,4 +21,12 @@ public final class Config {
     public static final String PLAYER_FILE_NAME = "players.dat";
     public static final String LOGGER_FILE_NAME = "loggers.log";
 
+    public static final class BotNames {
+        private BotNames() {}
+        public static final String BEGINNER_BOT_NAME = "BEGINNER_BOT";
+        public static final String EASY_BOT_NAME = "EASY_BOT";
+        public static final String MEDIUM_BOT_NAME = "MEDIUM_BOT";
+        public static final String HARD_BOT_NAME = "HARD_BOT";
+        public static final String UNBEATABLE_BOT_NAME = "UNBEATABLE_BOT";
+    }
 }

@@ -14,7 +14,7 @@ public final class GameHistory {
         this.renderer = renderer;
     }
 
-    public void add(GameSession session) {
+    public void add(PvPGameSession session) {
         sessions.add(session.toResult());
     }
 
