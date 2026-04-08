@@ -10,7 +10,7 @@ public final class Utility {
     private static final int BOARD_HEIGHT = 32;
     private static final int XO_BLOCK_LENGTH = 25;
     private static final int XO_BLOCK_HEIGHT = 9;
-    private static final String BOARD_TITLE = " 🎮 PLAY BOARD 🎮 ";
+    private static final String BOARD_TITLE = "<< PLAY BOARD >>";
 
     public static final char[][][] xo = buildBlocksXO();
 

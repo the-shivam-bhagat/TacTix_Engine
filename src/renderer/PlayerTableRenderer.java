@@ -42,8 +42,7 @@ public class PlayerTableRenderer implements PlayerTableView {
         int innerWidth = rankWidth + maxNameLen + maxWinsLen + 8;
 
         // ---- PRINT HEADER ----
-        output.println();
-        output.println("╔" + "═".repeat(innerWidth) + "╗");
+        output.println("\n\n╔" + "═".repeat(innerWidth) + "╗");
 
         int sidePadding = (innerWidth - title.length()) / 2;
 

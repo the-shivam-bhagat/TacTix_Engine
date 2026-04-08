@@ -53,24 +53,18 @@ public final class PlayerRegistry implements Registry, RankingView {
         Logger.info("New player registered: " + player.getName());
     }
 
-    // for greeting message
-    private static boolean flip = (int) Math.floor(Math.random() * 100) % 2 == 0;
-
     /// if player exists returns it, if not then create and return
     @Override
-    public Player getPlayer(String name) {
-        // Case 1: Player exists
+    public PlayerResult getOrCreatePlayer(String name) {
+
+        // Case 1: Existing player
         Player existing = players.get(name);
         if (existing != null) {
-            if (flip) System.out.printf(Strings.WELCOME_NEW_PLAYER_1, name, existing.getLifetimeWins());
-            else System.out.printf(Strings.WELCOME_NEW_PLAYER_2, name, existing.getLifetimeWins());
-            flip = !flip;
             Logger.info("Existing player loaded: " + name);
-            return existing;
+            return new PlayerResult(existing, false);
         }
 
         // Case 2: New player
-        // no name — auto-assign the first unused PLAYER_N slot
         if (name == null || name.isEmpty()) {
             name = generateUnusedName();
         }
@@ -78,11 +72,9 @@ public final class PlayerRegistry implements Registry, RankingView {
         Player newPlayer = new Player(name);
         addPlayer(newPlayer);
 
-        if (flip) System.out.printf(Strings.WELCOME_REGISTERED_PLAYER_1, name);
-        else System.out.printf(Strings.WELCOME_REGISTERED_PLAYER_2, name);
+        Logger.info("New player registered: " + name);
 
-        flip = !flip;
-        return newPlayer;
+        return new PlayerResult(newPlayer, true);
     }
 
     /// Internal removal helper

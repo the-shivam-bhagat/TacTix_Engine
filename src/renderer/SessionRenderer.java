@@ -1,6 +1,5 @@
 package renderer;
 
-import bot.Bot;
 import player.Player;
 import renderer.view.SessionView;
 import utility.Logger;
@@ -19,41 +18,45 @@ public class SessionRenderer implements SessionView {
 
     @Override
     public void showRoundStart(int round) {
-        output.printf("%n🚀 Round %d is about to begin! (Press ENTER to continue) ", round);
+        output.printf("%n> [ROUND] Round %d is about to begin%n> [INPUT] Press ENTER to continue", round);
     }
 
     @Override
-    public void showFirstMovePrompt(Player first, Player second) {
-        output.printf("%n⚔️ %s vs %s!%n%s, want to make the first move? (Y/N): ",
-                first, second, first);
+    public void showFirstMovePrompt(String first, String second) {
+        output.printf("""
+                        
+                        > [MATCH] %s vs %s
+                        > [INPUT] %s, play first? (Y/N):\s""",
+                first, second, first
+        );
     }
 
     @Override
     public void showBoard(char[][] board) {
-        output.println("\n🎮 Here's the Play Board:");
+        output.println("\n> [BOARD] Current game state:");
         Utility.displayPlayBoard(board);
     }
 
     @Override
     public void showMovePrompt(Player player, char mark) {
-        output.printf("⚔️ %s, make your move (%c) — pick a position (1-9): ",
+        output.printf("> [INPUT] %s, enter your move (%c) [1-9]: ",
                 player, mark);
     }
 
     @Override
     public void showWinner(Player player) {
-        output.printf("%n🏆 Congratulations, %s! You WON this round! 🎉%n%n", player);
+        output.printf("> [RESULT] %s wins this round%n%n", player);
     }
 
     @Override
     public void showTie() {
-        output.println("\n💥 Deadlock! Neither side claims victory this round! ⚔️\n");
+        output.printf("> [RESULT] Deadlock! Round ended in a draw%n%n");
     }
 
     @Override
     public void showScoreboard(String p1name, int w1, String p2name, int w2, int ties) {
 
-        String title = "📊 Current Scoreboard";
+        String title = "<< Current Scoreboard >>";
 
         // Width for names
         int nameWidth = Math.max(p1name.length(), p2name.length());
@@ -77,36 +80,35 @@ public class SessionRenderer implements SessionView {
         int boxWidth = maxWidth + 2; // padding inside borders
 
         // Top
-        output.println();
-        output.println("┌" + "─".repeat(boxWidth) + "┐");
+        output.println("╔" + "═".repeat(boxWidth) + "╗");
 
         // Title (centered)
         int leftPad = (boxWidth - title.length()) / 2;
         int rightPad = boxWidth - title.length() - leftPad;
-        output.printf("│%" + (leftPad + title.length()) + "s%" + rightPad + "s│%n", title, "");
+        output.printf("║%" + (leftPad + title.length()) + "s%" + rightPad + "s║%n", title, "");
 
         // Divider
-        output.println("├" + "─".repeat(boxWidth) + "┤");
+        output.println("╠" + "═".repeat(boxWidth) + "╣");
 
         // Player rows (perfect alignment)
-        output.printf("│ %-" + maxWidth + "s │%n", line1);
-        output.printf("│ %-" + maxWidth + "s │%n", line2);
+        output.printf("║ %-" + maxWidth + "s ║%n", line1);
+        output.printf("║ %-" + maxWidth + "s ║%n", line2);
 
         // Tie
         if (!tieLine.isEmpty()) {
-            output.println("├" + "─".repeat(boxWidth) + "┤");
-            output.printf("│ %-" + maxWidth + "s │%n", tieLine);
+            output.println("╠" + "═".repeat(boxWidth) + "╣");
+            output.printf("║ %-" + maxWidth + "s ║%n", tieLine);
         }
 
         // Bottom
-        output.println("└" + "─".repeat(boxWidth) + "┘");
+        output.println("╚" + "═".repeat(boxWidth) + "╝");
 
-        output.print("\n(Press ENTER to continue)");
+        output.printf("%n> [INPUT] Press ENTER to continue");
     }
 
     @Override
     public void showNextRoundPrompt() {
-        output.print("\n\n🚀 Ready for the next round? (Y/N): ");
+        output.printf("%n> [INPUT] Ready for the next round? (Y/N): ");
     }
 
     @Override
@@ -116,9 +118,9 @@ public class SessionRenderer implements SessionView {
 
     @Override
     public void showMatchWinnerBox(String name) {
-        String line1 = "🏆 MATCH WINNER!";
-        String line2 = "Congratulations, " + name + "! 🎉";
-        String line3 = "You dominated this match! 💪";
+        String line1 = "<< MATCH RESULT >>";
+        String line2 = "Congratulations, " + name + "!";
+        String line3 = "You dominated this match!";
 
         int innerWidth = Math.max(line2.length(), line3.length()) + 4;
 
@@ -137,17 +139,14 @@ public class SessionRenderer implements SessionView {
     }
 
     @Override
-    public void showBotThinking(Bot bot) {
+    public void showBotThinking(String botName, int dotDelayInMS) {
         try {
-            String botLabel = String.format("🤖 %s Bot (%s)",
-                    bot.getMode(), bot.getName());
+            output.printf("> [BOT] %s is thinking", botName);
 
-            output.print(botLabel + " is thinking");
-
-            int dots = 6 + new java.util.Random().nextInt(5);
+            int dots = 6 + new java.util.Random().nextInt(6);
 
             for (int i = 0; i < dots; i++) {
-                Thread.sleep(200);
+                Thread.sleep(dotDelayInMS);
                 output.print(".");
             }
 
@@ -160,23 +159,19 @@ public class SessionRenderer implements SessionView {
     }
 
     @Override
-    public void showBotMove(Bot bot, int blockNo, char mark) {
-        output.printf("→ %s Bot (%s) places (%c) at position %d%n",
-                bot.getMode(), bot.getName(), mark, blockNo + 1);
+    public void showBotMove(String botName, int blockNo, char mark) {
+        output.printf("> [MOVE] %s placed (%c) at position %d%n",
+                botName, mark, blockNo + 1);
     }
 
     @Override
-    public void showBotWinner(Bot bot) {
-        output.printf("%n🤖 %s Bot (%s) wins this round! 💥%n%n",
-                bot.getMode(), bot.getName());
+    public void showBotWinner(String botName) {
+        output.printf("%n> [RESULT] %s wins this round%n%n", botName);
     }
 
     @Override
-    public void showFirstMovePrompt(Player player, Bot bot) {
-        output.printf("%n⚔️ %s vs %s Bot (%s)!%n%s, want to make the first move? (Y/N): ",
-                player.getName(),
-                bot.getMode(),
-                bot.getName(),
-                player.getName());
+    public void showBotVsBotRoundWinner(String winnerName, String loserName) {
+        output.printf("%n> [RESULT] %s defeated %s this round%n%n",
+                winnerName, loserName);
     }
 }

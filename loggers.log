@@ -1,50 +1,9 @@
-[INFO  2026-04-02 13:55:18] System started
-[INFO  2026-04-02 13:55:18] Loading players from storage
-[INFO  2026-04-02 13:55:18] Reading players from file
-[INFO  2026-04-02 13:55:30] Loading players from storage
-[INFO  2026-04-02 13:55:30] Reading players from file
-[INFO  2026-04-02 13:55:30] New Player v Bot session started: Shivam vs HARD_BOT Bot ( HARD_BOT (HARD_BOT) )
-[INFO  2026-04-02 13:55:34] Bot Round 1 started
-[INFO  2026-04-02 13:55:57] Loading players from storage
-[INFO  2026-04-02 13:55:57] Reading players from file
-[INFO  2026-04-02 13:55:57] New Player v Bot session started: Shivam vs HARD_BOT Bot ( HARD_BOT (HARD_BOT) )
-[INFO  2026-04-02 13:56:00] Bot Round 1 started
-[WARN  2026-04-02 13:56:11] Invalid cell input attempted
-[INFO  2026-04-02 13:56:35] Loading players from storage
-[INFO  2026-04-02 13:56:35] Reading players from file
-[INFO  2026-04-02 13:56:35] New Player v Bot session started: Shivam vs HARD_BOT Bot ( HARD_BOT (HARD_BOT) )
-[INFO  2026-04-02 13:56:43] Bot Round 1 started
-[INFO  2026-04-02 13:57:09] Loading players from storage
-[INFO  2026-04-02 13:57:09] Reading players from file
-[INFO  2026-04-02 13:57:09] New Player v Bot session started: Shivam vs HARD_BOT Bot ( HARD_BOT (HARD_BOT) )
-[INFO  2026-04-02 13:57:36] Bot Round 1 started
-[INFO  2026-04-02 13:58:18] Round ended in tie
-[INFO  2026-04-02 13:58:25] Loading players from storage
-[INFO  2026-04-02 13:58:25] Reading players from file
-[INFO  2026-04-02 13:58:25] New Player v Bot session started: Shivam vs HARD_BOT Bot ( HARD_BOT (HARD_BOT) )
-[INFO  2026-04-02 13:58:32] Bot Round 1 started
-[INFO  2026-04-02 13:58:50] Win recorded for player: Shivam
-[INFO  2026-04-02 13:58:50] Round winner: Shivam
-[INFO  2026-04-02 14:03:01] Loading players from storage
-[INFO  2026-04-02 14:03:01] Reading players from file
-[INFO  2026-04-02 14:03:01] New Player v Bot session started: Shivam vs BEGINNER_BOT Bot ( BEGINNER_BOT (BEGINNER_BOT) )
-[INFO  2026-04-02 14:03:07] Bot Round 1 started
-[WARN  2026-04-02 14:03:22] Invalid cell input attempted
-[INFO  2026-04-02 14:03:48] Win recorded for player: Shivam
-[INFO  2026-04-02 14:03:48] Round winner: Shivam
-[INFO  2026-04-02 14:04:16] Loading players from storage
-[INFO  2026-04-02 14:04:16] Reading players from file
-[INFO  2026-04-02 14:04:16] New Player v Bot session started: Shivam vs HARD_BOT Bot ( HARD_BOT (HARD_BOT) )
-[INFO  2026-04-02 14:04:26] Bot Round 1 started
-[WARN  2026-04-02 14:04:44] Invalid cell input attempted
-[INFO  2026-04-02 14:05:02] Round ended in tie
-[INFO  2026-04-02 14:05:07] Bot Round 2 started
-[INFO  2026-04-02 14:05:30] Round ended in tie
-[INFO  2026-04-02 14:05:49] Loading players from storage
-[INFO  2026-04-02 14:05:49] Reading players from file
-[INFO  2026-04-02 14:05:49] New Player v Bot session started: Shivam vs UNBEATABLE_BOT Bot ( UNBEATABLE_BOT (UNBEATABLE_BOT) )
-[INFO  2026-04-02 14:05:54] Bot Round 1 started
-[INFO  2026-04-02 14:06:22] Round ended in tie
-[INFO  2026-04-02 14:06:29] Bot Round 2 started
-[INFO  2026-04-02 14:06:51] Round ended in tie
-[INFO  2026-04-02 14:06:57] Bot Round 3 started
+[INFO  2026-04-08 18:00:33] System started
+[INFO  2026-04-08 18:00:33] Loading players from storage
+[INFO  2026-04-08 18:00:33] Reading players from file
+[INFO  2026-04-08 18:00:39] Entering main game loop
+[INFO  2026-04-08 18:00:45] Starting Game 1
+[INFO  2026-04-08 18:00:45] New Bot v Bot session started: RAVE vs FLINT
+[INFO  2026-04-08 18:00:52] BvsB Round 1 started: RAVE (BEGINNER_BOT) (X) vs FLINT (HARD_BOT) (O)
+[INFO  2026-04-08 18:01:06] Round winner: FLINT (HARD_BOT)
+[INFO  2026-04-08 18:01:18] Match result: FLINT

@@ -14,5 +14,9 @@ public interface Input {
 
     boolean readYesNo_Specific();
 
+    int readBotLevelChoice();
+
+    int readSessionChoice();
+
     int readCellChoice(GameBoard board);
 }

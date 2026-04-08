@@ -1,23 +1,28 @@
 package engine;
 
 import admin.AdminControl;
+import bot.*;
 import command.CommandHandler;
 import command.CommandProcessor;
+import engine.sessions.BvsBGameSession;
+import engine.sessions.PvsBGameSession;
+import engine.sessions.PvsPGameSession;
 import input.*;
 import player.FilePlayerStore;
 import player.Player;
 import player.PlayerRegistry;
 
+import player.PlayerResult;
 import renderer.view.EngineView;
 import renderer.view.HistoryView;
 import renderer.view.PlayerTableView;
-import renderer.view.SessionView;
 
 import renderer.EngineRenderer;
 import renderer.HistoryRenderer;
 import renderer.SessionRenderer;
 import renderer.PlayerTableRenderer;
 
+import utility.Config;
 import utility.Logger;
 import utility.Strings;
 
@@ -26,59 +31,16 @@ import java.io.PrintStream;
 import java.util.Scanner;
 
 public final class GameEngine {
+    private PrintStream output;
 
-    private static Input input;
-    static PlayerRegistry playerRegistry;
-    private static GameHistory gameHistory;
+    private Input input;
+    PlayerRegistry playerRegistry;
+    private GameHistory gameHistory;
 
-    private static EngineView engineRenderer;
-    private static PlayerTableView boardRenderer;
+    private EngineView engineRenderer;
+    private PlayerTableView boardRenderer;
 
-    private static void runIntroSequence() {
-
-        engineRenderer.showIntro();
-
-        engineRenderer.prompt("\nDiscover the game features before we begin? (Y/N): ");
-        if (input.readYesNo_Specific()) {
-            engineRenderer.showFeatures();
-        }
-
-        engineRenderer.prompt("Let's see the instructions... (Press ENTER to continue)");
-        input.waitForEnter();
-        engineRenderer.showInstructions();
-
-        engineRenderer.prompt("Let's take look at Current Global Leaderboard..... (Press ENTER to continue)");
-        input.waitForEnter();
-        displayLeaderboard();
-
-        engineRenderer.prompt("Let's start the program..... (Press ENTER to continue) ");
-        input.waitForEnter();
-    }
-
-    static void displayLeaderboard() {
-        boardRenderer.showBoard(
-                playerRegistry.getTopPlayers(PlayerRegistry.TOP_PLAYERS),
-                Strings.LEADERBOARD_TITLE
-        );
-    }
-
-    private static Player createPlayer(String pre, int number) {
-        String name;
-
-        while (true) {
-            engineRenderer.prompt(String.format("Enter name of Player_%d : ", number));
-
-            name = input.readLine().trim().toUpperCase();
-
-            if (number == 2 && pre.equals(name)) {
-                engineRenderer.prompt(name + " is already playing!\n");
-            } else break;
-        }
-
-        return playerRegistry.getPlayer(name);
-    }
-
-    private static void initialize() throws IOException {
+    private void initialize() throws IOException {
         try {
             Logger.init();
         } catch (Exception e) {
@@ -87,12 +49,11 @@ public final class GameEngine {
 
         Logger.info("System started");
 
-        PrintStream output = new PrintStream(System.out);
+        output = new PrintStream(System.out);
 
         engineRenderer = new EngineRenderer(output);
         boardRenderer = new PlayerTableRenderer(output);
 
-        SessionView sessionRenderer = new SessionRenderer(output);
         HistoryView historyRenderer = new HistoryRenderer(output);
 
         playerRegistry = new PlayerRegistry(new FilePlayerStore());
@@ -114,20 +75,77 @@ public final class GameEngine {
         input = new InputHandler(sc, engineRenderer, commandHandler);
 
         gameHistory = new GameHistory(historyRenderer);
-
-        runIntroSequence();
     }
 
-    private static void runGameLoop() {
+    private void runIntroSequence() {
+        engineRenderer.showSystemBoot();
+        input.waitForEnter();
 
+        engineRenderer.showIntro();
+
+        // MODULE 1
+        engineRenderer.showModuleHeader(1, "Feature Overview");
+        engineRenderer.showFeatureLoadPrompt();
+
+        if (input.readYesNo_Specific()) {
+            engineRenderer.showFeatureLoading();
+            engineRenderer.showFeatures();
+        } else {
+            engineRenderer.showFeatureSkipped();
+        }
+
+        // MODULE 2
+        engineRenderer.showModuleHeader(2, "AI Bot System");
+        engineRenderer.showBotSystemInit();
+        input.waitForEnter();
+        engineRenderer.showBotsIntro();
+
+        // MODULE 3
+        engineRenderer.showModuleHeader(3, "Instruction Set");
+        engineRenderer.showInstructionInit();
+        input.waitForEnter();
+        engineRenderer.showInstructions();
+
+        // MODULE 4
+        engineRenderer.showModuleHeader(4, "Global Leaderboard");
+        engineRenderer.showLeaderboardInit();
+        input.waitForEnter();
+        displayLeaderboard();
+
+        // FINAL
+        engineRenderer.showSystemReady();
+        input.waitForEnter();
+    }
+
+    private void displayLeaderboard() {
+        boardRenderer.showBoard(
+                playerRegistry.getTopPlayers(PlayerRegistry.TOP_PLAYERS),
+                Strings.LEADERBOARD_TITLE
+        );
+    }
+
+    private void runGameLoop() {
         boolean playAnother = true;
         int gameNumber = 0;
 
         Logger.info("Entering main game loop");
 
         while (playAnother) {
+            engineRenderer.showSessionTypes();
+            int type = input.readSessionChoice();
 
-            engineRenderer.showGameStart(++gameNumber);
+            GameSession session = switch (type) {
+                case 1 -> getPlayerVSPlayerSession();
+                case 2 -> getPlayerVSBotSession();
+                case 3 -> getBotVSBotSession();
+                default -> {
+                    Logger.error("Invalid session choice");
+                    throw new IllegalStateException("Unexpected value for Game Session Type: " + type);
+                }
+            };
+
+            engineRenderer.showGameStart(++gameNumber, session.getSessionType());
+
             Logger.info("Starting Game " + gameNumber);
 
             if (gameNumber > 1) {
@@ -136,23 +154,6 @@ public final class GameEngine {
             } else {
                 engineRenderer.printLine();
             }
-
-            engineRenderer.printLine();
-
-            Player p1 = createPlayer("", 1);
-            Player p2 = createPlayer(p1.getName(), 2);
-
-            Logger.info("Players selected: " + p1.getName() + " vs " + p2.getName());
-
-            SessionView sessionRenderer = new SessionRenderer(System.out); // or reuse if stored
-
-            PvPGameSession session = new PvPGameSession(
-                    p1,
-                    p2,
-                    input,
-                    playerRegistry,
-                    sessionRenderer
-            );
 
             session.play();
             gameHistory.add(session);
@@ -163,13 +164,153 @@ public final class GameEngine {
         }
     }
 
-    private static void shutdown() {
+    private GameSession getPlayerVSPlayerSession() {
+        engineRenderer.showSessionTypeInitialization(PvsPGameSession.sessionType);
+
+        Player p1 = createPlayer("", 1);
+        Player p2 = createPlayer(p1.getName(), 2);
+
+        Logger.info("Players selected: " + p1.getName() + " vs " + p2.getName());
+
+        return new PvsPGameSession(
+                p1, p2, input, playerRegistry,
+                new SessionRenderer(output)
+        );
+    }
+
+    private GameSession getPlayerVSBotSession() {
+        engineRenderer.showSessionTypeInitialization(PvsBGameSession.sessionType);
+
+        Player player = createPlayer("", 1);
+
+        engineRenderer.showBotsPanalViewMessage();
+        engineRenderer.showContinuePrompt();
+        input.waitForEnter();
+
+        engineRenderer.showBotIntroduction(
+                Config.BotData.title,
+                Config.BotData.BOT_TABLE_HEADERS,
+                Config.BotData.BOT_TABLE
+        );
+
+        engineRenderer.showBotSelectionPrompt(0);
+        int level = input.readBotLevelChoice();
+
+        Bot bot = getBot(level);
+
+        engineRenderer.showBotChosen(bot.getNameWithELO(), "Player 2");
+
+        return new PvsBGameSession(
+                player, bot, input, playerRegistry,
+                new SessionRenderer(output)
+        );
+    }
+
+    private GameSession getBotVSBotSession() {
+        engineRenderer.showSessionTypeInitialization(BvsBGameSession.sessionType);
+        engineRenderer.showBotsPanalViewMessage();
+        engineRenderer.showBotIntroduction(
+                Config.BotData.title,
+                Config.BotData.BOT_TABLE_HEADERS,
+                Config.BotData.BOT_TABLE
+        );
+
+        engineRenderer.showBotSelectionPrompt(1);
+        int level1 = input.readBotLevelChoice();
+
+        engineRenderer.showBotSelectionPrompt(2);
+        int level2 = input.readBotLevelChoice();
+
+        Bot bot1 = level1 == level2 ? getBotFirstInstance(level1) : getBot(level1);
+        Bot bot2 = level1 == level2 ? getBotSecondInstance(level2) : getBot(level2);
+
+        engineRenderer.showBotChosen(bot1.getNameWithELO(), "Player 1");
+        engineRenderer.showBotChosen(bot2.getNameWithELO(), "PLayer 2");
+
+        return new BvsBGameSession(
+                bot1, bot2, input,
+                new SessionRenderer(output)
+        );
+    }
+
+    private Bot getBot(int level) {
+        return switch (level) {
+            case 1 -> new BeginnerBot();
+            case 2 -> new EasyBot();
+            case 3 -> new MediumBot();
+            case 4 -> new HardBot();
+            case 5 -> new UnbeatableBot();
+            case 0 -> new StallBot();
+            default -> {
+                Logger.error("Invalid session choice");
+                throw new IllegalStateException("Unexpected value for Bot Type: " + level);
+            }
+        };
+    }
+
+    private Bot getBotFirstInstance(int level) {
+        return switch (level) {
+            case 1 -> new BeginnerBot(true);
+            case 2 -> new EasyBot(true);
+            case 3 -> new MediumBot(true);
+            case 4 -> new HardBot(true);
+            case 5 -> new UnbeatableBot(true);
+            case 0 -> new StallBot(true);
+            default -> {
+                Logger.error("Invalid Bot Selection (First Instance)");
+                throw new IllegalStateException("Unexpected value for Bot (First Instance) Type: " + level);
+            }
+        };
+    }
+
+    private Bot getBotSecondInstance(int level) {
+        return switch (level) {
+            case 1 -> new BeginnerBot(false);
+            case 2 -> new EasyBot(false);
+            case 3 -> new MediumBot(false);
+            case 4 -> new HardBot(false);
+            case 5 -> new UnbeatableBot(false);
+            case 0 -> new StallBot(false);
+            default -> {
+                Logger.error("Invalid Bot Selection (Second Instance)");
+                throw new IllegalStateException("Unexpected value for Bot (Second Instance) Type: " + level);
+            }
+        };
+    }
+
+
+    private Player createPlayer(String pre, int number) {
+        String name;
+
+        while (true) {
+            engineRenderer.requestPlayerName(number);
+            String input = this.input.readLine();
+            if (input == null) continue;
+            name = input.trim().toUpperCase();
+
+            if (number == 2 && pre.equals(name)) {
+                engineRenderer.showPlayerAlreadyInGame(name);
+            } else break;
+        }
+
+        PlayerResult result = playerRegistry.getOrCreatePlayer(name);
+        Player player = result.getPlayer();
+
+        if (result.isNew()) {
+            engineRenderer.showNewPlayerWelcome(player);
+        } else {
+            engineRenderer.showReturningPlayerWelcome(player);
+        }
+
+        return player;
+    }
+
+    private void shutdown() {
         runFinalSequence();
         Logger.info("Game session ended");
     }
 
-    private static void runFinalSequence() {
-
+    private void runFinalSequence() {
         engineRenderer.showHistoryPrompt();
         input.waitForEnter();
 
@@ -188,7 +329,7 @@ public final class GameEngine {
         input.waitForEnterWithoutCheck();
     }
 
-    private static void handleFatalError(Exception ex) {
+    private void handleFatalError(Exception ex) {
         Logger.error("Unhandled exception in GameEngine", ex);
 
         if (engineRenderer != null) {
@@ -205,24 +346,23 @@ public final class GameEngine {
         }
     }
 
-    public static void restart() {
-
+    private void restart() {
         engineRenderer.showRestartPrompt();
 
         if (input.readYesNo()) {
             engineRenderer.showRestartingMessage();
             input.waitForEnter();
-
-            main(new String[0]);
+            start();
         } else {
             engineRenderer.showExitMessage();
             System.exit(0);
         }
     }
 
-    public static void main(String[] args) {
+    public void start() {
         try {
             initialize();
+            runIntroSequence();
             runGameLoop();
             shutdown();
         } catch (Exception ex) {

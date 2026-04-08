@@ -14,7 +14,7 @@ public final class AdminControl implements AdminService {
 
     private final Registry registry;
     private final RankingView rankingView;
-    private final EngineView engineRenderer;
+    private final EngineView renderer;
     private final PlayerTableView boardRenderer;
 
     public AdminControl(Registry registry,
@@ -25,7 +25,7 @@ public final class AdminControl implements AdminService {
         this.registry = registry;
         this.rankingView = rankingView;
         this.boardRenderer = boardRenderer;
-        this.engineRenderer = engineRenderer;
+        this.renderer = engineRenderer;
     }
 
     /// Display all players and run the delete loop
@@ -33,14 +33,14 @@ public final class AdminControl implements AdminService {
     public void show(Scanner sc) {
         Logger.info("Admin panel accessed");
         displayPlayers();
-        engineRenderer.prompt("\n\n" + "-".repeat(40) + "\n");
+        renderer.showAdminPanelSeperator();
         runDeleteLoop(sc);
-        engineRenderer.prompt("\n🔒 Exiting Player Management.\n");
+        renderer.showAdminPanelExitMessege();
     }
 
     /// Print all registered players in ranked order
     private void displayPlayers() {
-        engineRenderer.prompt(Strings.PLAYER_MANAGEMENT_BOARD);
+        renderer.prompt(Strings.ADMIN_PANEL_INTRO_BOARD);
         boardRenderer.showBoard(
                 rankingView.getAllPlayers(),
                 Strings.ADMIN_PLAYER_BOARD_TITLE
@@ -50,23 +50,23 @@ public final class AdminControl implements AdminService {
     /// Loop until the admin chooses to stop deleting
     private void runDeleteLoop(Scanner sc) {
         while (true) {
-            engineRenderer.prompt("\nEnter player name to delete : ");
+            renderer.showAdminPanelNameRequest();
             String name = sc.nextLine().trim().toUpperCase();
 
             if (name.isEmpty()) {
-                engineRenderer.prompt("⚠ Player name cannot be empty.\n");
+                renderer.showAdminPanelEmptyNameError();
                 continue;
             }
 
-            engineRenderer.printLine();
+            renderer.printLine();
             if (registry.deletePlayerByName(name)) {
                 Logger.info("Admin init player deletion: " + name);
-                engineRenderer.prompt(String.format("✅ Player '%s' deleted successfully.%n", name));
+                renderer.showAdminPanelPlayerDeleted(name);
             } else {
-                engineRenderer.prompt(String.format("❌ Player '%s' not found.%n", name));
+                renderer.showAdminPanelPlayerNotFound(name);
             }
 
-            engineRenderer.prompt("Delete another player? (Y/N): ");
+            renderer.showAdminPanelDeleteAnother();
             String line = sc.nextLine().trim();
             if (line.isEmpty() || Character.toUpperCase(line.charAt(0)) != 'Y') break;
         }

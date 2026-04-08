@@ -36,4 +36,15 @@ public final class GameResult {
     public String getResult() {
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "GameResult{" +
+                "p1Name='" + p1Name + '\'' +
+                ", p2Name='" + p2Name + '\'' +
+                ", wins1=" + wins1 +
+                ", wins2=" + wins2 +
+                ", result='" + result + '\'' +
+                '}';
+    }
 }

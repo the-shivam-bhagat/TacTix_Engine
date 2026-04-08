@@ -16,7 +16,7 @@ public class ExitCommand implements Command {
 
     @Override
     public void execute() {
-        renderer.prompt("\nExiting game. Goodbye!\n");
+        renderer.showExitCommandMessage();
         registry.trimToMaxPlayers();
         renderer.showExitMessage();
         System.exit(0);

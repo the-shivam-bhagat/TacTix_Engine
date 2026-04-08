@@ -17,7 +17,7 @@ public class HistoryRenderer implements HistoryView {
 
     public void showEmptyMessage() {
 
-        String message = "📋 No games recorded yet.";
+        String message = "[INFO] No game history available";
 
         int innerWidth = message.length() + 6;
 
@@ -99,7 +99,7 @@ public class HistoryRenderer implements HistoryView {
                 + "─".repeat(1 + leadWidth)   + "╢";
 
         // ── 6. Title (emoji-aware centering) ──────────────────────────────────
-        String title      = " \uD83D\uDCDC GAME HISTORY \uD83D\uDCDC ";
+        String title = " [HISTORY] GAME SESSIONS ";
         int    emojiCount = 2;
         int    displayLen = title.length() - emojiCount;
         int    leftPad    = (innerWidth - displayLen) / 2 - 1;
@@ -112,7 +112,7 @@ public class HistoryRenderer implements HistoryView {
         out.println("╠" + "═".repeat(innerWidth) + "╣");
 
         // Header row with ║ dividers, followed by heavy ╬ separator
-        out.printf(headRowFmt, "#", "Player1", "Player2", "Result", "Lead");
+        out.printf(headRowFmt, "#", "P1", "P2", "RESULT", "LEAD");
         out.println(heavySep);
 
         // Data rows, each followed by a light ┼ separator

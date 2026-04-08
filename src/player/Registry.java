@@ -1,7 +1,7 @@
 package player;
 
 /// Full mutable registry contract.
-/// GameEngine, PvPGameSession, and InputHandler depend on this —
+/// GameEngine, PvsPGameSession, and InputHandler depend on this —
 /// never on the concrete PlayerRegistry class directly.
 public interface Registry {
 
@@ -9,7 +9,7 @@ public interface Registry {
     void addPlayer(Player player);
 
     /// If player exists returns it, if not then create and return
-    Player getPlayer(String name);
+    PlayerResult getOrCreatePlayer(String name);
 
     /// Delete player by name
     boolean deletePlayerByName(String name);

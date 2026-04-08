@@ -1,12 +1,11 @@
 package renderer.view;
 
-import bot.Bot;
 import player.Player;
 
 public interface SessionView {
     void showRoundStart(int round);
 
-    void showFirstMovePrompt(Player first, Player second);
+    void showFirstMovePrompt(String first, String second);
 
     void showBoard(char[][] board);
 
@@ -26,11 +25,12 @@ public interface SessionView {
 
     void prompt(String message);
 
-    void showBotThinking(Bot bot);
+    // time in ms means the time each dot will take to appear
+    void showBotThinking(String BotName, int dotDelayInMS);
 
-    void showBotMove(Bot bot, int blockNo, char mark);
+    void showBotMove(String botName, int blockNo, char mark);
 
-    void showBotWinner(Bot bot);
+    void showBotWinner(String  BotName);
 
-    void showFirstMovePrompt(Player player, Bot bot);
+    void showBotVsBotRoundWinner(String winnerName, String looserName);
 }

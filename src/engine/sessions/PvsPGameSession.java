@@ -1,5 +1,8 @@
-package engine;
+package engine.sessions;
 
+import engine.GameBoard;
+import engine.GameResult;
+import engine.GameSession;
 import input.Input;
 import player.Player;
 import player.Registry;
@@ -7,7 +10,8 @@ import renderer.view.SessionView;
 import utility.Logger;
 import utility.Utility;
 
-public final class PvPGameSession {
+public final class PvsPGameSession implements GameSession {
+    public static final String sessionType = "Player VS Player";
 
     private final Player p1;
     private final Player p2;
@@ -24,7 +28,7 @@ public final class PvPGameSession {
 
     private String result = "[Match Abandoned]";
 
-    PvPGameSession(Player p1, Player p2, Input input, Registry registry, SessionView renderer) {
+    public PvsPGameSession(Player p1, Player p2, Input input, Registry registry, SessionView renderer) {
         this.first = this.p1 = p1;
         this.second = this.p2 = p2;
         this.input = input;
@@ -32,6 +36,7 @@ public final class PvPGameSession {
         this.renderer = renderer;
     }
 
+    @Override
     public void play() {
         Logger.info("New Player v Player session started: " + p1.getName() + " vs " + p2.getName());
 
@@ -42,7 +47,7 @@ public final class PvPGameSession {
             renderer.showRoundStart(++roundNumber);
             input.waitForEnter();
 
-            renderer.showFirstMovePrompt(first, second);
+            renderer.showFirstMovePrompt(first.getName(), second.getName());
 
             if (!input.readYesNo()) {
                 Player tmp = first;
@@ -131,6 +136,7 @@ public final class PvPGameSession {
         }
     }
 
+    @Override
     public GameResult toResult() {
         return new GameResult(
                 p1.getName(),
@@ -139,5 +145,10 @@ public final class PvPGameSession {
                 wins2,
                 result
         );
+    }
+
+    @Override
+    public String getSessionType() {
+        return sessionType;
     }
 }

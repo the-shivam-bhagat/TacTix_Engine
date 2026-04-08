@@ -1,14 +1,19 @@
-package engine;
+package engine.sessions;
 
 import bot.Bot;
+import engine.GameBoard;
+import engine.GameResult;
+import engine.GameSession;
 import input.Input;
 import player.Player;
 import player.Registry;
 import renderer.view.SessionView;
+import utility.Config;
 import utility.Logger;
 import utility.Utility;
 
-public final class BotGameSession implements GameSession {
+public final class PvsBGameSession implements GameSession {
+    public static final String sessionType = "Player VS Bot";
 
     private final Player player;
     private final Bot bot;
@@ -21,12 +26,10 @@ public final class BotGameSession implements GameSession {
     private int ties = 0;
 
     private String result = "[Match Abandoned]";
+    private static final int DOT_DELAY = Config.BotData.BOT_THINK_DOT_DELAY_MS_PVG;
 
-    public BotGameSession(Player player,
-                          Bot bot,
-                          Input input,
-                          Registry registry,
-                          SessionView renderer) {
+    public PvsBGameSession(Player player, Bot bot, Input input,
+                           Registry registry, SessionView renderer) {
 
         this.player = player;
         this.bot = bot;
@@ -37,10 +40,9 @@ public final class BotGameSession implements GameSession {
 
     @Override
     public void play() {
-        Logger.info(String.format("New Player v Bot session started: %s vs %s Bot ( %s )",
+        Logger.info(String.format("New Player v Bot session started: %s vs %s",
                 player.getName(),
-                bot.getMode(),
-                bot.getName()
+                bot.getNameWithMode()
         ));
 
         int roundNumber = 0;
@@ -50,7 +52,11 @@ public final class BotGameSession implements GameSession {
             renderer.showRoundStart(++roundNumber);
             input.waitForEnter();
 
-            renderer.showFirstMovePrompt(player, bot);
+            renderer.showFirstMovePrompt(
+                    player.getName(),
+                    bot.getNameWithELO()
+            );
+
             boolean playerMove = input.readYesNo();
 
             playRound(roundNumber, playerMove);
@@ -58,7 +64,7 @@ public final class BotGameSession implements GameSession {
             renderer.showScoreboard(
                     player.getName(),
                     playerWins,
-                    String.format("%s Bot ( %s )", bot.getMode(), bot.getName()),
+                    bot.getNameWithELO(),
                     botWins,
                     ties
             );
@@ -97,7 +103,7 @@ public final class BotGameSession implements GameSession {
                 blockNo = input.readCellChoice(gameBoard);
             } else {
                 blockNo = bot.chooseMove(gameBoard.getCopyOfFreq(), entityFlag, stepCount);
-                renderer.showBotThinking(bot);
+                renderer.showBotThinking(bot.getName(), DOT_DELAY);
             }
 
             gameBoard.makeMove(
@@ -109,7 +115,7 @@ public final class BotGameSession implements GameSession {
 
             Utility.displayPlayBoard(gameBoard.getBoard());
 
-            if (!playerMove) renderer.showBotMove(bot, blockNo, mark);
+            if (!playerMove) renderer.showBotMove(bot.getName(), blockNo, mark);
 
             Boolean winCheck = gameBoard.checkWinner();
 
@@ -121,9 +127,8 @@ public final class BotGameSession implements GameSession {
                     Logger.info("Round winner: " + player.getName());
                 } else {
                     botWins++;
-                    renderer.showBotWinner(bot);
-                    Logger.info(String.format("Round winner: %s Bot ( %s )",
-                            bot.getMode(), bot.getName()));
+                    renderer.showBotWinner(bot.getName());
+                    Logger.info("Round winner: " + bot.getFullIdentity());
                 }
                 return;
             }
@@ -142,11 +147,11 @@ public final class BotGameSession implements GameSession {
     private void declareMatchResult() {
         if (playerWins == botWins) {
             renderer.showMatchDraw();
-            result = "DRAW"; // ✅ FIXED
+            result = "DRAW";
         } else {
             result = (playerWins > botWins)
                     ? player.getName()
-                    : String.format("%s Bot ( %s )", bot.getMode(), bot.getName());
+                    : bot.getNameWithMode();
 
             renderer.showMatchWinnerBox(result);
         }
@@ -156,10 +161,15 @@ public final class BotGameSession implements GameSession {
     public GameResult toResult() {
         return new GameResult(
                 player.getName(),
-                String.format("%s Bot ( %s )", bot.getMode(), bot.getName()),
+                String.format("%s [%s]", bot.getName(), bot.getMode()),
                 playerWins,
                 botWins,
                 result
         );
+    }
+
+    @Override
+    public String getSessionType() {
+        return sessionType;
     }
 }

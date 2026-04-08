@@ -3,7 +3,10 @@ package bot;
 import java.util.Random;
 
 import static bot.BotUtility.*;
-import static utility.Config.BotNames.UNBEATABLE_BOT_NAME;
+import static utility.Config.BotData.*;
+
+// PROBE — Priority-Ordered Opening-Boosted Minimax with Alpha-Beta and Equimax Selection
+// Difficulty: 100% (ELO: 2000)
 
 // PROBE  Priority-Reordered Opening-Boosted EquiMinMax
 
@@ -17,18 +20,21 @@ import static utility.Config.BotNames.UNBEATABLE_BOT_NAME;
 // an opening book, and equimax output selection —
 // the specific combination and architecture is my own design."
 
-
 /// Perfect play -- Full Minimax
 public class UnbeatableBot implements Bot {
+
     private static final String MODE = "UNBEATABLE_BOT";
+    private static final int ELO_RATING = UNBEATABLE_BOT_ELO_RATING;
+
     private final String name;
+    private final Random random = new Random();
 
-    private final Random random;
+    public UnbeatableBot() {
+        this.name = UNBEATABLE_BOT_NAME;
+    }
 
-    public UnbeatableBot(boolean secondInstance) {
-        name = UNBEATABLE_BOT_NAME.concat(secondInstance ? "2.0" : "")
-                .concat(String.format(" (%s)", MODE));
-        random = new Random();
+    public UnbeatableBot(boolean firstInstance) {
+        this.name = UNBEATABLE_BOT_NAME.concat(firstInstance ? "-α" : "-β");
     }
 
     // bot is always max player
@@ -117,6 +123,16 @@ public class UnbeatableBot implements Bot {
     }
 
     @Override
+    public String getNameWithELO() {
+        return String.format("%s (%d)", name, ELO_RATING);
+    }
+
+    @Override
+    public String getNameWithMode() {
+        return String.format("%s (%s)", name, MODE);
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -124,5 +140,15 @@ public class UnbeatableBot implements Bot {
     @Override
     public String getMode() {
         return MODE;
+    }
+
+    @Override
+    public int getEloRating() {
+        return ELO_RATING;
+    }
+
+    @Override
+    public String getFullIdentity() {
+        return String.format("%s (%s, %d)", name, MODE, ELO_RATING);
     }
 }

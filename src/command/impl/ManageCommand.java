@@ -22,20 +22,17 @@ public class ManageCommand implements Command {
 
     @Override
     public void execute() {
-        renderer.prompt("\nProvide Password : ");
+        renderer.requestAdminPassword();
         String password = sc.nextLine();
 
         if (password.equals(Config.ADMIN_PASSWORD)) {
+            Logger.warn("Admin password has been entered.");
             admin.show(sc);
         } else {
             Logger.warn("Invalid admin password attempt");
-            renderer.prompt("Wrong password!\n");
+            renderer.showInvalidAdminPassword();
         }
 
-        renderer.prompt("""
-                
-                (Continue Your Game)
-                
-                """);
+        renderer.showContinueFromManageCmd();
     }
 }

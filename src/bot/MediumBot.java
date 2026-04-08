@@ -5,21 +5,29 @@ import java.util.HashSet;
 import java.util.Random;
 
 import static bot.BotUtility.*;
-import static utility.Config.BotNames.MEDIUM_BOT_NAME;
+import static utility.Config.BotData.*;
 
-// WIRE   Win-first Immediate-block Rule-based EquiSelect
+// WIRE — Win-first Immediate-block Rule-based Priority with Partial Opening Awareness
+// Difficulty: 72% (ELO: 1716)
 ///  Reactive (win + block) -- Win → Block → Line Extension → Random
+
 public class MediumBot implements Bot {
+
     private static final String MODE = "MEDIUM_BOT";
+    private static final int ELO_RATING = MEDIUM_BOT_ELO_RATING;
+
     private final String name;
+    private final Random random = new Random();
 
-    private final Random random;
-    private static final float PERFECT_RATE = 0.1f;
+    // Correct opening Rate - 20%
+    private static final float OPENING_AWARENESS_RATE = MEDIUM_BOT_OPENING_AWARENESS_RATE;
 
-    public MediumBot(boolean secondInstance) {
-        name = MEDIUM_BOT_NAME.concat(secondInstance ? "2.0" : "")
-                .concat(String.format(" (%s)", MODE));
-        random = new Random();
+    public MediumBot() {
+        this.name = MEDIUM_BOT_NAME;
+    }
+
+    public MediumBot(boolean firstInstance) {
+        this.name = MEDIUM_BOT_NAME.concat(firstInstance ? "-α" : "-β");
     }
 
     @Override
@@ -31,8 +39,10 @@ public class MediumBot implements Bot {
         // 3. Else → random
 
         // adding a defect for best opening Strategy play
-        if (stepNo < 2 && random.nextFloat() < PERFECT_RATE)
-            return BotUtility.getOpeningStrategyMove(board, stepNo, random);
+        if (stepNo < 2 && random.nextFloat() < OPENING_AWARENESS_RATE) {
+            int move = BotUtility.getOpeningStrategyMove(board, stepNo, random);
+            if (move != -1) return move;
+        }
 
         var choices = new ArrayList<>(getChoices(board, botFlag));
         return choices.get(random.nextInt(choices.size()));
@@ -56,6 +66,16 @@ public class MediumBot implements Bot {
     }
 
     @Override
+    public String getNameWithELO() {
+        return String.format("%s (%d)", name, ELO_RATING);
+    }
+
+    @Override
+    public String getNameWithMode() {
+        return String.format("%s (%s)", name, MODE);
+    }
+
+    @Override
     public String getName() {
         return name;
     }
@@ -63,5 +83,15 @@ public class MediumBot implements Bot {
     @Override
     public String getMode() {
         return MODE;
+    }
+
+    @Override
+    public int getEloRating() {
+        return ELO_RATING;
+    }
+
+    @Override
+    public String getFullIdentity() {
+        return String.format("%s (%s, %d)", name, MODE, ELO_RATING);
     }
 }

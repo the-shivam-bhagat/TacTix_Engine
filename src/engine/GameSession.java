@@ -6,5 +6,5 @@ public interface GameSession {
 
     GameResult toResult();
 
-
+    String getSessionType();
 }

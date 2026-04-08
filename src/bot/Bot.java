@@ -4,9 +4,17 @@ public interface Bot {
 
     int chooseMove(int[] board, int playerFlag, int stepNo);
 
+    String getNameWithELO();
+
+    String getNameWithMode();
+
     String getName();
 
     String getMode();
+
+    int getEloRating();
+
+    public String getFullIdentity();
 }
 
 // RAVE   Random Any Valid-cell EquiSelect                               - Beginner
