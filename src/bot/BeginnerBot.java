@@ -5,7 +5,7 @@ import utility.Config;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static bot.BotUtility.*;
+import static bot.UtilBot.*;
 import static utility.Config.BotData.BEGINNER_BOT_ELO_RATING;
 import static utility.Config.BotData.BEGINNER_BOT_NAME;
 

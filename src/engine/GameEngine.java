@@ -8,7 +8,7 @@ import engine.sessions.BvsBGameSession;
 import engine.sessions.PvsBGameSession;
 import engine.sessions.PvsPGameSession;
 import input.*;
-import player.FilePlayerStore;
+import player.store.FilePlayerStore;
 import player.Player;
 import player.PlayerRegistry;
 

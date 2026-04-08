@@ -1,4 +1,6 @@
-package player;
+package player.store;
+
+import player.Player;
 
 import java.io.IOException;
 import java.util.List;

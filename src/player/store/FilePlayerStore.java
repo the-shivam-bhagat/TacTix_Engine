@@ -1,5 +1,6 @@
-package player;
+package player.store;
 
+import player.Player;
 import utility.Config;
 import utility.Logger;
 

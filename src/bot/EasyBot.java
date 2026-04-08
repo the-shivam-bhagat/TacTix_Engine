@@ -5,7 +5,7 @@ import utility.Config;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static bot.BotUtility.*;
+import static bot.UtilBot.*;
 import static utility.Config.BotData.EASY_BOT_NAME;
 
 // GREX — GReedy EXtension bot

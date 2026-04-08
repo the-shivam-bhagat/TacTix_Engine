@@ -2,7 +2,7 @@ package bot;
 
 import java.util.Random;
 
-import static bot.BotUtility.*;
+import static bot.UtilBot.*;
 import static utility.Config.BotData.*;
 
 // PROBE — Priority-Ordered Opening-Boosted Minimax with Alpha-Beta and Equimax Selection

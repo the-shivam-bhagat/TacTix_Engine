@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-import static bot.BotUtility.*;
+import static bot.UtilBot.*;
 import static utility.Config.BotData.*;
 
 // WIRE — Win-first Immediate-block Rule-based Priority with Partial Opening Awareness
@@ -40,7 +40,7 @@ public class MediumBot implements Bot {
 
         // adding a defect for best opening Strategy play
         if (stepNo < 2 && random.nextFloat() < OPENING_AWARENESS_RATE) {
-            int move = BotUtility.getOpeningStrategyMove(board, stepNo, random);
+            int move = UtilBot.getOpeningStrategyMove(board, stepNo, random);
             if (move != -1) return move;
         }
 

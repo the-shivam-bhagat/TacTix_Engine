@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-public final class BotUtility {
-    private BotUtility() {
+public final class UtilBot {
+    private UtilBot() {
     }
 
     static final int[][] DIRS = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};

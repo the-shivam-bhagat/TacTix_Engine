@@ -2,7 +2,7 @@ package bot;
 
 import java.util.Random;
 
-import static bot.BotUtility.*;
+import static bot.UtilBot.*;
 
 public class StallBot implements Bot {
 
