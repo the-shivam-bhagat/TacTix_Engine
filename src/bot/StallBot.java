@@ -174,4 +174,9 @@ public class StallBot implements Bot {
     public int getEloRating() {
         return -1;
     }
+
+    @Override
+    public String getFullIdentity() {
+        return String.format("%s (%s, %s)", name, MODE, ELO_RATING);
+    }
 }
