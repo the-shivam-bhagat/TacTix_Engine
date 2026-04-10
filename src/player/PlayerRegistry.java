@@ -1,5 +1,7 @@
 package player;
 
+import exception.GameErrorCode;
+import exception.GameException;
 import player.store.PlayerStore;
 import utility.Config;
 import utility.Logger;
@@ -26,17 +28,26 @@ public final class PlayerRegistry implements Registry, RankingView {
     public static final int TOP_PLAYERS = Config.PlayerConfig.TOP_PLAYERS;
     private static final int MAX_PLAYERS = Config.PlayerConfig.MAX_PLAYERS;
 
-    /// We could have also used singleton but, it is too much for our project
-    public PlayerRegistry(PlayerStore store) throws IOException {
-        this.store   = store;
+    /// IOException from store.loadAll() is caught here and wrapped as GameException
+    /// so no checked exception leaks to GameEngine.initialize()
+    public PlayerRegistry(PlayerStore store) {
+        this.store = store;
         players = new HashMap<>();
         ranking = new TreeSet<>();
 
-        // loadAll() returns a plain List — registry owns its own internal structure
         Logger.info("Loading players from storage");
-        for (Player p : store.loadAll()) {
-            players.put(p.getName(), p);
-            ranking.add(p);
+        try {
+            for (Player p : store.loadAll()) {
+                players.put(p.getName(), p);
+                ranking.add(p);
+            }
+        } catch (IOException e) {
+            Logger.error("Failed to load player data from storage", e);
+            throw new GameException(
+                    GameErrorCode.STORAGE_LOAD_FAILED,
+                    "Could not load player data: " + e.getMessage(),
+                    e
+            );
         }
     }
 
@@ -108,6 +119,7 @@ public final class PlayerRegistry implements Registry, RankingView {
     }
 
     /// Keep registry within max size, then persist via the injected store
+    /// RuntimeException from store.saveAll() is wrapped as GameException(STORAGE_SAVE_FAILED)
     @Override
     public void trimToMaxPlayers() {
 
@@ -116,7 +128,17 @@ public final class PlayerRegistry implements Registry, RankingView {
             if (lowest != null) players.remove(lowest.getName());
         }
         Logger.info("Trimming to max players");
-        store.saveAll(ranking);  // ranking is Iterable<Player>
+
+        try {
+            store.saveAll(ranking);
+        } catch (RuntimeException e) {
+            Logger.error("Failed to save player data to storage", e);
+            throw new GameException(
+                    GameErrorCode.STORAGE_SAVE_FAILED,
+                    "Could not save player data: " + e.getMessage(),
+                    e
+            );
+        }
     }
 
     // =====================================================
@@ -136,6 +158,7 @@ public final class PlayerRegistry implements Registry, RankingView {
 
         return result;
     }
+
     /// give list of all players
     @Override
     public List<Player> getAllPlayers() {
@@ -164,6 +187,6 @@ public final class PlayerRegistry implements Registry, RankingView {
             String newName = "PLAYER_" + i;
             if (!players.containsKey(newName)) return newName;
         }
-        return "PLAYER_" + System.currentTimeMillis(); // fallback if all 60 slots taken
+        return "PLAYER_" + System.currentTimeMillis(); // fallback if all slots taken
     }
 }

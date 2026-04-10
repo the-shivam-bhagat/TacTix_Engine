@@ -1,22 +1,37 @@
 import core.GameEngine;
 import utility.Logger;
 
-public class MainExecution {
+import java.io.IOException;
 
+public class MainExecution {
     public static void main(String[] args) {
         try {
             Logger.init();
             Logger.info("Application started");
+        } catch (IOException e) {
+            // Logger failed — game can still run, just warn on stderr
+            System.err.println("[WARN] Logger initialization failed: " + e.getMessage());
+            System.err.println("[WARN] Continuing without file logging.");
+            // Don't exit — the game is still playable without logs
+        }
 
+        try {
             GameEngine engine = new GameEngine();
             engine.start();
 
         } catch (Exception e) {
-            Logger.error("Unhandled exception in main execution", e);
+            // Logger may or may not be available here
+            try {
+                Logger.error("Unhandled exception in main execution", e);
+            } catch (Exception ignored) {}
 
-            System.out.println("⚠️ A critical error occurred. Please restart the application.");
+            System.err.println("⚠️ A critical error occurred. Please restart.");
+            System.err.println("Details: " + e.getMessage());
+
         } finally {
-            Logger.info("Application terminated");
+            try {
+                Logger.info("Application terminated");
+            } catch (Exception ignored) {}
         }
     }
 }

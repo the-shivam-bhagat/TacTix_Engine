@@ -12,9 +12,10 @@ public interface Bot {
 
     String getMode();
 
+    @SuppressWarnings("unused")
     int getEloRating();
 
-    public String getFullIdentity();
+    String getFullIdentity();
 }
 
 // RAVE   Random Any Valid-cell EquiSelect                               - Beginner

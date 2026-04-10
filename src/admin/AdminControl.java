@@ -33,9 +33,9 @@ public final class AdminControl implements AdminService {
     public void show(Scanner sc) {
         Logger.info("Admin panel accessed");
         displayPlayers();
-        renderer.showAdminPanelSeperator();
+        renderer.showAdminPanelSeparator();
         runDeleteLoop(sc);
-        renderer.showAdminPanelExitMessege();
+        renderer.showAdminPanelExitMessage();
     }
 
     /// Print all registered players in ranked order

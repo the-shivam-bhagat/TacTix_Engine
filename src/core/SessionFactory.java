@@ -36,6 +36,7 @@ public class SessionFactory {
         this.playBoardView = playBoardRenderer;
     }
 
+    @SuppressWarnings("UnnecessaryDefault")
     public GameSession createGameSession(SessionType type) {
         return switch (type) {
             case PLAYER_VS_PLAYER -> getPlayerVSPlayerSession();

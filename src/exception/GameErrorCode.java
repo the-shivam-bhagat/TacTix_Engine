@@ -5,7 +5,6 @@ package exception;
  * Enables programmatic handling, logging, and filtering by error type.
  */
 public enum GameErrorCode {
-
     // Session errors
     INVALID_SESSION_TYPE,
     SESSION_ALREADY_ACTIVE,
@@ -23,5 +22,9 @@ public enum GameErrorCode {
     // Game state errors
     GAME_NOT_STARTED,
     GAME_ALREADY_OVER,
-    INVALID_BOARD_STATE
+    INVALID_BOARD_STATE,
+
+    // System / IO errors
+    STORAGE_LOAD_FAILED,
+    STORAGE_SAVE_FAILED
 }

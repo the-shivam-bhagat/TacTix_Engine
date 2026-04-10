@@ -3,6 +3,9 @@ package core;
 import admin.AdminControl;
 import command.CommandHandler;
 import command.CommandProcessor;
+import exception.GameException;
+import exception.InvalidBotSelectionException;
+import exception.InvalidSessionException;
 import input.*;
 import player.store.FilePlayerStore;
 import player.PlayerRegistry;
@@ -15,7 +18,6 @@ import sessions.GameSession;
 import utility.Logger;
 import utility.Strings;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
@@ -35,7 +37,12 @@ public final class GameEngine {
 
     private SessionFactory sessionFactory;
 
-    private void initialize() throws IOException {
+    // ================================================================
+    // INITIALIZATION
+    // ================================================================
+
+    /// No longer throws IOException — PlayerRegistry wraps it as GameException internally
+    private void initialize() {
         PrintStream output = new PrintStream(System.out);
 
         engineRenderer = new EngineRenderer(output);
@@ -47,6 +54,8 @@ public final class GameEngine {
         HistoryView historyRenderer = new HistoryRenderer(output);
         Logger.info("Created history renderer");
 
+        // PlayerRegistry constructor now throws GameException(STORAGE_LOAD_FAILED)
+        // if FilePlayerStore.loadAll() fails — no IOException leaks out
         playerRegistry = new PlayerRegistry(new FilePlayerStore());
         Logger.info("Created players registry");
 
@@ -80,6 +89,10 @@ public final class GameEngine {
         gameHistory = new GameHistory(historyRenderer);
         Logger.info("Created game history");
     }
+
+    // ================================================================
+    // INTRO SEQUENCE  — preserved exactly as original
+    // ================================================================
 
     private void runIntroSequence() {
         engineRenderer.showSystemBoot();
@@ -128,6 +141,10 @@ public final class GameEngine {
         );
     }
 
+    // ================================================================
+    // MAIN GAME LOOP — recoverable exceptions handled here
+    // ================================================================
+
     private void startGameLoop() {
         boolean playAnother = true;
         int gameNumber = 0;
@@ -135,31 +152,70 @@ public final class GameEngine {
         Logger.info("Entering main game loop");
 
         while (playAnother) {
-            engineRenderer.showSessionTypes();
-            int choice = input.readSessionChoice();
-            SessionType type = SessionType.fromIntValue(choice);
+            try {
+                engineRenderer.showSessionTypes();
+                int choice = input.readSessionChoice();
+                SessionType type = SessionType.fromIntValue(choice);
 
-            GameSession session = sessionFactory.createGameSession(type);
+                GameSession session = sessionFactory.createGameSession(type);
 
-            engineRenderer.showGameStart(++gameNumber, session.getSessionType().toString());
+                engineRenderer.showGameStart(++gameNumber, session.getSessionType().toString());
+                Logger.info("Starting Game " + gameNumber);
 
-            Logger.info("Starting Game " + gameNumber);
+                if (gameNumber > 1) {
+                    engineRenderer.showContinuePrompt();
+                    input.waitForEnter();
+                } else {
+                    engineRenderer.printLine();
+                }
 
-            if (gameNumber > 1) {
-                engineRenderer.showContinuePrompt();
-                input.waitForEnter();
-            } else {
+                session.play();
+                gameHistory.add(session);
+
+            } catch (InvalidSessionException e) {
+                // Bad session type selected — show error, let loop continue
+                Logger.warn("Invalid session type: " + e.getMessage());
+                engineRenderer.showError(
+                        "Invalid session type [" + e.getErrorCode() + "]. Please try again."
+                );
+                continue; // skip play-again prompt, go straight back to session picker
+
+            } catch (InvalidBotSelectionException e) {
+                // Bad bot level selected — show error, let loop continue
+                Logger.warn("Invalid bot selection: " + e.getMessage());
+                engineRenderer.showError(
+                        "Invalid bot level [" + e.getErrorCode() + "]. Please try again."
+                );
+                continue; // skip play-again prompt, go straight back to session picker
+
+            } catch (GameException e) {
+                // Known typed error mid-session (e.g. bot crash, bad move state)
+                Logger.error("GameException during session: " + e.getMessage());
+                engineRenderer.showError(
+                        "A game error occurred [" + e.getErrorCode() + "]: " + e.getMessage()
+                );
+                // Ask if they want to play again — if no, exit loop cleanly
+                engineRenderer.showPlayAgainPrompt();
+                playAnother = input.readYesNo();
                 engineRenderer.printLine();
+                continue;
+
+            } catch (Exception e) {
+                // Completely unexpected — rethrow up to start() for restart decision
+                Logger.error("Unexpected exception during game loop", e);
+                throw e;
             }
 
-            session.play();
-            gameHistory.add(session);
-
+            // Normal path — session completed cleanly
             engineRenderer.showPlayAgainPrompt();
             playAnother = input.readYesNo();
             engineRenderer.printLine();
         }
     }
+
+    // ================================================================
+    // SHUTDOWN — preserved exactly as original, wrapped for safety
+    // ================================================================
 
     private void shutdown() {
         runFinalSequence();
@@ -175,7 +231,10 @@ public final class GameEngine {
         engineRenderer.showUpdatedLeaderboardPrompt();
         input.waitForEnterWithoutCheck();
 
+        // trimToMaxPlayers now throws GameException(STORAGE_SAVE_FAILED) on failure
+        // caught by the wrapper in shutdown() below — player data warning shown
         playerRegistry.trimToMaxPlayers();
+
         playerTableRenderer.showTable(
                 playerRegistry.getTopPlayers(TOP_PLAYERS),
                 Strings.LEADERBOARD_TITLE
@@ -184,6 +243,10 @@ public final class GameEngine {
         engineRenderer.showEndingMessage();
         input.waitForEnterWithoutCheck();
     }
+
+    // ================================================================
+    // ERROR HANDLING — preserved exactly as original
+    // ================================================================
 
     private void handleFatalError(Exception ex) {
         Logger.error("Unhandled exception in GameEngine", ex);
@@ -197,11 +260,19 @@ public final class GameEngine {
 
             engineRenderer.showStackTrace(sb.toString());
         } else {
+            // engineRenderer itself failed to initialize — raw fallback
             System.err.println("Fatal Error: " + ex.getMessage());
+            ex.printStackTrace(System.err);
         }
     }
 
     private boolean handleRestartDecision() {
+        // Guard: if renderer or input never initialized, can't interact with user
+        if (engineRenderer == null || input == null) {
+            System.err.println("> [SYSTEM] Cannot recover — renderer or input unavailable. Exiting.");
+            return false;
+        }
+
         engineRenderer.showRestartPrompt();
 
         if (input.readYesNo()) {
@@ -213,6 +284,10 @@ public final class GameEngine {
             return false;
         }
     }
+
+    // ================================================================
+    // ENTRY POINT
+    // ================================================================
 
     public void start() {
         boolean running = true;
@@ -228,9 +303,17 @@ public final class GameEngine {
                 startGameLoop();
                 shutdown();
 
-                running = false;
+                running = false; // clean exit — no exception
+
+            } catch (GameException ex) {
+                Logger.error("Game Engine (Game Exception - Known): " + ex.getMessage());
+                // Known typed error (storage load fail, renderer fail, etc.)
+                handleFatalError(ex);
+                running = handleRestartDecision();
 
             } catch (Exception ex) {
+                Logger.error("Game Engine (Exception - Unknown): " + ex.getMessage());
+                // Completely unexpected runtime error
                 handleFatalError(ex);
                 running = handleRestartDecision();
             }

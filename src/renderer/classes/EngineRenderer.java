@@ -328,12 +328,12 @@ public class EngineRenderer implements EngineView {
     }
 
     @Override
-    public void showAdminPanelSeperator() {
+    public void showAdminPanelSeparator() {
         output.printf("> [INFO] " + "-".repeat(50) + "%n");
     }
 
     @Override
-    public void showAdminPanelExitMessege() {
+    public void showAdminPanelExitMessage() {
         output.printf("%n> [SYSTEM] Exiting player management%n");
     }
 

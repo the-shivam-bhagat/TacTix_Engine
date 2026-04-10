@@ -51,9 +51,10 @@ public final class InputHandler implements Input{
     public int readBotLevelChoice() {
         while (true) {
             String input = readLine();
-            if (input != null && input.length() == 1 && input.charAt(0) >= '0' && input.charAt(0) <= '5')
+            if (input == null) continue;
+            if (input.length() == 1 && input.charAt(0) >= '0' && input.charAt(0) <= '5')
                 return input.charAt(0) - '0';
-            Logger.warn("Invalid bot level input");
+            Logger.warn("Invalid bot level input: " + input);
             renderer.showInvalidBotChoice();
         }
     }
@@ -62,9 +63,10 @@ public final class InputHandler implements Input{
     public int readSessionChoice() {
         while (true) {
             String input = readLine();
-            if (input != null && input.length() == 1 && input.charAt(0) >= '1' && input.charAt(0) <= '3')
+            if (input == null) continue;
+            if (input.length() == 1 && input.charAt(0) >= '1' && input.charAt(0) <= '3')
                 return input.charAt(0) - '0';
-            Logger.warn("Invalid session choice input");
+            Logger.warn("Invalid session choice: " + input);
             renderer.showInvalidSessionChoice();
         }
     }
@@ -73,11 +75,13 @@ public final class InputHandler implements Input{
     public int readCellChoice(GameBoard board) {
         while (true) {
             String input = readLine();
-            if (input != null && input.length() == 1 && input.charAt(0) >= '1' && input.charAt(0) <= '9') {
+            if (input == null) continue;
+            if (input.length() == 1 && input.charAt(0) >= '1' && input.charAt(0) <= '9') {
                 int idx = input.charAt(0) - '1';
                 if (board.isCellFree(idx)) return idx;
+                // Cell occupied — this is an InvalidMoveException scenario
+                Logger.warn("Cell already occupied: " + (idx + 1));
             }
-            Logger.warn("Invalid cell selection input");
             renderer.showInvalidCellChoice();
         }
     }

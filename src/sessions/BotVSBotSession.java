@@ -4,6 +4,8 @@ import bot.Bot;
 import core.GameBoard;
 import core.GameResult;
 import core.SessionType;
+import exception.GameErrorCode;
+import exception.GameException;
 import input.Input;
 import renderer.view.PlayBoardView;
 import renderer.view.SessionView;
@@ -93,14 +95,26 @@ public final class BotVSBotSession implements GameSession {
             char mark = (stepCount % 2 == 0) ? 'X' : 'O';
             int entityFlag = (stepCount % 2 == 0) ? 1 : -1;
 
-            int blockNo = current.chooseMove(gameBoard.getCopyOfFreq(), entityFlag, stepCount);
+            int blockNo;
+            // Wrap bot move calls in sessions
+            try {
+                blockNo = current.chooseMove(gameBoard.getCopyOfFreq(), entityFlag, stepCount);
 
-            renderer.showBotThinking(current.getName(), DOT_DELAY);
+                renderer.showBotThinking(current.getName(), DOT_DELAY);
 
-            gameBoard.makeMove(blockNo, entityFlag);
+                gameBoard.makeMove(blockNo, entityFlag);
 
-            playBoardView.showBoard(gameBoard);
-            renderer.showBotMove(current.getName(), blockNo, mark);
+                playBoardView.showBoard(gameBoard);
+                renderer.showBotMove(current.getName(), blockNo, mark);
+
+            } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+                Logger.error("Bot produced invalid move: " + current.getName(), e);
+                throw new GameException(
+                        GameErrorCode.INVALID_MOVE,
+                        "Bot " + current.getName() + " returned an illegal move",
+                        e
+                );
+            }
 
             Boolean winCheck = gameBoard.checkWinner();
 

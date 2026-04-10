@@ -16,6 +16,7 @@ public class InvalidBotSelectionException extends GameException {
         this.requestedLevel = requestedLevel;
     }
 
+    @SuppressWarnings("unused")
     public int getRequestedLevel() {
         return requestedLevel;
     }

@@ -21,6 +21,7 @@ public interface SessionView {
 
     void showMatchWinnerBox(String name);
 
+    @SuppressWarnings("unused")
     void prompt(String message);
 
     // time in ms means the time each dot will take to appear

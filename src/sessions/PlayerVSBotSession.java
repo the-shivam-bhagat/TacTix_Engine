@@ -4,6 +4,8 @@ import bot.Bot;
 import core.GameBoard;
 import core.GameResult;
 import core.SessionType;
+import exception.GameErrorCode;
+import exception.GameException;
 import input.Input;
 import player.Player;
 import player.Registry;
@@ -97,12 +99,26 @@ public final class PlayerVSBotSession implements GameSession {
             if (playerMove) {
                 renderer.showMovePrompt(player, mark);
                 blockNo = input.readCellChoice(gameBoard);
-            } else {
-                blockNo = bot.chooseMove(gameBoard.getCopyOfFreq(), entityFlag, stepCount);
-                renderer.showBotThinking(bot.getName(), DOT_DELAY);
-            }
 
-            gameBoard.makeMove(blockNo, entityFlag);
+                gameBoard.makeMove(blockNo, entityFlag);
+
+            } else {
+                // Wrap bot move calls in sessions
+                try {
+                    blockNo = bot.chooseMove(gameBoard.getCopyOfFreq(), entityFlag, stepCount);
+                    renderer.showBotThinking(bot.getName(), DOT_DELAY);
+
+                    gameBoard.makeMove(blockNo, entityFlag);
+
+                } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
+                    Logger.error("Bot produced invalid move: " + bot.getNameWithMode(), e);
+                    throw new GameException(
+                            GameErrorCode.INVALID_MOVE,
+                            "Bot " + bot.getNameWithMode() + " returned an illegal move",
+                            e
+                    );
+                }
+            }
 
             playBoardView.showBoard(gameBoard);
             if (!playerMove) renderer.showBotMove(bot.getName(), blockNo, mark);

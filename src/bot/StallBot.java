@@ -1,7 +1,5 @@
 package bot;
 
-import java.util.Random;
-
 import static bot.UtilBot.*;
 
 public class StallBot implements Bot {
@@ -10,7 +8,6 @@ public class StallBot implements Bot {
     private static final String ELO_RATING = "??";
 
     private final String name;
-    private final Random random = new Random();
 
     public StallBot() {
         this.name = "STALL";
@@ -24,7 +21,7 @@ public class StallBot implements Bot {
     public int chooseMove(int[] board, int botFlag, int stepNo) {
 
         // ================================
-        // 🔥 OPENING RULES (KEEP THESE)
+        // OPENING RULES
         // ================================
 
         if (stepNo == 0) return 4;
@@ -56,7 +53,7 @@ public class StallBot implements Bot {
             int score = minimax(board, false, botFlag, stepNo + 1);
 
             // ================================
-            // 🚨 ONLY RULE: BLOCK OPPONENT FORK
+            // ONLY RULE: BLOCK OPPONENT FORK
             // ================================
             if (opponentCanForkNext(board, botFlag)) {
                 score -= 50; // strong penalty
@@ -72,10 +69,10 @@ public class StallBot implements Bot {
             }
         }
 
-        // 🎯 Always prefer draw
+        // Always prefer draw
         if (drawMove != -1) return drawMove;
 
-        // 🔥 Safety fallback
+        // Safety fallback
         if (bestMove == -1) {
             for (int move : priorityOrder) {
                 if (board[move] == 0) return move;
@@ -85,7 +82,7 @@ public class StallBot implements Bot {
         return bestMove;
     }
 
-    // 🔥 PERFECT PLAY MINIMAX
+    // PERFECT PLAY MINIMAX
     private int minimax(int[] board, boolean isBotTurn, int botFlag, int stepNo) {
 
         int winner = winnerCheck(board);
@@ -95,9 +92,10 @@ public class StallBot implements Bot {
             else return -100;                  // losing is worst
         }
 
-        // 🔥 FAST DRAW CHECK (no loop)
+        // FAST DRAW CHECK (no loop)
         if (stepNo == 9) return 1;
 
+        //noinspection IfStatementWithIdenticalBranches
         if (isBotTurn) {
             int best = Integer.MIN_VALUE;
 

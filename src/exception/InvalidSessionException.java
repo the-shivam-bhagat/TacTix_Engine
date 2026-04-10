@@ -31,10 +31,12 @@ public class InvalidSessionException extends GameException {
         this.requestedValue = null;
     }
 
+    @SuppressWarnings("unused")
     public Integer getRequestedValue() {
         return requestedValue;
     }
 
+    @SuppressWarnings("unused")
     public SessionType getRequestedType() {
         return requestedType;
     }

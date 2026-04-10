@@ -16,6 +16,7 @@ public enum SessionType {
         this.displayName = displayName;
     }
 
+    @SuppressWarnings("unused")
     public int getValue() {
         return value;
     }

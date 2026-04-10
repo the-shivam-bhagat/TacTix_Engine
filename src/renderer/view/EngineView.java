@@ -114,9 +114,9 @@ public interface EngineView {
 
     void showAdminPanelDeleteAnother();
 
-    void showAdminPanelSeperator();
+    void showAdminPanelSeparator();
 
-    void showAdminPanelExitMessege();
+    void showAdminPanelExitMessage();
 
     void requestAdminPassword();
 
