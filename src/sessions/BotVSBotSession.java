@@ -1,22 +1,21 @@
-package engine.sessions;
+package sessions;
 
 import bot.Bot;
-import engine.GameBoard;
-import engine.GameResult;
-import engine.GameSession;
+import core.GameBoard;
+import core.GameResult;
+import core.SessionType;
 import input.Input;
+import renderer.view.PlayBoardView;
 import renderer.view.SessionView;
 import utility.Config;
 import utility.Logger;
-import utility.Utility;
 
-public final class BvsBGameSession implements GameSession {
-    public static final String sessionType = "Bot VS Bot";
-
+public final class BotVSBotSession implements GameSession {
     private final Bot bot1;
     private final Bot bot2;
     private final Input input;
     private final SessionView renderer;
+    private final PlayBoardView playBoardView;
 
     private Bot first;
     private Bot second;
@@ -29,11 +28,12 @@ public final class BvsBGameSession implements GameSession {
 
     private static final int DOT_DELAY = Config.BotData.BOT_THINK_DOT_DELAY_MS_BVB;
 
-    public BvsBGameSession(Bot bot1, Bot bot2, Input input, SessionView renderer) {
+    public BotVSBotSession(Bot bot1, Bot bot2, Input input, SessionView renderer, PlayBoardView playBoardView) {
         this.bot1 = bot1;
         this.bot2 = bot2;
         this.input = input;
         this.renderer = renderer;
+        this.playBoardView = playBoardView;
     }
 
     @Override
@@ -84,10 +84,7 @@ public final class BvsBGameSession implements GameSession {
 
         GameBoard gameBoard = new GameBoard();
 
-        char[][][] xo = Utility.xo;
-        int[][] idx = Utility.getStartIndexesOfEachBlock_1_to_9();
-
-        renderer.showBoard(gameBoard.getBoard());
+        playBoardView.showBoard(gameBoard);
 
         while (true) {
 
@@ -100,14 +97,9 @@ public final class BvsBGameSession implements GameSession {
 
             renderer.showBotThinking(current.getName(), DOT_DELAY);
 
-            gameBoard.makeMove(
-                    blockNo,
-                    xo[stepCount % 2],
-                    idx[blockNo],
-                    entityFlag
-            );
+            gameBoard.makeMove(blockNo, entityFlag);
 
-            Utility.displayPlayBoard(gameBoard.getBoard());
+            playBoardView.showBoard(gameBoard);
             renderer.showBotMove(current.getName(), blockNo, mark);
 
             Boolean winCheck = gameBoard.checkWinner();
@@ -122,8 +114,7 @@ public final class BvsBGameSession implements GameSession {
                         loser.getNameWithELO()
                 );
 
-                Logger.info(String.format("Round winner: %s",
-                        winner.getFullIdentity()));
+                Logger.info("Round " + roundNumber + " winner: " + winner.getFullIdentity());
                 return;
             }
 
@@ -164,7 +155,7 @@ public final class BvsBGameSession implements GameSession {
     }
 
     @Override
-    public String getSessionType() {
-        return sessionType;
+    public SessionType getSessionType() {
+        return SessionType.BOT_VS_BOT;
     }
 }

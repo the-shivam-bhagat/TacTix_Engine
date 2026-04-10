@@ -3,6 +3,7 @@ package command.impl;
 import command.Command;
 import player.Registry;
 import renderer.view.EngineView;
+import utility.Logger;
 
 public class ExitCommand implements Command {
 
@@ -19,6 +20,7 @@ public class ExitCommand implements Command {
         renderer.showExitCommandMessage();
         registry.trimToMaxPlayers();
         renderer.showExitMessage();
+        Logger.warn("System exit triggered via command");
         System.exit(0);
     }
 }

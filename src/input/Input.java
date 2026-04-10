@@ -1,6 +1,6 @@
 package input;
 
-import engine.GameBoard;
+import core.GameBoard;
 
 public interface Input {
 

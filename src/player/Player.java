@@ -12,7 +12,7 @@ public final class Player implements Comparable<Player> {
     }
 
     /// Package-private — only used by FilePlayerStore when loading saved players
-    Player(String name, int lifetimeWins) {
+    public Player(String name, int lifetimeWins) {
         this.name = name;
         this.lifetimeWins = lifetimeWins;
     }
@@ -41,5 +41,17 @@ public final class Player implements Comparable<Player> {
 
     void incrementLifetimeWins() {
         lifetimeWins++;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Player player)) return false;
+        return name.equals(player.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

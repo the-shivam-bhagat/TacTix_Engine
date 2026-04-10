@@ -1,7 +1,7 @@
 package player;
 
 /// Full mutable registry contract.
-/// GameEngine, PvsPGameSession, and InputHandler depend on this —
+/// GameEngine, PlayerVSPlayerSession, and InputHandler depend on this —
 /// never on the concrete PlayerRegistry class directly.
 public interface Registry {
 

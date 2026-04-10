@@ -1,6 +1,6 @@
 package renderer.view;
 
-import engine.GameResult;
+import core.GameResult;
 
 import java.util.List;
 

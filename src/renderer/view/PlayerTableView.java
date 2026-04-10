@@ -5,5 +5,5 @@ import player.Player;
 import java.util.List;
 
 public interface PlayerTableView {
-    void showBoard(List<Player> players, String title);
+    void showTable(List<Player> players, String title);
 }

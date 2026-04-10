@@ -1,4 +1,4 @@
-package renderer;
+package renderer.classes;
 
 import player.Player;
 import renderer.view.EngineView;
@@ -29,7 +29,7 @@ public class EngineRenderer implements EngineView {
     }
 
     // ================================
-    // MODULE 1 : FEATURES
+    // MODULE FLOW (IN ORDER)
     // ================================
 
     @Override
@@ -60,10 +60,6 @@ public class EngineRenderer implements EngineView {
         output.println(Strings.FEATURES_STRING);
     }
 
-    // ================================
-    // MODULE 2 : BOT SYSTEM
-    // ================================
-
     @Override
     public void showBotSystemInit() {
         output.print("> [SETUP] Initializing bot architecture...\n> [INPUT] Press ENTER to continue");
@@ -74,10 +70,6 @@ public class EngineRenderer implements EngineView {
         output.println(Strings.BOTS_INTRODUCTION_PANEL);
     }
 
-    // ================================
-    // MODULE 3 : INSTRUCTIONS
-    // ================================
-
     @Override
     public void showInstructionInit() {
         output.print("> [SETUP] Loading gameplay instructions...\n> [INPUT] Press ENTER to continue");
@@ -87,10 +79,6 @@ public class EngineRenderer implements EngineView {
     public void showInstructions() {
         output.println(Strings.INSTRUCTION_STRING);
     }
-
-    // ================================
-    // MODULE 4 : LEADERBOARD
-    // ================================
 
     @Override
     public void showLeaderboardInit() {
@@ -111,18 +99,8 @@ public class EngineRenderer implements EngineView {
     }
 
     // ================================
-    // GAME FLOW (POST INIT)
+    // SESSION SETUP FLOW
     // ================================
-
-    @Override
-    public void requestPlayerName(int number) {
-        output.printf("%n> [INPUT] Enter name for Player %d: ", number);
-    }
-
-    @Override
-    public void showPlayerAlreadyInGame(String name) {
-        output.printf("> [ERROR] Player %s is already in the game!%n", name);
-    }
 
     @Override
     public void showSessionTypes() {
@@ -147,6 +125,98 @@ public class EngineRenderer implements EngineView {
     public void showSessionTypeInitialization(String sessionType) {
         output.printf("%n> [SETUP] Initializing → %s%n", sessionType);
     }
+
+    @Override
+    public void requestPlayerName(int number) {
+        output.printf("%n> [INPUT] Enter name for Player %d: ", number);
+    }
+
+    @Override
+    public void showPlayerAlreadyInGame(String name) {
+        output.printf("> [ERROR] Player %s is already in the game!%n", name);
+    }
+
+    @Override
+    public void showBotSelectionPrompt(int type) {
+        switch (type) {
+            case 0 -> output.printf("%n> [INPUT] Choose a bot");
+            case 1 -> output.printf("%n> [INPUT] Choose First bot");
+            case 2 -> output.printf("%n> [INPUT] Choose Second bot");
+        }
+        output.printf("%n> [INPUT] Enter bot level (0–5): ");
+    }
+
+    @Override
+    public void showBotsPanelViewMessage() {
+        output.printf("%n> [SYSTEM] Showing Bots...%n");
+    }
+
+    @Override
+    public void showBotIntroduction(String title, String[] TABLE_HEADERS, String[][] TABLE_DATA) {
+        int[] widths = new int[TABLE_HEADERS.length];
+        for (int i = 0; i < TABLE_HEADERS.length; i++)
+            widths[i] = TABLE_HEADERS[i].length();
+
+        for (String[] row : TABLE_DATA)
+            for (int i = 0; i < TABLE_HEADERS.length; i++)
+                if (row[i].length() > widths[i]) widths[i] = row[i].length();
+
+        for (int i = 0; i < widths.length; i++) widths[i] += 1;
+
+        int lenSum = 0;
+        for (int len : widths) lenSum += len;
+        if (lenSum < title.length() + 2) {
+            int perDiff = (title.length() - lenSum) / widths.length + 1;
+            for (int i = 0; i < widths.length; i++) widths[i] += perDiff;
+        }
+
+        int innerWidth = 0;
+        for (int w : widths) innerWidth += w + 3;
+        innerWidth = Math.max(innerWidth, title.length() + 2);
+        innerWidth -= 1;
+
+        output.println();
+        output.println("╔" + "═".repeat(innerWidth) + "╗");
+        int sidePad = (innerWidth - title.length()) / 2;
+        output.println("║" +
+                " ".repeat(sidePad) + title +
+                " ".repeat(Math.max(innerWidth - title.length() - sidePad, 0)) + "║");
+        output.println("╠" + "═".repeat(innerWidth) + "╣");
+
+        var header = new StringBuilder("║");
+        for (int i = 0; i < TABLE_HEADERS.length; i++) {
+            header.append(String.format(" %-" + widths[i] + "s │", TABLE_HEADERS[i]));
+        }
+        header.setCharAt(header.length() - 1, '║');
+        output.println(header);
+
+        for (String[] row : TABLE_DATA) {
+            StringBuilder divider = new StringBuilder("╟");
+            for (int i = 0; i < widths.length; i++) {
+                divider.append("─".repeat(widths[i] + 2));
+                divider.append(i < widths.length - 1 ? "┼" : "╢");
+            }
+            output.println(divider);
+
+            StringBuilder line = new StringBuilder("║");
+            for (int i = 0; i < TABLE_HEADERS.length; i++)
+                line.append(String.format(" %-" + widths[i] + "s │", row[i]));
+            line.setCharAt(line.length() - 1, '║');
+            output.println(line);
+        }
+
+        output.println("╚" + "═".repeat(innerWidth) + "╝");
+        output.println();
+    }
+
+    @Override
+    public void showBotChosen(String name, String value) {
+        output.printf("%n> [SYSTEM] Bot %s has been selected as %s%n", name, value);
+    }
+
+    // ================================
+    // GAME FLOW
+    // ================================
 
     @Override
     public void showGameStart(int gameNumber, String sessionType) {
@@ -174,57 +244,10 @@ public class EngineRenderer implements EngineView {
     }
 
     // ================================
-    // SYSTEM CONTROL / ERROR HANDLING
+    // PLAYER FEEDBACK
     // ================================
 
-    @Override
-    public void showRestartPrompt() {
-        output.print("""
-                
-                > [ERROR] A system error occurred
-                > [INPUT] Restart the game? (Y/N):\s""");
-    }
-
-    @Override
-    public void showRestartingMessage() {
-        output.print("\n> [SYSTEM] Restarting game\n> [INPUT] Press ENTER to continue");
-    }
-
-    @Override
-    public void showEndingMessage() {
-        output.print("> [SYSTEM] Session complete\n> [INPUT] Press ENTER to continue");
-    }
-
-    @Override
-    public void showExitMessage() {
-        output.print("\n> [SYSTEM] Program terminated\n> [INPUT] Press ENTER to continue");
-    }
-
-    @Override
-    public void showError(String message) {
-        output.println("\n> [ERROR] " + message + "\n");
-    }
-
-    @Override
-    public void showStackTrace(String trace) {
-        output.println(trace);
-    }
-
-    // ================================
-    // UTILITY
-    // ================================
-
-    @Override
-    public void prompt(String message) {
-        output.print(message);
-    }
-
-    @Override
-    public void printLine() {
-        output.println();
-    }
-
-    private static boolean flip = (int) Math.floor(Math.random() * 100) % 2 == 0;
+    private boolean flip = Math.random() < 0.5;
 
     @Override
     public void showNewPlayerWelcome(Player player) {
@@ -233,7 +256,6 @@ public class EngineRenderer implements EngineView {
                         : Strings.WELCOME_NEW_PLAYER_2,
                 player.getName(), player.getLifetimeWins()
         );
-
         flip = !flip;
     }
 
@@ -244,19 +266,12 @@ public class EngineRenderer implements EngineView {
                         : Strings.WELCOME_REGISTERED_PLAYER_2,
                 player.getName(), player.getLifetimeWins()
         );
-
         flip = !flip;
     }
 
-    @Override
-    public void showBotSelectionPrompt(int type) {
-        switch (type) {
-            case 0 -> output.printf("%n> [INPUT] Choose a bot");
-            case 1 -> output.printf("%n> [INPUT] Choose First bot");
-            case 2 -> output.printf("%n> [INPUT] Choose Second bot");
-        }
-        output.printf("%n> [INPUT] Enter bot level (0–5): ");
-    }
+    // ================================
+    // INPUT ERRORS
+    // ================================
 
     @Override
     public void showInvalidSessionChoice() {
@@ -273,70 +288,18 @@ public class EngineRenderer implements EngineView {
         output.print("> [ERROR] Invalid move. Enter an unoccupied cell (1–9): ");
     }
 
+    // ================================
+    // ADMIN FLOW
+    // ================================
+
     @Override
-    public void showBotIntroduction(String title, String[] TABLE_HEADERS, String[][] TABLE_DATA) {
-        // compute column widths from data + headers
-        int[] widths = new int[TABLE_HEADERS.length];
-        for (int i = 0; i < TABLE_HEADERS.length; i++)
-            widths[i] = TABLE_HEADERS[i].length();
+    public void requestAdminPassword() {
+        output.printf("%n> [INPUT] Enter admin password: ");
+    }
 
-        for (String[] row : TABLE_DATA)
-            for (int i = 0; i < TABLE_HEADERS.length; i++)
-                if (row[i].length() > widths[i]) widths[i] = row[i].length();
-
-        // add padding
-        for (int i = 0; i < widths.length; i++) widths[i] += 1;
-
-        int lenSum = 0;
-        for (int len : widths) lenSum += len;
-        if (lenSum < title.length() + 2) {
-            int perDiff = (title.length() - lenSum) / widths.length + 1;
-            for (int i = 0; i < widths.length; i++) widths[i] += perDiff;
-        }
-
-        // inner width = sum of col widths + separators
-        int innerWidth = 0;
-        for (int w : widths) innerWidth += w + 3; // 3 = " │ " per col
-        innerWidth = Math.max(innerWidth, title.length() + 2);
-        innerWidth -= 1;
-
-        // ── title ──
-        output.println();
-        output.println("╔" + "═".repeat(innerWidth) + "╗");
-        int sidePad = (innerWidth - title.length()) / 2;
-        output.println("║" +
-                " ".repeat(sidePad) + title +
-                " ".repeat(Math.max(innerWidth - title.length() - sidePad, 0)) + "║");
-        output.println("╠" + "═".repeat(innerWidth) + "╣");
-
-        // ── column headers ──
-        var header = new StringBuilder("║");
-        for (int i = 0; i < TABLE_HEADERS.length; i++) {
-            header.append(String.format(" %-" + widths[i] + "s │", TABLE_HEADERS[i])); // replace trailing │ with ║
-        }
-        header.setCharAt(header.length() - 1, '║');
-        output.println(header);
-
-
-        // ── rows ──
-        for (String[] row : TABLE_DATA) {
-            // ── header divider ──
-            StringBuilder divider = new StringBuilder("╟");
-            for (int i = 0; i < widths.length; i++) {
-                divider.append("─".repeat(widths[i] + 2));
-                divider.append(i < widths.length - 1 ? "┼" : "╢");
-            }
-            output.println(divider);
-            // --------
-            StringBuilder line = new StringBuilder("║");
-            for (int i = 0; i < TABLE_HEADERS.length; i++)
-                line.append(String.format(" %-" + widths[i] + "s │", row[i]));
-            line.setCharAt(line.length() - 1, '║');
-            output.println(line);
-        }
-
-        output.println("╚" + "═".repeat(innerWidth) + "╝");
-        output.println();
+    @Override
+    public void showInvalidAdminPassword() {
+        output.printf("> [ERROR] Invalid password%n");
     }
 
     @Override
@@ -375,16 +338,6 @@ public class EngineRenderer implements EngineView {
     }
 
     @Override
-    public void requestAdminPassword() {
-        output.printf("%n> [INPUT] Enter admin password: ");
-    }
-
-    @Override
-    public void showInvalidAdminPassword() {
-        output.printf("> [ERROR] Invalid password%n");
-    }
-
-    @Override
     public void showContinueFromManageCmd() {
         output.print("""
                 
@@ -393,18 +346,59 @@ public class EngineRenderer implements EngineView {
                 """);
     }
 
+    // ================================
+    // SYSTEM CONTROL / ERROR HANDLING
+    // ================================
+
+    @Override
+    public void showRestartPrompt() {
+        output.print("""
+                
+                > [ERROR] A system error occurred
+                > [INPUT] Restart the game? (Y/N):\s""");
+    }
+
+    @Override
+    public void showRestartingMessage() {
+        output.print("\n> [SYSTEM] Restarting game\n> [INPUT] Press ENTER to continue");
+    }
+
+    @Override
+    public void showEndingMessage() {
+        output.print("> [SYSTEM] Session complete\n> [INPUT] Press ENTER to continue");
+    }
+
+    @Override
+    public void showExitMessage() {
+        output.print("\n> [SYSTEM] Program terminated\n> [INPUT] Press ENTER to continue");
+    }
+
     @Override
     public void showExitCommandMessage() {
         output.printf("%n> [SYSTEM] Exiting game. Goodbye%n");
     }
 
     @Override
-    public void showBotsPanalViewMessage() {
-        output.printf("%n> [SYSTEM] Showing Bots...%n");
+    public void showError(String message) {
+        output.println("\n> [ERROR] " + message + "\n");
     }
 
     @Override
-    public void showBotChosen(String name, String value) {
-        output.printf("%n> [SYSTEM] Bot %s has been selected as %s%n", name, value);
+    public void showStackTrace(String trace) {
+        output.println(trace);
+    }
+
+    // ================================
+    // UTILITY
+    // ================================
+
+    @Override
+    public void prompt(String message) {
+        output.print(message);
+    }
+
+    @Override
+    public void printLine() {
+        output.println();
     }
 }

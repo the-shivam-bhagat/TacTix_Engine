@@ -41,7 +41,7 @@ public final class AdminControl implements AdminService {
     /// Print all registered players in ranked order
     private void displayPlayers() {
         renderer.prompt(Strings.ADMIN_PANEL_INTRO_BOARD);
-        boardRenderer.showBoard(
+        boardRenderer.showTable(
                 rankingView.getAllPlayers(),
                 Strings.ADMIN_PLAYER_BOARD_TITLE
         );

@@ -1,7 +1,7 @@
 package input;
 
 import command.CommandProcessor;
-import engine.GameBoard;
+import core.GameBoard;
 import renderer.view.EngineView;
 import utility.Logger;
 
@@ -22,14 +22,15 @@ public final class InputHandler implements Input{
 
     @Override
     public String readLine() {
-        String line = sc.nextLine().trim().toUpperCase();
+        String raw = sc.nextLine().trim();
+        String line = raw.toUpperCase();
         if (commandProcessor.handle(line)) return null;
         return line;
     }
 
     @Override
     public void waitForEnter() {
-        sc.nextLine();
+        readLine();
     }
 
     @Override
@@ -52,7 +53,7 @@ public final class InputHandler implements Input{
             String input = readLine();
             if (input != null && input.length() == 1 && input.charAt(0) >= '0' && input.charAt(0) <= '5')
                 return input.charAt(0) - '0';
-            Logger.warn("Invalid  input for session type attempted");
+            Logger.warn("Invalid bot level input");
             renderer.showInvalidBotChoice();
         }
     }
@@ -63,7 +64,7 @@ public final class InputHandler implements Input{
             String input = readLine();
             if (input != null && input.length() == 1 && input.charAt(0) >= '1' && input.charAt(0) <= '3')
                 return input.charAt(0) - '0';
-            Logger.warn("Invalid  input for session type attempted");
+            Logger.warn("Invalid session choice input");
             renderer.showInvalidSessionChoice();
         }
     }
@@ -76,7 +77,7 @@ public final class InputHandler implements Input{
                 int idx = input.charAt(0) - '1';
                 if (board.isCellFree(idx)) return idx;
             }
-            Logger.warn("Invalid cell input for board cell choice attempted");
+            Logger.warn("Invalid cell selection input");
             renderer.showInvalidCellChoice();
         }
     }

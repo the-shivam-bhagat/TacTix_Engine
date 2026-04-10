@@ -7,8 +7,6 @@ public interface SessionView {
 
     void showFirstMovePrompt(String first, String second);
 
-    void showBoard(char[][] board);
-
     void showMovePrompt(Player player, char mark);
 
     void showWinner(Player player);

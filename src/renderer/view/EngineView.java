@@ -126,7 +126,7 @@ public interface EngineView {
 
     void showExitCommandMessage();
 
-    void showBotsPanalViewMessage();
+    void showBotsPanelViewMessage();
 
     void showBotChosen(String name, String value);
 }

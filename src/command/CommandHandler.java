@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import static utility.Config.CommandConfig.EXIT;
+import static utility.Config.CommandConfig.MANAGE;
+
 public final class CommandHandler implements CommandProcessor {
 
     private final Map<String, Command> commands;
@@ -24,14 +27,19 @@ public final class CommandHandler implements CommandProcessor {
         commands = new HashMap<>();
 
         // register commands
-        commands.put("exit", new ExitCommand(registry, renderer));
-        commands.put("manage", new ManageCommand(sc, admin, renderer));
+        commands.put(EXIT, new ExitCommand(registry, renderer));
+        commands.put(MANAGE, new ManageCommand(sc, admin, renderer));
     }
 
     @Override
     public boolean handle(String line) {
-        Command cmd = commands.get(line.toLowerCase());
-        if (cmd == null) return false;
+        String commandKey = line.trim().toLowerCase();
+        Command cmd = commands.get(commandKey);
+
+        if (cmd == null) {
+            Logger.warn("Unknown command: " + line);
+            return false;
+        }
         Logger.info("Command executed: " + line.toLowerCase());
         cmd.execute();
         return true;

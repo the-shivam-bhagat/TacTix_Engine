@@ -1,6 +1,7 @@
-package engine;
+package core;
 
 import renderer.view.HistoryView;
+import sessions.GameSession;
 
 import java.util.ArrayList;
 import java.util.List;

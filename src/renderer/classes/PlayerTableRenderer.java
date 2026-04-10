@@ -1,4 +1,4 @@
-package renderer;
+package renderer.classes;
 
 import player.Player;
 import renderer.view.PlayerTableView;
@@ -16,7 +16,7 @@ public class PlayerTableRenderer implements PlayerTableView {
     }
 
     @Override
-    public void showBoard(List<Player> list, String title) {
+    public void showTable(List<Player> list, String title) {
         if (list == null || list.isEmpty()) {
             output.println(Strings.NO_PLAYERS_LEADERBOARD);
             return;

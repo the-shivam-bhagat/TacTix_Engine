@@ -1,23 +1,23 @@
-package engine.sessions;
+package sessions;
 
-import engine.GameBoard;
-import engine.GameResult;
-import engine.GameSession;
+import core.GameBoard;
+import core.GameResult;
+import core.SessionType;
 import input.Input;
 import player.Player;
 import player.Registry;
+import renderer.view.PlayBoardView;
 import renderer.view.SessionView;
 import utility.Logger;
-import utility.Utility;
 
-public final class PvsPGameSession implements GameSession {
-    public static final String sessionType = "Player VS Player";
+public final class PlayerVSPlayerSession implements GameSession {
 
     private final Player p1;
     private final Player p2;
     private final Input input;
     private final Registry registry;
     private final SessionView renderer;
+    private final PlayBoardView playBoardView;
 
     private Player first;
     private Player second;
@@ -28,12 +28,17 @@ public final class PvsPGameSession implements GameSession {
 
     private String result = "[Match Abandoned]";
 
-    public PvsPGameSession(Player p1, Player p2, Input input, Registry registry, SessionView renderer) {
+    public PlayerVSPlayerSession(Player p1, Player p2,
+                                 Input input,
+                                 Registry registry,
+                                 SessionView renderer,
+                                 PlayBoardView playBoardView) {
         this.first = this.p1 = p1;
         this.second = this.p2 = p2;
         this.input = input;
         this.registry = registry;
         this.renderer = renderer;
+        this.playBoardView = playBoardView;
     }
 
     @Override
@@ -74,10 +79,7 @@ public final class PvsPGameSession implements GameSession {
 
         GameBoard gameBoard = new GameBoard();
 
-        char[][][] xo = Utility.xo;
-        int[][] idx = Utility.getStartIndexesOfEachBlock_1_to_9();
-
-        renderer.showBoard(gameBoard.getBoard());
+        playBoardView.showBoard(gameBoard);
 
         while (true) {
 
@@ -92,14 +94,9 @@ public final class PvsPGameSession implements GameSession {
 
             int playerFlag = (stepCount % 2 == 0) ? 1 : -1;
 
-            gameBoard.makeMove(
-                    blockNo,
-                    xo[stepCount % 2],
-                    idx[blockNo],
-                    playerFlag
-            );
+            gameBoard.makeMove(blockNo, playerFlag);
 
-            Utility.displayPlayBoard(gameBoard.getBoard());
+            playBoardView.showBoard(gameBoard);
 
             Boolean winCheck = gameBoard.checkWinner();
 
@@ -148,7 +145,7 @@ public final class PvsPGameSession implements GameSession {
     }
 
     @Override
-    public String getSessionType() {
-        return sessionType;
+    public SessionType getSessionType() {
+        return SessionType.PLAYER_VS_PLAYER;
     }
 }

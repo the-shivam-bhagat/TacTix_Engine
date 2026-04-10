@@ -93,7 +93,7 @@ public final class Strings {
             """;
 
 
-    public static String BOTS_INTRODUCTION_PANEL = """
+    public static final String BOTS_INTRODUCTION_PANEL = """
             
             ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
             ║                                                     << ADVANCED AI BOT SYSTEM >>                                                     ║

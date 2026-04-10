@@ -12,9 +12,10 @@ import java.util.*;
  * Name = FilePlayerStore: tells you WHAT it is (a Store) and HOW (File).
  * Swap for DatabasePlayerStore or MemoryPlayerStore without touching PlayerRegistry.
  */
+
 public class FilePlayerStore implements PlayerStore {
 
-    static final String FILE_NAME = Config.PLAYER_FILE_NAME;
+    static final String FILE_NAME = Config.FileConfig.PLAYER_FILE_NAME;
 
     @Override
     public List<Player> loadAll() throws IOException {
@@ -48,6 +49,7 @@ public class FilePlayerStore implements PlayerStore {
             Logger.info("Saving players to file");
         } catch (IOException e) {
             Logger.error("Failed to save players", e);
+            throw new RuntimeException(e);
         }
     }
 

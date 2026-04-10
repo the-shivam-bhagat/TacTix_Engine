@@ -12,6 +12,7 @@ import java.util.*;
 /// Callers that manage players depend on Registry.
 /// Neither needs to know about PlayerRegistry directly.
 public final class PlayerRegistry implements Registry, RankingView {
+    private static final int AUTO_NAME_LIMIT = Config.PlayerConfig.AUTO_NAME_LIMIT;
 
     /// Fast lookup by player name
     private final Map<String, Player> players;
@@ -22,8 +23,8 @@ public final class PlayerRegistry implements Registry, RankingView {
     /// player storage
     private final PlayerStore store;
 
-    public static final int TOP_PLAYERS = Config.TOP_PLAYERS;
-    private static final int MAX_PLAYERS = Config.MAX_PLAYERS;
+    public static final int TOP_PLAYERS = Config.PlayerConfig.TOP_PLAYERS;
+    private static final int MAX_PLAYERS = Config.PlayerConfig.MAX_PLAYERS;
 
     /// We could have also used singleton but, it is too much for our project
     public PlayerRegistry(PlayerStore store) throws IOException {
@@ -72,8 +73,6 @@ public final class PlayerRegistry implements Registry, RankingView {
         Player newPlayer = new Player(name);
         addPlayer(newPlayer);
 
-        Logger.info("New player registered: " + name);
-
         return new PlayerResult(newPlayer, true);
     }
 
@@ -97,7 +96,11 @@ public final class PlayerRegistry implements Registry, RankingView {
     /// Safely update win count — remove first so TreeSet re-sorts correctly
     @Override
     public void incrementWin(Player player) {
-        if (player == null) return;
+        if (player == null) {
+            Logger.warn("Attempted to increment win for null player");
+            return;
+        }
+
         ranking.remove(player);
         player.incrementLifetimeWins();
         Logger.info("Win recorded for player: " + player.getName());
@@ -157,7 +160,7 @@ public final class PlayerRegistry implements Registry, RankingView {
 
     /// Auto-assigns the first unused PLAYER_N name (fallback: timestamp-based)
     private String generateUnusedName() {
-        for (int i = 1; i <= 60; i++) {
+        for (int i = 1; i <= AUTO_NAME_LIMIT; i++) {
             String newName = "PLAYER_" + i;
             if (!players.containsKey(newName)) return newName;
         }

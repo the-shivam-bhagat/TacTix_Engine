@@ -1,4 +1,4 @@
-package engine;
+package core;
 
 public final class GameResult {
 

@@ -3,7 +3,8 @@ package command.impl;
 import admin.AdminService;
 import command.Command;
 import renderer.view.EngineView;
-import utility.Config;
+import static utility.Config.AdminConfig.ADMIN_PASSWORD;
+
 import utility.Logger;
 
 import java.util.Scanner;
@@ -25,7 +26,7 @@ public class ManageCommand implements Command {
         renderer.requestAdminPassword();
         String password = sc.nextLine();
 
-        if (password.equals(Config.ADMIN_PASSWORD)) {
+        if (ADMIN_PASSWORD.equals(password)) {
             Logger.warn("Admin password has been entered.");
             admin.show(sc);
         } else {

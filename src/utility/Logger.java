@@ -8,15 +8,20 @@ import java.time.format.DateTimeFormatter;
 
 public final class Logger {
 
-    private static final String FILE = Config.LOGGER_FILE_NAME;
+    private static final String FILE = Config.FileConfig.LOGGER_FILE_NAME;
 
     private static final DateTimeFormatter FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    private static PrintWriter writer;   // ✅ single writer
+
     private Logger() {}
 
+    // ==============================
+    // INITIALIZATION
+    // ==============================
     public static void init() throws IOException {
-        new PrintWriter(new FileWriter(FILE)).close(); // clears file
+        writer = new PrintWriter(new FileWriter(FILE)); // overwrite file
     }
 
     private static String time() {
@@ -27,11 +32,12 @@ public final class Logger {
     // CORE WRITE METHOD
     // ==============================
     private static void write(String level, String msg) {
-        try (PrintWriter out = new PrintWriter(new FileWriter(FILE, true))) {
-            out.println("[" + level + "  " + time() + "] " + msg);
-        } catch (IOException e) {
-            System.err.println("[LOGGER ERROR] " + e.getMessage());
+        if (writer == null) {
+            throw new IllegalStateException("Logger not initialized. Call Logger.init() first.");
         }
+
+        writer.println("[" + level + "  " + time() + "] " + msg);
+        writer.flush(); // ensure immediate write
     }
 
     // ==============================
@@ -59,12 +65,13 @@ public final class Logger {
     // ERROR (with exception)
     // ==============================
     public static void error(String msg, Exception ex) {
-        write("ERROR", msg + " | " + ex.toString());
+        write("ERROR", msg + " | " + ex);
 
-        try (PrintWriter out = new PrintWriter(new FileWriter(FILE, true))) {
+        if (writer != null) {
             for (StackTraceElement e : ex.getStackTrace()) {
-                out.println("    at " + e);
+                writer.println("    at " + e);
             }
-        } catch (IOException ignored) {}
+            writer.flush();
+        }
     }
 }

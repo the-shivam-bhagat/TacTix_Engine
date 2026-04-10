@@ -1,6 +1,6 @@
 # 🎮 TIC TAC TOE — Console Edition
 
-> *A battle-tested, persistence-driven, terminal Tic Tac Toe engine built in pure Java.*
+> *A battle-tested, persistence-driven, terminal Tic Tac Toe core built in pure Java.*
 > Clean architecture. Live leaderboards. No shortcuts.
 
 ---

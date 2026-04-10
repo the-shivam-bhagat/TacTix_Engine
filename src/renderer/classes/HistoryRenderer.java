@@ -1,9 +1,7 @@
-package renderer;
+package renderer.classes;
 
-import engine.GameResult;
+import core.GameResult;
 import renderer.view.HistoryView;
-
-import javax.swing.*;
 import java.io.PrintStream;
 import java.util.List;
 
