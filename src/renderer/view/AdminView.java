@@ -1,16 +1,7 @@
 package renderer.view;
 
 public interface AdminView {
-
-    void showAdminPanelNameRequest();
-
-    void showAdminSelectPrompt();
-
-    void showAdminOperationPrompt();
-
-    void showAdminPlayerHasNoPassword(String name);
-
-    // ── Existing ─────────────────────────────────────────────────────
+    // ── old ─────────────────────────────────────────────────────
     void showAdminPanelSeparator();
 
     void showAdminPanelExitMessage();

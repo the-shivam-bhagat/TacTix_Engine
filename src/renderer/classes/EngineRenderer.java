@@ -271,11 +271,6 @@ public class EngineRenderer implements EngineView {
     }
 
     @Override
-    public void showAdminPanelNameRequest() {
-        output.printf("%n> [INPUT] Enter player name to delete: ");
-    }
-
-    @Override
     public void showAdminPanelEmptyNameError() {
         output.printf("> [ERROR] ⚠ Player name cannot be empty.%n");
     }
@@ -307,21 +302,6 @@ public class EngineRenderer implements EngineView {
                 > [SYSTEM] Returning to game
                 
                 """);
-    }
-
-    @Override
-    public void showAdminSelectPrompt() {
-        output.print("\n> [INPUT] Enter player name or rank: ");
-    }
-
-    @Override
-    public void showAdminOperationPrompt() {
-        output.print("\n> [INPUT] Choice: ");
-    }
-
-    @Override
-    public void showAdminPlayerHasNoPassword(String name) {
-        output.printf("\n> [INFO] '%s' has no password set%n", name);
     }
 
     // ── Selection ─────────────────────────────────────────────────────

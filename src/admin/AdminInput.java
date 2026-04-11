@@ -1,8 +1,4 @@
 package admin;
-
-import core.GameBoard;
-import input.Input;
-
 import java.util.Scanner;
 
 /// Raw input handler for admin panel — no command interception, no case conversion.
@@ -36,6 +32,7 @@ public final class AdminInput {
     }
 
     /// Read a Y/N confirmation — returns true if Y or y
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean readConfirm() {
         String line = sc.nextLine().trim();
         return !line.isEmpty() && Character.toUpperCase(line.charAt(0)) == 'Y';

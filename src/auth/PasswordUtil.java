@@ -35,6 +35,7 @@ public final class PasswordUtil {
     // Rules: 4–32 chars, no spaces, printable ASCII only (33–126)
     // ================================================================
 
+    @SuppressWarnings("unused")
     public static boolean isValid(String password) {
         return getValidationError(password) == null;
     }
