@@ -1,6 +1,7 @@
 package core;
 
 import admin.AdminControl;
+import auth.SessionAuthManager;
 import command.CommandHandler;
 import command.CommandProcessor;
 import exception.GameException;
@@ -82,7 +83,8 @@ public final class GameEngine {
                 playerRegistry,
                 engineRenderer,
                 new SessionRenderer(output),
-                new PlayBoardRenderer(output)
+                new PlayBoardRenderer(output),
+                new SessionAuthManager(playerRegistry)
         );
         Logger.info("Created session factory");
 
@@ -135,7 +137,7 @@ public final class GameEngine {
     }
 
     private void displayLeaderboard() {
-        playerTableRenderer.showTable(
+        playerTableRenderer.showLeaderboard(
                 playerRegistry.getTopPlayers(TOP_PLAYERS),
                 Strings.LEADERBOARD_TITLE
         );
@@ -235,7 +237,7 @@ public final class GameEngine {
         // caught by the wrapper in shutdown() below — player data warning shown
         playerRegistry.trimToMaxPlayers();
 
-        playerTableRenderer.showTable(
+        playerTableRenderer.showLeaderboard(
                 playerRegistry.getTopPlayers(TOP_PLAYERS),
                 Strings.LEADERBOARD_TITLE
         );

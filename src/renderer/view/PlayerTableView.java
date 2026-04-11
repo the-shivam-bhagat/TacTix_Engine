@@ -1,9 +1,9 @@
 package renderer.view;
 
 import player.Player;
-
 import java.util.List;
 
 public interface PlayerTableView {
-    void showTable(List<Player> players, String title);
+    void showLeaderboard(List<Player> players, String title);   // rank, name, wins, daysOld
+    void showAdminTable(List<Player> players, String title);    // rank, name, wins, daysOld, joinDate
 }

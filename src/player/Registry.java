@@ -19,4 +19,15 @@ public interface Registry {
 
     /// Keep registry within max size, then persist
     void trimToMaxPlayers();
+
+    /// Auth-related - related
+    @SuppressWarnings("UnusedReturnValue")
+    boolean setPassword(String name, String rawPassword);
+    boolean verifyPassword(String name, String rawPassword);
+
+    void setLifetimeWins(String name, int wins, String AdminPassword);
+
+    void removePassword(String name, String rawPassword);
+
+    boolean renamePlayer(String name, String newName, String AdminPassword);
 }

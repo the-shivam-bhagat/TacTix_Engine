@@ -1,90 +1,17 @@
-[INFO  2026-04-10 11:35:23] Application started
-[INFO  2026-04-10 11:35:23] Game Engine: System started
-[INFO  2026-04-10 11:35:23] Created engine renderer
-[INFO  2026-04-10 11:35:23] Created board renderer
-[INFO  2026-04-10 11:35:23] Created history renderer
-[INFO  2026-04-10 11:35:23] Loading players from storage
-[INFO  2026-04-10 11:35:23] Reading players from file
-[INFO  2026-04-10 11:35:23] Created players registry
-[INFO  2026-04-10 11:35:23] Created command handler
-[INFO  2026-04-10 11:35:23] Created input handler
-[INFO  2026-04-10 11:35:23] Created session factory
-[INFO  2026-04-10 11:35:23] Created game history
-[INFO  2026-04-10 11:35:23] Initialization complete
-[WARN  2026-04-10 11:35:27] Unknown command: 
-[WARN  2026-04-10 11:35:32] Unknown command: Y
-[WARN  2026-04-10 11:35:33] Unknown command: 
-[WARN  2026-04-10 11:35:34] Unknown command: 
-[WARN  2026-04-10 11:35:35] Unknown command: 
-[WARN  2026-04-10 11:35:37] Unknown command: 
-[INFO  2026-04-10 11:35:37] Entering main game loop
-[WARN  2026-04-10 11:35:39] Unknown command: 1
-[WARN  2026-04-10 11:35:43] Unknown command: SHIVAM
-[INFO  2026-04-10 11:35:43] Existing player loaded: SHIVAM
-[WARN  2026-04-10 11:35:46] Unknown command: HARSH
-[INFO  2026-04-10 11:35:46] Existing player loaded: HARSH
-[INFO  2026-04-10 11:35:46] Players selected: SHIVAM vs HARSH
-[INFO  2026-04-10 11:35:46] Starting Game 1
-[INFO  2026-04-10 11:35:46] New Player v Player session started: SHIVAM vs HARSH
-[WARN  2026-04-10 11:35:48] Unknown command: 
-[WARN  2026-04-10 11:35:48] Unknown command: 
-[INFO  2026-04-10 11:35:48] PvP Round 1 started
-[WARN  2026-04-10 11:35:50] Unknown command: 1
-[WARN  2026-04-10 11:35:50] Unknown command: 2
-[WARN  2026-04-10 11:35:51] Unknown command: 3
-[WARN  2026-04-10 11:35:52] Unknown command: 4
-[WARN  2026-04-10 11:35:52] Unknown command: 5
-[WARN  2026-04-10 11:35:53] Unknown command: 6
-[WARN  2026-04-10 11:35:54] Unknown command: 7
-[INFO  2026-04-10 11:35:54] Win recorded for player: SHIVAM
-[INFO  2026-04-10 11:35:54] Round winner: SHIVAM
-[WARN  2026-04-10 11:35:55] Unknown command: 
-[WARN  2026-04-10 11:35:56] Unknown command: N
-[INFO  2026-04-10 11:35:56] Match result: SHIVAM
-[WARN  2026-04-10 11:35:57] Unknown command: 
-[WARN  2026-04-10 11:35:59] Unknown command: 2
-[WARN  2026-04-10 11:36:00] Unknown command: 
-[INFO  2026-04-10 11:36:00] New player registered: PLAYER_14
-[WARN  2026-04-10 11:36:02] Unknown command: 
-[WARN  2026-04-10 11:36:03] Unknown command: 2
-[INFO  2026-04-10 11:36:03] Starting Game 2
-[WARN  2026-04-10 11:36:04] Unknown command: 
-[INFO  2026-04-10 11:36:04] New Player v Bot session started: PLAYER_14 vs HAZE (EASY_BOT)
-[WARN  2026-04-10 11:36:05] Unknown command: 
-[WARN  2026-04-10 11:36:06] Unknown command: 
-[INFO  2026-04-10 11:36:06] PvB Round 1 started
-[WARN  2026-04-10 11:36:23] Unknown command: 1
-[WARN  2026-04-10 11:36:24] Unknown command: 
-[WARN  2026-04-10 11:36:28] Unknown command: 9
-[WARN  2026-04-10 11:36:31] Unknown command: 7
-[WARN  2026-04-10 11:36:38] Unknown command: 8
-[INFO  2026-04-10 11:36:38] Win recorded for player: PLAYER_14
-[INFO  2026-04-10 11:36:38] Round winner: PLAYER_14
-[WARN  2026-04-10 11:36:40] Unknown command: 
-[WARN  2026-04-10 11:36:42] Unknown command: N
-[INFO  2026-04-10 11:36:42] Match result: PLAYER_14
-[WARN  2026-04-10 11:36:43] Unknown command: 
-[WARN  2026-04-10 11:36:44] Unknown command: 3
-[WARN  2026-04-10 11:36:46] Unknown command: 4
-[WARN  2026-04-10 11:36:50] Unknown command: 0
-[INFO  2026-04-10 11:36:50] Starting Game 3
-[WARN  2026-04-10 11:36:52] Unknown command: 
-[INFO  2026-04-10 11:36:52] New Bot v Bot session started: FLINT vs STALL
-[WARN  2026-04-10 11:36:53] Unknown command: 
-[WARN  2026-04-10 11:36:55] Unknown command: 
-[INFO  2026-04-10 11:36:55] BvsB Round 1 started: FLINT (HARD_BOT, 1833) (X) vs STALL (STALL_BOT, ??) (O)
-[INFO  2026-04-10 11:37:14] Round ended in tie
-[WARN  2026-04-10 11:37:19] Unknown command: 
-[WARN  2026-04-10 11:37:20] Unknown command: 
-[WARN  2026-04-10 11:37:21] Unknown command: 
-[INFO  2026-04-10 11:37:21] BvsB Round 2 started: STALL (STALL_BOT, ??) (X) vs FLINT (HARD_BOT, 1833) (O)
-[INFO  2026-04-10 11:37:41] Round ended in tie
-[WARN  2026-04-10 11:37:57] Unknown command: 
-[WARN  2026-04-10 11:37:57] Unknown command: N
-[INFO  2026-04-10 11:37:57] Match result: DRAW
-[WARN  2026-04-10 11:37:58] Unknown command: N
-[WARN  2026-04-10 11:38:00] Unknown command: 
-[INFO  2026-04-10 11:38:02] Trimming to max players
-[INFO  2026-04-10 11:38:02] Saving players to file
-[INFO  2026-04-10 11:38:04] Game session ended
-[INFO  2026-04-10 11:38:04] Application terminated
+[INFO  2026-04-11 20:24:47] Application started
+[INFO  2026-04-11 20:24:47] Game Engine: System started
+[INFO  2026-04-11 20:24:47] Created engine renderer
+[INFO  2026-04-11 20:24:47] Created board renderer
+[INFO  2026-04-11 20:24:47] Created history renderer
+[INFO  2026-04-11 20:24:47] Loading players from storage
+[INFO  2026-04-11 20:24:47] Reading players from file
+[INFO  2026-04-11 20:24:47] Created players registry
+[INFO  2026-04-11 20:24:47] Created command handler
+[INFO  2026-04-11 20:24:47] Created input handler
+[INFO  2026-04-11 20:24:47] Created auth service
+[INFO  2026-04-11 20:24:47] Created session factory
+[INFO  2026-04-11 20:24:47] Created game history
+[INFO  2026-04-11 20:24:47] Initialization complete
+[INFO  2026-04-11 20:24:50] Command executed: manage
+[WARN  2026-04-11 20:24:52] Admin password has been entered.
+[INFO  2026-04-11 20:24:52] Admin panel accessed

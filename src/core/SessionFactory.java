@@ -1,14 +1,16 @@
 package core;
 
+import auth.AuthService;
+import auth.PlayerCreator;
 import bot.Bot;
 import exception.InvalidSessionException;
 import input.Input;
 import player.Player;
-import player.PlayerResult;
 import player.Registry;
 import renderer.view.EngineView;
 import renderer.view.PlayBoardView;
 import renderer.view.SessionView;
+import renderer.view.SetupView;
 import sessions.BotVSBotSession;
 import sessions.GameSession;
 import sessions.PlayerVSBotSession;
@@ -21,19 +23,29 @@ import static bot.BotFactory.createBot;
 public class SessionFactory {
     private final Input input;
     private final Registry playerRegistry;
-    private final EngineView engineRenderer;
+    private final SetupView renderer;
     private final SessionView sessionRenderer;
     private final PlayBoardView playBoardView;
+    private final PlayerCreator playerCreator;
 
 
-    public SessionFactory(Input input, Registry playerRegistry,
+    public SessionFactory(Input input,
+                          Registry playerRegistry,
                           EngineView engineRenderer,
-                          SessionView sessionRenderer, PlayBoardView playBoardRenderer) {
+                          SessionView sessionRenderer,
+                          PlayBoardView playBoardRenderer,
+                          AuthService authService) {
         this.input = input;
         this.playerRegistry = playerRegistry;
-        this.engineRenderer = engineRenderer;
+        this.renderer = engineRenderer;
         this.sessionRenderer = sessionRenderer;
         this.playBoardView = playBoardRenderer;
+        this.playerCreator = new PlayerCreator(
+                input,
+                playerRegistry,
+                engineRenderer,
+                authService
+        );
     }
 
     @SuppressWarnings("UnnecessaryDefault")
@@ -50,10 +62,10 @@ public class SessionFactory {
     }
 
     private GameSession getPlayerVSPlayerSession() {
-        engineRenderer.showSessionTypeInitialization(SessionType.PLAYER_VS_PLAYER.toString());
+        renderer.showSessionTypeInitialization(SessionType.PLAYER_VS_PLAYER.toString());
 
-        Player p1 = createPlayer("", 1);
-        Player p2 = createPlayer(p1.getName(), 2);
+        Player p1 = playerCreator.createPlayer("", 1);
+        Player p2 = playerCreator.createPlayer(p1.getName(), 2);
 
         Logger.info("Players selected: " + p1.getName() + " vs " + p2.getName());
 
@@ -64,26 +76,26 @@ public class SessionFactory {
     }
 
     private GameSession getPlayerVSBotSession() {
-        engineRenderer.showSessionTypeInitialization(SessionType.PLAYER_VS_BOT.toString());
+        renderer.showSessionTypeInitialization(SessionType.PLAYER_VS_BOT.toString());
 
-        Player player = createPlayer("", 1);
+        Player player = playerCreator.createPlayer("", 1);
 
-        engineRenderer.showBotsPanelViewMessage();
-        engineRenderer.showContinuePrompt();
+        renderer.showBotsPanelViewMessage();
+        renderer.showContinuePrompt();
         input.waitForEnter();
 
-        engineRenderer.showBotIntroduction(
+        renderer.showBotIntroduction(
                 Config.BotData.TITLE,
                 Config.BotData.BOT_TABLE_HEADERS,
                 Config.BotData.BOT_TABLE
         );
 
-        engineRenderer.showBotSelectionPrompt(0);
+        renderer.showBotSelectionPrompt(0);
         int level = input.readBotLevelChoice();
 
         Bot bot = createBot(level);
 
-        engineRenderer.showBotChosen(bot.getNameWithELO(), "Player 2");
+        renderer.showBotChosen(bot.getNameWithELO(), "Player 2");
 
         return new PlayerVSBotSession(
                 player, bot, input, playerRegistry,
@@ -92,56 +104,30 @@ public class SessionFactory {
     }
 
     private GameSession getBotVSBotSession() {
-        engineRenderer.showSessionTypeInitialization(SessionType.BOT_VS_BOT.toString());
-        engineRenderer.showBotsPanelViewMessage();
-        engineRenderer.showBotIntroduction(
+        renderer.showSessionTypeInitialization(SessionType.BOT_VS_BOT.toString());
+        renderer.showBotsPanelViewMessage();
+        renderer.showBotIntroduction(
                 Config.BotData.TITLE,
                 Config.BotData.BOT_TABLE_HEADERS,
                 Config.BotData.BOT_TABLE
         );
 
-        engineRenderer.showBotSelectionPrompt(1);
+        renderer.showBotSelectionPrompt(1);
         int level1 = input.readBotLevelChoice();
 
-        engineRenderer.showBotSelectionPrompt(2);
+        renderer.showBotSelectionPrompt(2);
         int level2 = input.readBotLevelChoice();
 
         Bot bot1 = level1 == level2 ? createBot(level1, true) : createBot(level1);
         Bot bot2 = level1 == level2 ? createBot(level2, false) : createBot(level2);
 
-        engineRenderer.showBotChosen(bot1.getNameWithELO(), "Player 1");
-        engineRenderer.showBotChosen(bot2.getNameWithELO(), "Player 2");
+        renderer.showBotChosen(bot1.getNameWithELO(), "Player 1");
+        renderer.showBotChosen(bot2.getNameWithELO(), "Player 2");
 
         return new BotVSBotSession(
                 bot1, bot2, input,
                 sessionRenderer,
                 playBoardView
         );
-    }
-
-    private Player createPlayer(String pre, int number) {
-        String name;
-
-        while (true) {
-            engineRenderer.requestPlayerName(number);
-            String input = this.input.readLine();
-            if (input == null) continue;
-            name = input.trim().toUpperCase();
-
-            if (number == 2 && pre.equals(name)) {
-                engineRenderer.showPlayerAlreadyInGame(name);
-            } else break;
-        }
-
-        PlayerResult result = playerRegistry.getOrCreatePlayer(name);
-        Player player = result.getPlayer();
-
-        if (result.isNew()) {
-            engineRenderer.showNewPlayerWelcome(player);
-        } else {
-            engineRenderer.showReturningPlayerWelcome(player);
-        }
-
-        return player;
     }
 }

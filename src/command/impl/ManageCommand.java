@@ -2,9 +2,9 @@ package command.impl;
 
 import admin.AdminService;
 import command.Command;
-import renderer.view.EngineView;
 import static utility.Config.AdminConfig.ADMIN_PASSWORD;
 
+import renderer.view.ManageCommandView;
 import utility.Logger;
 
 import java.util.Scanner;
@@ -13,9 +13,9 @@ public class ManageCommand implements Command {
 
     private final Scanner sc;
     private final AdminService admin;
-    private final EngineView renderer;
+    private final ManageCommandView renderer;
 
-    public ManageCommand(Scanner sc, AdminService admin, EngineView renderer) {
+    public ManageCommand(Scanner sc, AdminService admin, ManageCommandView renderer) {
         this.sc = sc;
         this.admin = admin;
         this.renderer = renderer;

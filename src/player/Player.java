@@ -2,7 +2,13 @@ package player;
 
 import auth.PasswordUtil;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+
 public final class Player implements Comparable<Player> {
+
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final String name;
     private int lifetimeWins;
@@ -11,19 +17,85 @@ public final class Player implements Comparable<Player> {
     private String passwordHash;
     private String passwordSalt;
 
+    private final String joinDate;
+    private String lastActive; // null = never played a session
+
     public Player(String name) {
         this.name = name;
         this.lifetimeWins = 0;
         this.passwordHash = null;
         this.passwordSalt = null;
+        this.joinDate = LocalDate.now().format(FORMATTER);
+        this.lastActive = null;
     }
 
-    // Used by FilePlayerStore — hash/salt may be null (backward compact + no password)
-    public Player(String name, int lifetimeWins, String passwordHash, String passwordSalt) {
+    // Used by FilePlayerStore — hash/salt/lastActive may be null (backward compact)
+    public Player(
+            String name,
+            int lifetimeWins,
+            String passwordHash,
+            String passwordSalt,
+            String joinDate,
+            String lastActive) {
+
         this.name = name;
         this.lifetimeWins = lifetimeWins;
         this.passwordHash = passwordHash;
         this.passwordSalt = passwordSalt;
+        this.joinDate = (joinDate == null || joinDate.isEmpty())
+                ? LocalDate.now().format(FORMATTER) : joinDate;
+        this.lastActive = (lastActive == null || lastActive.isEmpty()) ? null : lastActive;
+    }
+
+    Player(Player player, String newName) {
+        this.name = newName;
+        this.lifetimeWins = player.getLifetimeWins();
+        this.passwordHash = player.getPasswordHash();
+        this.passwordSalt = player.getPasswordSalt();
+        this.joinDate = player.getJoinDate();
+        this.lastActive = player.getLastActiveExact();
+    }
+
+    // =====================================================
+    // Date methods
+    // =====================================================
+
+    // Returns join date as "DD/MM/YYYY"
+    public String memberSince() {
+        return joinDate;
+    }
+
+    // Returns how many days ago this player joined
+    public int daysOld() {
+        LocalDate join = LocalDate.parse(joinDate, FORMATTER);
+        return (int) ChronoUnit.DAYS.between(join, LocalDate.now());
+    }
+
+    // Called by PlayerCreator after player is resolved — marks today as last active
+    public void markActive() {
+        this.lastActive = LocalDate.now().format(FORMATTER);
+    }
+
+    // Returns "X days ago", "Today", or "Never played"
+    public String lastActiveDisplay() {
+        if (lastActive == null) return "Never played";
+        LocalDate date = LocalDate.parse(lastActive, FORMATTER);
+        long days = ChronoUnit.DAYS.between(date, LocalDate.now());
+        if (days == 0) return "Today";
+        return days + " days ago";
+    }
+
+    // For persistence only
+    public String getJoinDate() {
+        return joinDate;
+    }
+
+    public String getLastActive() {
+        return lastActive != null ? lastActive : "";
+    }
+
+    String getLastActiveExact() {
+        return lastActive;
     }
 
     // =====================================================
@@ -50,8 +122,13 @@ public final class Player implements Comparable<Player> {
     }
 
     // For persistence only — FilePlayerStore reads these directly
-    public String getPasswordHash() { return passwordHash != null ? passwordHash : ""; }
-    public String getPasswordSalt() { return passwordSalt != null ? passwordSalt : ""; }
+    public String getPasswordHash() {
+        return passwordHash != null ? passwordHash : "";
+    }
+
+    public String getPasswordSalt() {
+        return passwordSalt != null ? passwordSalt : "";
+    }
 
     // =====================================================
     // Standard methods
@@ -64,12 +141,31 @@ public final class Player implements Comparable<Player> {
         return this.name.compareTo(o.name);
     }
 
-    @Override public String toString() { return name; }
+    @Override
+    public String toString() {
+        return name;
+    }
 
-    public String getName() { return name; }
-    public int getLifetimeWins() { return lifetimeWins; }
+    public String getName() {
+        return name;
+    }
 
-    void incrementLifetimeWins() { lifetimeWins++; }
+    public int getLifetimeWins() {
+        return lifetimeWins;
+    }
+
+    void incrementLifetimeWins() {
+        lifetimeWins++;
+    }
+
+    void setLifetimeWins(int lifetimeWins) {
+        this.lifetimeWins = lifetimeWins;
+    }
+
+    void removePassword() {
+        this.passwordHash = null;
+        this.passwordSalt = null;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -78,5 +174,8 @@ public final class Player implements Comparable<Player> {
         return name.equals(player.name);
     }
 
-    @Override public int hashCode() { return name.hashCode(); }
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }

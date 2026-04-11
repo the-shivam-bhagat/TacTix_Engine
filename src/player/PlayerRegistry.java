@@ -141,6 +141,74 @@ public final class PlayerRegistry implements Registry, RankingView {
         }
     }
 
+    /// Auth - related
+
+    @Override
+    public boolean setPassword(String name, String rawPassword) {
+        Player player = players.get(name);
+        if (player == null) return false;
+        player.setPassword(rawPassword);
+        Logger.info("Password set for player: " + name);
+        return true;
+    }
+
+    @Override
+    public boolean verifyPassword(String name, String rawPassword) {
+        Player player = players.get(name);
+        if (player == null) return false;
+        return player.matchesPassword(rawPassword);
+    }
+
+    @Override
+    public void setLifetimeWins(String name, int wins, String AdminPassword) {
+        if (!Config.AdminConfig.ADMIN_PASSWORD.equals(AdminPassword)) {
+            Logger.warn("Unauthorized Win Increment request, player: " + name);
+            throw new RuntimeException("Unauthorized win Increment request");
+        }
+
+        Player player = players.get(name);
+        if (player == null) return;
+
+        ranking.remove(player);
+        player.setLifetimeWins(wins);
+        ranking.add(player);
+    }
+
+    @Override
+    public void removePassword(String name, String rawPassword) {
+        if (!Config.AdminConfig.ADMIN_PASSWORD.equals(rawPassword)) {
+            Logger.warn("Unauthorized password removal requested, player: " + name);
+            throw new RuntimeException("Unauthorized password removal requested");
+        }
+        Player player = players.get(name);
+        if (player == null) return;
+        player.removePassword();
+    }
+
+    @Override
+    public boolean renamePlayer(String name, String newName, String rawPassword) {
+        if (!Config.AdminConfig.ADMIN_PASSWORD.equals(rawPassword)) {
+            Logger.warn("Unauthorized rename requested, player: " + name);
+            throw new RuntimeException("Unauthorized rename requested");
+        }
+
+        Player player = players.get(name);
+        if (player == null) return false;
+        if (players.containsKey(newName)) return false; // name taken
+
+        Player newPlayer = new Player(player, newName);
+
+        // Remove old before adding new
+        ranking.remove(player);
+        players.remove(name);
+
+        players.put(newName, newPlayer);
+        ranking.add(newPlayer);
+
+        Logger.info("Admin renamed: " + name + " → " + newName);
+        return true;
+    }
+
     // =====================================================
     // RankingView implementation (read-only)
     // =====================================================

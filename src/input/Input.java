@@ -6,6 +6,8 @@ public interface Input {
 
     String readLine();
 
+    String readRawLine();
+
     void waitForEnter();
 
     void waitForEnterWithoutCheck();

@@ -2,7 +2,7 @@ package input;
 
 import command.CommandProcessor;
 import core.GameBoard;
-import renderer.view.EngineView;
+import renderer.view.InputView;
 import utility.Logger;
 
 import java.util.Scanner;
@@ -10,11 +10,11 @@ import java.util.Scanner;
 
 public final class InputHandler implements Input{
 
-    private final EngineView renderer;
+    private final InputView renderer;
     private final Scanner sc;
     private final CommandProcessor commandProcessor;
 
-    public InputHandler(Scanner sc, EngineView renderer, CommandProcessor commandProcessor) {
+    public InputHandler(Scanner sc, InputView renderer, CommandProcessor commandProcessor) {
         this.sc = sc;
         this.renderer = renderer;
         this.commandProcessor = commandProcessor;
@@ -26,6 +26,13 @@ public final class InputHandler implements Input{
         String line = raw.toUpperCase();
         if (commandProcessor.handle(line)) return null;
         return line;
+    }
+
+    @Override
+    public String readRawLine() {
+        String raw = sc.nextLine().trim();
+        if (commandProcessor.handle(raw.toUpperCase())) return null;
+        return raw;
     }
 
     @Override

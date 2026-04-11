@@ -127,16 +127,6 @@ public class EngineRenderer implements EngineView {
     }
 
     @Override
-    public void requestPlayerName(int number) {
-        output.printf("%n> [INPUT] Enter name for Player %d: ", number);
-    }
-
-    @Override
-    public void showPlayerAlreadyInGame(String name) {
-        output.printf("> [ERROR] Player %s is already in the game!%n", name);
-    }
-
-    @Override
     public void showBotSelectionPrompt(int type) {
         switch (type) {
             case 0 -> output.printf("%n> [INPUT] Choose a bot");
@@ -244,43 +234,21 @@ public class EngineRenderer implements EngineView {
     }
 
     // ================================
-    // PLAYER FEEDBACK
-    // ================================
-
-    private boolean flip = Math.random() < 0.5;
-
-    @Override
-    public void showNewPlayerWelcome(Player player) {
-        output.printf(
-                flip ? Strings.WELCOME_NEW_PLAYER_1
-                        : Strings.WELCOME_NEW_PLAYER_2,
-                player.getName(), player.getLifetimeWins()
-        );
-        flip = !flip;
-    }
-
-    @Override
-    public void showReturningPlayerWelcome(Player player) {
-        output.printf(
-                flip ? Strings.WELCOME_REGISTERED_PLAYER_1
-                        : Strings.WELCOME_REGISTERED_PLAYER_2,
-                player.getName(), player.getLifetimeWins()
-        );
-        flip = !flip;
-    }
-
-    // ================================
     // INPUT ERRORS
     // ================================
 
     @Override
     public void showInvalidSessionChoice() {
-        output.print("> [ERROR] Invalid selection. Enter a value between 1 and 3: ");
+        output.print("""
+                > [ERROR] Invalid selection.
+                > [INPUT] Enter a value between 1 and 3:\s""");
     }
 
     @Override
     public void showInvalidBotChoice() {
-        output.print("> [ERROR] Invalid selection. Enter a value between 0 and 5: ");
+        output.print("""
+                > [ERROR] Invalid selection.
+                > [Input] Enter a value between 0 and 5:\s""");
     }
 
     @Override
@@ -323,11 +291,6 @@ public class EngineRenderer implements EngineView {
     }
 
     @Override
-    public void showAdminPanelDeleteAnother() {
-        output.printf("%n> [INPUT] Perform another action? (Y/N): ");
-    }
-
-    @Override
     public void showAdminPanelSeparator() {
         output.printf("> [INFO] " + "-".repeat(50) + "%n");
     }
@@ -344,6 +307,208 @@ public class EngineRenderer implements EngineView {
                 > [SYSTEM] Returning to game
                 
                 """);
+    }
+
+    @Override
+    public void showAdminSelectPrompt() {
+        output.print("\n> [INPUT] Enter player name or rank: ");
+    }
+
+    @Override
+    public void showAdminOperationPrompt() {
+        output.print("\n> [INPUT] Choice: ");
+    }
+
+    @Override
+    public void showAdminPlayerHasNoPassword(String name) {
+        output.printf("\n> [INFO] '%s' has no password set%n", name);
+    }
+
+    // ── Selection ─────────────────────────────────────────────────────
+
+    @Override
+    public void showAdminMenu() {
+        output.print("""
+            
+            > [INFO] Select player from menu to perform actions on
+            > [ADMIN] Select player by:
+                [1] Name
+                [2] Rank
+                [3] Refresh player table
+                [0] Exit admin panel
+            
+            > [INPUT] Choice:\s""");
+    }
+
+    @Override
+    public void showAdminSelectByNamePrompt() {
+        output.print("\n> [INPUT] Enter player name: ");
+    }
+
+    @Override
+    public void showAdminSelectByRankPrompt() {
+        output.print("\n> [INPUT] Enter player rank: ");
+    }
+
+    @Override
+    public void showAdminPlayerNotFound(String identifier) {
+        output.printf("> [ERROR] No player found for: '%s'%n", identifier);
+    }
+
+    @Override
+    public void showAdminAnotherAction() {
+        output.print("\n> [INPUT] Perform another action? (Y/N): ");
+    }
+
+// ── Operation menu ────────────────────────────────────────────────
+
+    @Override
+    public void showAdminOperationMenu(String playerName) {
+        output.printf("""
+                
+                > [ADMIN] Selected player: %s
+                > [ADMIN] Choose operation:
+                    [1] Change name
+                    [2] Manage password
+                    [3] Set lifetime wins
+                    [4] Delete player
+                    [0] Back
+                
+                > [INPUT] Choice:\s""", playerName);
+    }
+
+// ── Change name ───────────────────────────────────────────────────
+
+    @Override
+    public void showAdminChangeNamePrompt(String currentName) {
+        output.printf("%n> [INPUT] Enter new name for '%s': ", currentName);
+    }
+
+    @Override
+    public void showAdminRenameSuccess(String oldName, String newName) {
+        output.printf("> [ADMIN] Player '%s' renamed to '%s'%n", oldName, newName);
+    }
+
+    @Override
+    public void showAdminNameTaken(String name) {
+        output.printf("> [ERROR] Name '%s' is already taken. Choose another.%n", name);
+    }
+
+// ── Password management ───────────────────────────────────────────
+
+    @Override
+    public void showAdminPasswordMenuHasPassword(String playerName) {
+        output.printf("""
+                
+                > [ADMIN] '%s' currently has a password.
+                    [1] Change password
+                    [2] Remove password
+                    [0] Back
+                
+                > [INPUT] Choice:\s""", playerName);
+    }
+
+    @Override
+    public void showAdminPasswordMenuNoPassword(String playerName) {
+        output.printf("""
+                
+                > [ADMIN] '%s' has no password set.
+                    [1] Add password
+                    [0] Back
+                
+                > [INPUT] Choice:\s""", playerName);
+    }
+
+    @Override
+    public void showAdminPasswordInputPrompt(boolean isChange) {
+        output.printf("""
+                        
+                        > [INFO]  Rules: 4-32 chars, no spaces, letters/digits/symbols only.
+                        
+                        > [INPUT] Enter%s password (or press ENTER to cancel):\s""",
+                isChange ? " new" : "");
+    }
+
+    @Override
+    public void showAdminPasswordConfirmPrompt(boolean isChange) {
+        output.printf("%n> [INPUT] Confirm%s password: ", isChange ? " new" : "");
+    }
+
+    @Override
+    public void showAdminPasswordMismatch() {
+        output.print("> [ERROR] Passwords do not match. Try again.\n");
+    }
+
+    @Override
+    public void showAdminPasswordChanged(String name) {
+        output.printf("> [ADMIN] Password changed for '%s'%n", name);
+    }
+
+    @Override
+    public void showAdminPasswordRemoved(String name) {
+        output.printf("> [ADMIN] Password removed for '%s' — account is now open%n", name);
+    }
+
+    @Override
+    public void showAdminPasswordAdded(String name) {
+        output.printf("> [ADMIN] Password added for '%s'%n", name);
+    }
+
+    @Override
+    public void showAdminValidationError(String error) {
+        output.printf("> [ERROR] %s%n", error);
+    }
+
+// ── Set wins ──────────────────────────────────────────────────────
+
+    @Override
+    public void showAdminWinsCurrentAndPrompt(String name, int currentWins) {
+        output.printf("""
+                
+                > [INFO]  Current wins for '%s': %d
+                
+                > [INPUT] Enter new win count:\s""", name, currentWins);
+    }
+
+    @Override
+    public void showAdminWinsUpdated(String name, int wins) {
+        output.printf("> [ADMIN] Lifetime wins for '%s' set to %d%n", name, wins);
+    }
+
+    @Override
+    public void showAdminWinsNegativeError() {
+        output.print("%n> [ERROR] Win count cannot be negative.\n");
+    }
+
+// ── Delete ────────────────────────────────────────────────────────
+
+    @Override
+    public void showAdminDeleteConfirmPrompt(String playerName) {
+        output.printf("%n> [ADMIN] Are you sure you want to delete '%s'? (Y/N): ",
+                playerName);
+    }
+
+// ── General ───────────────────────────────────────────────────────
+
+    @Override
+    public void showAdminInvalidInput() {
+        output.print("> [ERROR] Invalid input. Please try again.\n");
+    }
+
+    @Override
+    public void showAdminActionCancelled() {
+        output.print("> [ADMIN] Action cancelled.\n");
+    }
+
+    @Override
+    public void showAdminPanelContinuePrompt() {
+        output.print("\n> [INPUT] Press ENTER to continue to player management");
+    }
+
+    @Override
+    public void showPlayerTableIsRefreshed() {
+        output.print("> [INFO] Player table is refreshed.\n");
+        showAdminPanelSeparator();
     }
 
     // ================================
@@ -386,6 +551,123 @@ public class EngineRenderer implements EngineView {
     @Override
     public void showStackTrace(String trace) {
         output.println(trace);
+    }
+
+    @Override
+    public void requestPlayerName(int number) {
+        output.printf("%n> [INPUT] Enter name for Player %d: ", number);
+    }
+
+    @Override
+    public void showPlayerAlreadyInGame(String name) {
+        output.printf("> [ERROR] Player %s is already in the game!%n", name);
+    }
+
+    // ================================
+    // PLAYER FEEDBACK
+    // ================================
+
+    private boolean flip = Math.random() < 0.5;
+
+    @Override
+    public void showNewPlayerWelcome(Player player) {
+        output.printf(
+                flip ? Strings.WELCOME_NEW_PLAYER_1
+                        : Strings.WELCOME_NEW_PLAYER_2,
+                player.getName(), player.getLifetimeWins()
+        );
+        flip = !flip;
+    }
+
+    @Override
+    public void showReturningPlayerWelcome(Player player) {
+        output.printf(
+                flip ? Strings.WELCOME_REGISTERED_PLAYER_1
+                        : Strings.WELCOME_REGISTERED_PLAYER_2,
+                player.getName(), player.getLifetimeWins()
+        );
+        flip = !flip;
+    }
+
+    // ================================
+    // Auth renderers
+    // ================================
+
+    @Override
+    public void showAuthPasswordRequired(String playerName) {
+        output.printf("%n> [AUTH] Password required for: %s%n", playerName);
+    }
+
+    @Override
+    public void showAuthAttemptsRemaining(int remaining) {
+        output.printf("> [AUTH] Attempts remaining: %d%n", remaining);
+    }
+
+    @Override
+    public void showAuthPasswordPrompt() {
+        output.print("\n> [INPUT] Enter password: ");
+    }
+
+    @Override
+    public void showAuthAccessGranted(String playerName) {
+        output.printf("> [AUTH] Access granted. Welcome back, %s%n", playerName);
+    }
+
+    @Override
+    public void showAuthIncorrectPassword() {
+        output.print("> [AUTH] Incorrect password.\n");
+    }
+
+    @Override
+    public void showAuthAccountLocked(String playerName) {
+        output.printf("%n> [AUTH] Account '%s' is now locked for this session.%n" +
+                        "> [AUTH] You cannot access this account until the game restarts.%n",
+                playerName);
+    }
+
+    @Override
+    public void showAuthAccountLockedOnEntry(String playerName) {
+        output.printf("%n> [AUTH] Account '%s' is locked for this session.%n" +
+                "> [AUTH] Please use a different name.%n", playerName);
+    }
+
+    @Override
+    public void showAuthSetPasswordOffer() {
+        output.print("\n> [AUTH] Would you like to set a password for your account? (Y/N): ");
+    }
+
+    @Override
+    public void showAuthPasswordRules() {
+        output.print("""
+                
+                > [INFO]  Rules: 4-32 chars, no spaces, letters/digits/symbols only
+                
+                > [INPUT] Enter new password (or press ENTER to skip):\s""");
+    }
+
+    @Override
+    public void showAuthConfirmPasswordPrompt() {
+        output.print("\n> [INPUT] Confirm your password: ");
+    }
+
+    @Override
+    public void showAuthPasswordMismatch() {
+        output.print("> [ERROR] Passwords do not match. Please try again.\n");
+    }
+
+    @Override
+    public void showAuthPasswordSetSuccess() {
+        output.print("> [AUTH] Password set successfully.\n");
+    }
+
+    @Override
+    public void showAuthNoPasswordSet() {
+        output.print("\n> [AUTH] No password set — account remains open.\n");
+    }
+
+    @Override
+    public void showAuthValidationError(String error) {
+        output.printf("> [ERROR] %s Please try again.%n", error);
     }
 
     // ================================
