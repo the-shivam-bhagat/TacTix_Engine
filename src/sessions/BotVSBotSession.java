@@ -6,11 +6,15 @@ import core.GameResult;
 import core.SessionType;
 import exception.GameErrorCode;
 import exception.GameException;
+import exception.SessionEndException;
 import input.Input;
 import renderer.view.PlayBoardView;
 import renderer.view.SessionView;
 import utility.Config;
 import utility.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class BotVSBotSession implements GameSession {
     private final Bot bot1;
@@ -28,9 +32,15 @@ public final class BotVSBotSession implements GameSession {
 
     private String result = "[Match Abandoned]";
 
+    // Per-round parallel lists — same index = same round, null = abandoned round
+    private final List<List<Integer>> allRoundMoves = new ArrayList<>();
+    private final List<String> allRoundFirstPlayerStarts = new ArrayList<>(); // bot name who went first
+    private final List<String> allRoundWinners = new ArrayList<>();
+
     private static final int DOT_DELAY = Config.BotData.BOT_THINK_DOT_DELAY_MS_BVB;
 
-    public BotVSBotSession(Bot bot1, Bot bot2, Input input, SessionView renderer, PlayBoardView playBoardView) {
+    public BotVSBotSession(Bot bot1, Bot bot2, Input input,
+                           SessionView renderer, PlayBoardView playBoardView) {
         this.bot1 = bot1;
         this.bot2 = bot2;
         this.input = input;
@@ -56,20 +66,29 @@ public final class BotVSBotSession implements GameSession {
             renderer.showRoundStart(++roundNumber);
             input.waitForEnter();
 
-            playRound(roundNumber);
+            List<Integer> roundMoves = new ArrayList<>();
 
-            renderer.showScoreboard(
-                    bot1.getName(), wins1,
-                    bot2.getName(), wins2,
-                    ties
-            );
+            // Record first player name before round starts
+            allRoundFirstPlayerStarts.add(first.getName());
 
+            try {
+                String roundWinner = playRound(roundNumber, roundMoves); // single call
+                allRoundMoves.add(new ArrayList<>(roundMoves));
+                allRoundWinners.add(roundWinner);
+
+            } catch (SessionEndException e) {
+                allRoundMoves.add(null);
+                allRoundWinners.add(null); // null = abandoned
+                throw e;                   // propagate to GameEngine
+            }
+
+            renderer.showScoreboard(bot1.getName(), wins1, bot2.getName(), wins2, ties);
             input.waitForEnter();
 
             renderer.showNextRoundPrompt();
             keepPlaying = input.readYesNo();
 
-            // alternate first mover each round
+            // Alternate first mover each round
             Bot tmp = first;
             first = second;
             second = tmp;
@@ -80,16 +99,14 @@ public final class BotVSBotSession implements GameSession {
     }
 
     @SuppressWarnings("DuplicatedCode")
-    private void playRound(int roundNumber) {
+    private String playRound(int roundNumber, List<Integer> moves) {
         Logger.info(String.format("BvsB Round %d started: %s (X) vs %s (O)",
                 roundNumber, first.getFullIdentity(), second.getFullIdentity()));
 
         GameBoard gameBoard = new GameBoard();
-
         playBoardView.showBoard(gameBoard);
 
         while (true) {
-
             int stepCount = gameBoard.getStepCount();
             Bot current = (stepCount % 2 == 0) ? first : second;
             char mark = (stepCount % 2 == 0) ? 'X' : 'O';
@@ -99,11 +116,9 @@ public final class BotVSBotSession implements GameSession {
             // Wrap bot move calls in sessions
             try {
                 blockNo = current.chooseMove(gameBoard.getCopyOfFreq(), entityFlag, stepCount);
-
                 renderer.showBotThinking(current.getName(), DOT_DELAY);
-
                 gameBoard.makeMove(blockNo, entityFlag);
-
+                moves.add(blockNo);
                 playBoardView.showBoard(gameBoard);
                 renderer.showBotMove(current.getName(), blockNo, mark);
 
@@ -111,32 +126,25 @@ public final class BotVSBotSession implements GameSession {
                 Logger.error("Bot produced invalid move: " + current.getName(), e);
                 throw new GameException(
                         GameErrorCode.INVALID_MOVE,
-                        "Bot " + current.getName() + " returned an illegal move",
-                        e
+                        "Bot " + current.getName() + " returned an illegal move", e
                 );
             }
 
             Boolean winCheck = gameBoard.checkWinner();
-
             if (winCheck != null) {
                 Bot winner = winCheck ? first : second;
                 Bot loser = winCheck ? second : first;
-
                 recordWin(winner);
-                renderer.showBotVsBotRoundWinner(
-                        winner.getNameWithELO(),
-                        loser.getNameWithELO()
-                );
-
+                renderer.showBotVsBotRoundWinner(winner.getNameWithELO(), loser.getNameWithELO());
                 Logger.info("Round " + roundNumber + " winner: " + winner.getFullIdentity());
-                return;
+                return winner.getName();
             }
 
             if (gameBoard.isFull()) {
                 renderer.showTie();
                 ties++;
                 Logger.info("Round ended in tie");
-                return;
+                return "TIE";
             }
         }
     }
@@ -152,7 +160,7 @@ public final class BotVSBotSession implements GameSession {
             result = "DRAW";
         } else {
             Bot matchWinner = wins1 > wins2 ? bot1 : bot2;
-            result = String.format("%s", matchWinner.getName());
+            result = matchWinner.getNameWithMode();
             renderer.showMatchWinnerBox(result);
         }
     }
@@ -162,9 +170,8 @@ public final class BotVSBotSession implements GameSession {
         return new GameResult(
                 String.format("%s [%s]", bot1.getName(), bot1.getMode()),
                 String.format("%s [%s]", bot2.getName(), bot2.getMode()),
-                wins1,
-                wins2,
-                result
+                wins1, wins2, result,
+                allRoundMoves, allRoundFirstPlayerStarts, allRoundWinners
         );
     }
 

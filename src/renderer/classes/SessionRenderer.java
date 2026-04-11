@@ -181,4 +181,29 @@ public class SessionRenderer implements SessionView {
     public void prompt(String message) {
         output.print(message);
     }
+
+    @Override
+    public void showUndoOffer() {
+        output.print("""
+            
+            > [SETUP] Enable undo for this session?
+            > [INFO]  If enabled, wins in this specific game will NOT be updated on Leaderboard.
+            
+            > [INPUT] Enable undo? (Y/N):\s""");
+    }
+
+    @Override
+    public void showUndoEnabled() {
+        output.print("> [SETUP] Undo enabled — type 'undo' during your move to undo the last turn.\n");
+    }
+
+    @Override
+    public void showUndoDisabled() {
+        output.print("> [SETUP] Undo disabled — wins will be tracked normally.\n");
+    }
+
+    @Override
+    public void showUndoNotAvailable() {
+        output.print("> [UNDO] Nothing to undo — no moves have been made this round.\n");
+    }
 }

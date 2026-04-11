@@ -1,5 +1,8 @@
 package core;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 import static utility.Config.BoardConfig.*;
 
 public class GameBoard {
@@ -11,9 +14,13 @@ public class GameBoard {
     private final int[] freq;
     private int stepCount;
 
+    // Undo support — snapshot captures full state before every move
+    private record Snapshot(int[] freq, char[][] board, int stepCount) {}
+    private final Deque<Snapshot> history = new ArrayDeque<>();
+
     public GameBoard() {
-        this.board = getPlayBoard();
-        this.freq = new int[9];
+        this.board     = getPlayBoard();
+        this.freq      = new int[9];
         this.stepCount = 0;
     }
 
@@ -30,15 +37,34 @@ public class GameBoard {
     }
 
     public void makeMove(int blockNo, int playerFlag) {
+        // Snapshot full state before modifying — enables undo
+        history.push(new Snapshot(freq.clone(), cloneBoard(), stepCount));
+
         freq[blockNo] = playerFlag;
-
-        placeXO(
-                board,
-                xoBlocks[stepCount % 2],
-                CELL_START_INDEXES[blockNo]
-        );
-
+        placeXO(board, xoBlocks[stepCount % 2], CELL_START_INDEXES[blockNo]);
         stepCount++;
+    }
+
+    /// Undo the last move — restores freq, visual board, and stepCount.
+    /// Returns true if a move was undone, false if history is empty.
+    public boolean undo() {
+        if (history.isEmpty()) return false;
+
+        Snapshot snap = history.pop();
+        System.arraycopy(snap.freq(), 0, freq, 0, 9);
+
+        char[][] saved = snap.board();
+        for (int i = 0; i < board.length; i++)
+            board[i] = saved[i].clone();
+
+        stepCount = snap.stepCount();
+        return true;
+    }
+
+    /// True if there is at least one move available to undo
+    @SuppressWarnings("unused")
+    public boolean canUndo() {
+        return !history.isEmpty();
     }
 
     public Boolean checkWinner() {
@@ -52,12 +78,18 @@ public class GameBoard {
 
     public boolean isFull() {
         return stepCount >= MAX_MOVES;
-        // indexing based
     }
 
-    //  Utility Functions
+    /// Deep clone of char[][] board — used exclusively for undo snapshots
+    private char[][] cloneBoard() {
+        char[][] copy = new char[board.length][];
+        for (int i = 0; i < board.length; i++)
+            copy[i] = board[i].clone();
+        return copy;
+    }
 
-    /// winnerCheck
+    //  Utility Functions — unchanged from original
+
     private static Boolean winnerCheck(int[] freq) {
         if ((freq[0] == freq[4] && freq[0] == freq[8]) ||
                 (freq[2] == freq[4] && freq[2] == freq[6])) {
@@ -79,58 +111,44 @@ public class GameBoard {
         return null;
     }
 
-    /// base game board
     private static char[][] getPlayBoard() {
         char[][] playBoard = new char[BOARD_HEIGHT][BOARD_LENGTH];
-
         for (int i = 0; i < BOARD_HEIGHT; i++)
             for (int j = 0; j < BOARD_LENGTH; j++)
                 playBoard[i][j] = ' ';
-
         for (int i = 10; i < BOARD_HEIGHT; i += 11)
             for (int j = 0; j < BOARD_LENGTH; j++)
                 playBoard[i][j] = '═';
-
         for (int i = 0; i < BOARD_HEIGHT; i++)
             for (int j = XO_BLOCK_LENGTH + 2; j < BOARD_LENGTH; j += XO_BLOCK_LENGTH + 3)
                 playBoard[i][j] = '║';
-
         for (int i = 5, num = '1'; i < BOARD_HEIGHT; i += 11)
             for (int j = 13; j < BOARD_LENGTH; j += XO_BLOCK_LENGTH + 3)
                 playBoard[i][j] = (char) num++;
-
         return playBoard;
     }
 
-    /// placeXO
     public static void placeXO(char[][] playBoard, char[][] block, int[] indexes) {
         for (int i = 0, x = indexes[0]; i < XO_BLOCK_HEIGHT; i++, x++)
             for (int j = 0, y = indexes[1]; j < XO_BLOCK_LENGTH; j++, y++)
                 playBoard[x][y] = block[i][j];
     }
 
-    ///  X & O indexes
     private static final int[][] CELL_START_INDEXES = new int[][]{
             {1, 1}, {1, 29}, {1, 57},
             {12, 1}, {12, 29}, {12, 57},
             {23, 1}, {23, 29}, {23, 57}
     };
 
-    /// make X and O
     private static char[][][] buildBlocksXO() {
         char[][][] blockXO = new char[2][XO_BLOCK_HEIGHT][XO_BLOCK_LENGTH];
-
-        // X block
         for (int i = 0; i < XO_BLOCK_HEIGHT; i++)
             for (int j = 0; j < XO_BLOCK_LENGTH; j++)
                 blockXO[0][i][j] = ' ';
-
         for (int i = 0; i < XO_BLOCK_HEIGHT; i++)
             for (int j = 0; j < XO_BLOCK_LENGTH; j += 3)
                 if (i == j / 3 || i + j / 3 == 8)
                     blockXO[0][i][j] = '#';
-
-        // O block
         for (int i = 0; i < XO_BLOCK_HEIGHT; i++)
             for (int j = 0; j < XO_BLOCK_LENGTH; j++)
                 blockXO[1][i][j] = ' ';
@@ -142,7 +160,6 @@ public class GameBoard {
                 {6, 1}, {6, 23}, {7, 3}, {7, 21}
         };
         for (int[] pos : fill) blockXO[1][pos[0]][pos[1]] = '#';
-
         return blockXO;
     }
 }

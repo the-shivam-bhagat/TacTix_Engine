@@ -663,4 +663,14 @@ public class EngineRenderer implements EngineView {
     public void printLine() {
         output.println();
     }
+
+    @Override
+    public void showSessionTerminating() {
+        output.print("\n> [SESSION] Terminating current session...\n");
+    }
+
+    @Override
+    public void showCommandIneligible(String command) {
+        output.printf("%n> [ERROR] Command '%s' cannot be used here.%n", command);
+    }
 }

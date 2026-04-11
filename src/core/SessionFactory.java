@@ -15,6 +15,7 @@ import sessions.BotVSBotSession;
 import sessions.GameSession;
 import sessions.PlayerVSBotSession;
 import sessions.PlayerVSPlayerSession;
+import sessions.SessionContext;
 import utility.Config;
 import utility.Logger;
 
@@ -27,24 +28,23 @@ public class SessionFactory {
     private final SessionView sessionRenderer;
     private final PlayBoardView playBoardView;
     private final PlayerCreator playerCreator;
-
+    private final SessionContext context;
 
     public SessionFactory(Input input,
                           Registry playerRegistry,
                           EngineView engineRenderer,
                           SessionView sessionRenderer,
                           PlayBoardView playBoardRenderer,
-                          AuthService authService) {
-        this.input = input;
-        this.playerRegistry = playerRegistry;
-        this.renderer = engineRenderer;
+                          AuthService authService,
+                          SessionContext context) {
+        this.input           = input;
+        this.playerRegistry  = playerRegistry;
+        this.renderer        = engineRenderer;
         this.sessionRenderer = sessionRenderer;
-        this.playBoardView = playBoardRenderer;
-        this.playerCreator = new PlayerCreator(
-                input,
-                playerRegistry,
-                engineRenderer,
-                authService
+        this.playBoardView   = playBoardRenderer;
+        this.context         = context;
+        this.playerCreator   = new PlayerCreator(
+                input, playerRegistry, engineRenderer, authService
         );
     }
 
@@ -52,8 +52,8 @@ public class SessionFactory {
     public GameSession createGameSession(SessionType type) {
         return switch (type) {
             case PLAYER_VS_PLAYER -> getPlayerVSPlayerSession();
-            case PLAYER_VS_BOT -> getPlayerVSBotSession();
-            case BOT_VS_BOT -> getBotVSBotSession();
+            case PLAYER_VS_BOT   -> getPlayerVSBotSession();
+            case BOT_VS_BOT      -> getBotVSBotSession();
             default -> {
                 Logger.error("Invalid session type: " + type);
                 throw new InvalidSessionException(type);
@@ -71,7 +71,7 @@ public class SessionFactory {
 
         return new PlayerVSPlayerSession(
                 p1, p2, input, playerRegistry,
-                sessionRenderer, playBoardView
+                sessionRenderer, playBoardView, context
         );
     }
 
@@ -94,12 +94,11 @@ public class SessionFactory {
         int level = input.readBotLevelChoice();
 
         Bot bot = createBot(level);
-
         renderer.showBotChosen(bot.getNameWithELO(), "Player 2");
 
         return new PlayerVSBotSession(
                 player, bot, input, playerRegistry,
-                sessionRenderer, playBoardView
+                sessionRenderer, playBoardView, context
         );
     }
 
@@ -118,16 +117,13 @@ public class SessionFactory {
         renderer.showBotSelectionPrompt(2);
         int level2 = input.readBotLevelChoice();
 
-        Bot bot1 = level1 == level2 ? createBot(level1, true) : createBot(level1);
+        Bot bot1 = level1 == level2 ? createBot(level1, true)  : createBot(level1);
         Bot bot2 = level1 == level2 ? createBot(level2, false) : createBot(level2);
 
         renderer.showBotChosen(bot1.getNameWithELO(), "Player 1");
         renderer.showBotChosen(bot2.getNameWithELO(), "Player 2");
 
-        return new BotVSBotSession(
-                bot1, bot2, input,
-                sessionRenderer,
-                playBoardView
-        );
+        // BotVSBotSession has no human undo — no context passed
+        return new BotVSBotSession(bot1, bot2, input, sessionRenderer, playBoardView);
     }
 }

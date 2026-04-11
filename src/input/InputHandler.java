@@ -42,16 +42,20 @@ public final class InputHandler implements Input{
 
     @Override
     public boolean readYesNo() {
-        String line = readLine();
-        if (line == null) return false;
-        return line.isEmpty() || Character.toUpperCase(line.charAt(0)) == 'Y';
+        while (true) {
+            String line = readLine(); // can throw SessionEndException
+            if (line == null) continue; // command handled — re-prompt instead of defaulting
+            return line.isEmpty() || Character.toUpperCase(line.charAt(0)) == 'Y';
+        }
     }
 
     @Override
     public boolean readYesNo_Specific() {
-        String line = readLine();
-        if (line == null) return false;
-        return !line.isEmpty() && Character.toUpperCase(line.charAt(0)) == 'Y';
+        while (true) {
+            String line = readLine();
+            if (line == null) continue;
+            return !line.isEmpty() && Character.toUpperCase(line.charAt(0)) == 'Y';
+        }
     }
 
     @Override

@@ -5,7 +5,9 @@ public interface EngineView extends
         SetupView,
         AdminView,
         ExitCommandView,
+        EndCommandView,
         ManageCommandView,
+        UndoCommandView,
         InputView {
 
     // GameEngine needs everything — extends all three

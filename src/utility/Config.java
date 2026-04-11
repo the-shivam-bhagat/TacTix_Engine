@@ -5,13 +5,25 @@ public final class Config {
     private Config() {}
 
     // ==============================
+    // SESSION SETTINGS
+    // ==============================
+
+    public static final class SessionConfig {
+        private SessionConfig() {}
+
+        public static final int MAX_MOVES_TO_UNDO = 1;
+    }
+
+    // ==============================
     // COMMAND SETTINGS
     // ==============================
     public static final class CommandConfig {
         private CommandConfig() {}
 
-        public static final String EXIT = "exit";
+        public static final String EXIT   = "exit";
         public static final String MANAGE = "manage";
+        public static final String END    = "end";   // ends current session
+        public static final String UNDO   = "undo";  // undoes last move(s) during a round
     }
 
     // ==============================

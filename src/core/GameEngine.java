@@ -7,6 +7,7 @@ import command.CommandProcessor;
 import exception.GameException;
 import exception.InvalidBotSelectionException;
 import exception.InvalidSessionException;
+import exception.SessionEndException;
 import input.*;
 import player.store.FilePlayerStore;
 import player.PlayerRegistry;
@@ -16,6 +17,7 @@ import renderer.view.HistoryView;
 import renderer.view.PlayerTableView;
 
 import sessions.GameSession;
+import sessions.SessionContext;
 import utility.Logger;
 import utility.Strings;
 
@@ -37,6 +39,8 @@ public final class GameEngine {
     private PlayerTableView playerTableRenderer;
 
     private SessionFactory sessionFactory;
+
+    private SessionContext sessionContext;
 
     // ================================================================
     // INITIALIZATION
@@ -62,6 +66,9 @@ public final class GameEngine {
 
         Scanner sc = new Scanner(System.in);
 
+        sessionContext = new SessionContext();
+        Logger.info("Created session context");
+
         CommandProcessor commandHandler = new CommandHandler(
                 sc,
                 playerRegistry,
@@ -71,7 +78,8 @@ public final class GameEngine {
                         playerRegistry,
                         playerTableRenderer,
                         engineRenderer
-                )
+                ),
+                sessionContext   // NEW
         );
         Logger.info("Created command handler");
 
@@ -84,7 +92,8 @@ public final class GameEngine {
                 engineRenderer,
                 new SessionRenderer(output),
                 new PlayBoardRenderer(output),
-                new SessionAuthManager(playerRegistry)
+                new SessionAuthManager(playerRegistry),
+                sessionContext   // NEW
         );
         Logger.info("Created session factory");
 
@@ -171,8 +180,29 @@ public final class GameEngine {
                     engineRenderer.printLine();
                 }
 
-                session.play();
-                gameHistory.add(session);
+                // ── SESSION EXECUTION ─────────────────────────────────
+                sessionContext.enterSession();
+
+                try {
+
+                    session.play();
+                    gameHistory.add(session); // normal completion
+
+                } catch (SessionEndException e) {
+
+                    // User typed "end" — session abandoned cleanly
+                    Logger.info("Session ended by user command");
+                    gameHistory.add(session); // record the abandoned match
+
+                    engineRenderer.showPlayAgainPrompt();
+                    playAnother = input.readYesNo();
+                    engineRenderer.printLine();
+                    continue; // skip normal play-again at bottom
+
+                } finally {
+                    sessionContext.exitSession(); // always clean up context
+                }
+                // ── END SESSION EXECUTION ─────────────────────────────
 
             } catch (InvalidSessionException e) {
                 // Bad session type selected — show error, let loop continue
@@ -180,7 +210,7 @@ public final class GameEngine {
                 engineRenderer.showError(
                         "Invalid session type [" + e.getErrorCode() + "]. Please try again."
                 );
-                continue; // skip play-again prompt, go straight back to session picker
+                continue;
 
             } catch (InvalidBotSelectionException e) {
                 // Bad bot level selected — show error, let loop continue
@@ -188,7 +218,7 @@ public final class GameEngine {
                 engineRenderer.showError(
                         "Invalid bot level [" + e.getErrorCode() + "]. Please try again."
                 );
-                continue; // skip play-again prompt, go straight back to session picker
+                continue;
 
             } catch (GameException e) {
                 // Known typed error mid-session (e.g. bot crash, bad move state)
@@ -196,7 +226,6 @@ public final class GameEngine {
                 engineRenderer.showError(
                         "A game error occurred [" + e.getErrorCode() + "]: " + e.getMessage()
                 );
-                // Ask if they want to play again — if no, exit loop cleanly
                 engineRenderer.showPlayAgainPrompt();
                 playAnother = input.readYesNo();
                 engineRenderer.printLine();

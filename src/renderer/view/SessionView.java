@@ -29,7 +29,15 @@ public interface SessionView {
 
     void showBotMove(String botName, int blockNo, char mark);
 
-    void showBotWinner(String  BotName);
+    void showBotWinner(String BotName);
 
     void showBotVsBotRoundWinner(String winnerName, String looserName);
+
+    void showUndoOffer();
+
+    void showUndoEnabled();
+
+    void showUndoDisabled();
+
+    void showUndoNotAvailable();
 }
