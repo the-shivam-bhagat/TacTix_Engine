@@ -7,12 +7,6 @@ import utility.Logger;
 import java.io.*;
 import java.util.*;
 
-/**
- * File-based implementation of PlayerStore.
- * Name = FilePlayerStore: tells you WHAT it is (a Store) and HOW (File).
- * Swap for DatabasePlayerStore or MemoryPlayerStore without touching PlayerRegistry.
- */
-
 public class FilePlayerStore implements PlayerStore {
 
     static final String FILE_NAME = Config.FileConfig.PLAYER_FILE_NAME;
@@ -26,13 +20,13 @@ public class FilePlayerStore implements PlayerStore {
             return result;
         }
 
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        Logger.info("Reading players from file");
-
-        String line;
-        while ((line = reader.readLine()) != null) {
-            Player p = decode(line);
-            if (p != null) result.add(p);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            Logger.info("Reading players from file");
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Player p = decode(line);
+                if (p != null) result.add(p);
+            }
         }
 
         return result;
@@ -54,40 +48,61 @@ public class FilePlayerStore implements PlayerStore {
     }
 
     // --------------------------------------------------
-    // Encoding / decoding (private — callers don't care)
+    // Format: name,wins,passwordHash,passwordSalt
+    // passwordHash and passwordSalt are "" if no password set
+    // Backward compact: old 2-field files load fine with null hash/salt
     // --------------------------------------------------
 
     private Player decode(String line) {
         if ((line.length() & 1) == 1) return null;
-        StringBuilder sb = new StringBuilder(line.length() / 2);
 
+        StringBuilder sb = new StringBuilder(line.length() / 2);
         for (int i = 1; i < line.length(); i += 2) {
             int a = line.charAt(i - 1) - 32;
             int b = line.charAt(i) - 32;
             sb.append((char) (a + b));
         }
 
-        String[] parts = sb.toString().split(",");
-        if (parts.length != 2) return null;
+        // limit=4 keeps any future comma-containing fields safe
+        String[] parts = sb.toString().split(",", 4);
+        if (parts.length < 2) return null;
 
         try {
-            return new Player(parts[0], Integer.parseInt(parts[1]));
+            String name          = parts[0];
+            int    wins          = Integer.parseInt(parts[1]);
+
+            // Backward compact: old file had no hash/salt fields
+            String passwordHash  = (parts.length >= 3 && !parts[2].isEmpty()) ? parts[2] : null;
+            String passwordSalt  = (parts.length == 4 && !parts[3].isEmpty()) ? parts[3] : null;
+
+            // Guard: hash without salt (or vice versa) = corrupted → treat as no password
+            if ((passwordHash == null) != (passwordSalt == null)) {
+                Logger.warn("Corrupted password data for player: " + name + " — resetting");
+                passwordHash = null;
+                passwordSalt = null;
+            }
+
+            return new Player(name, wins, passwordHash, passwordSalt);
+
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     private String encode(Player p, Random r) {
-        String raw = p.getName() + "," + p.getLifetimeWins();
-        StringBuilder sb = new StringBuilder(raw.length() * 2);
+        // Always write all 4 fields — empty string if no password
+        String raw = p.getName()        + ","
+                + p.getLifetimeWins()+ ","
+                + p.getPasswordHash()+ ","    // "" if no password
+                + p.getPasswordSalt();        // "" if no password
 
+        StringBuilder sb = new StringBuilder(raw.length() * 2);
         for (int i = 0; i < raw.length(); i++) {
-            int cur = raw.charAt(i);
+            int cur   = raw.charAt(i);
             int split = r.nextInt(cur - 1) + 1;
             sb.append((char) (split + 32));
             sb.append((char) ((cur - split) + 32));
         }
-
         return sb.toString();
     }
 }
