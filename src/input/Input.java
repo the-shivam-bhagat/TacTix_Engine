@@ -21,4 +21,8 @@ public interface Input {
     int readSessionChoice();
 
     int readCellChoice(GameBoard board);
+
+    /// Read an integer in [min, max] inclusive. Re-prompts on invalid input.
+    @SuppressWarnings("JavadocReference")
+    int readBoundedInt(int min, int max);
 }

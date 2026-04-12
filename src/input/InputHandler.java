@@ -98,6 +98,19 @@ public final class InputHandler implements Input{
     }
 
     @Override
+    public int readBoundedInt(int min, int max) {
+        while (true) {
+            String raw = readLine();
+            if (raw == null) continue;
+            try {
+                int val = Integer.parseInt(raw.trim());
+                if (val >= min && val <= max) return val;
+            } catch (NumberFormatException ignored) {}
+            renderer.showInvalidBoundedInt(min, max);
+        }
+    }
+
+    @Override
     public void waitForEnterWithoutCheck() {
         sc.nextLine();
     }

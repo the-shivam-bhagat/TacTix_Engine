@@ -16,6 +16,9 @@ import renderer.view.EngineView;
 import renderer.view.HistoryView;
 import renderer.view.PlayerTableView;
 
+import replay.ReplayView;
+import replay.ReplayEngine;
+import replay.ReplayRenderer;
 import sessions.GameSession;
 import sessions.SessionContext;
 import utility.Logger;
@@ -59,6 +62,9 @@ public final class GameEngine {
         HistoryView historyRenderer = new HistoryRenderer(output);
         Logger.info("Created history renderer");
 
+        ReplayView replayRenderer = new ReplayRenderer(output);
+        Logger.info("Created replay renderer");
+
         // PlayerRegistry constructor now throws GameException(STORAGE_LOAD_FAILED)
         // if FilePlayerStore.loadAll() fails — no IOException leaks out
         playerRegistry = new PlayerRegistry(new FilePlayerStore());
@@ -97,7 +103,10 @@ public final class GameEngine {
         );
         Logger.info("Created session factory");
 
-        gameHistory = new GameHistory(historyRenderer);
+        ReplayEngine replayEngine = new ReplayEngine(input, replayRenderer);
+        Logger.info("Created replay engine");
+
+        gameHistory = new GameHistory(historyRenderer, replayEngine);
         Logger.info("Created game history");
     }
 

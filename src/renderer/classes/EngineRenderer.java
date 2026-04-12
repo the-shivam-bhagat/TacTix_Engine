@@ -678,4 +678,9 @@ public class EngineRenderer implements EngineView {
     public void showCommandIsBlocked() {
         output.printf("%n> [ERROR] Command 'undo' is blocked for this session.%n");
     }
+
+    @Override
+    public void showInvalidBoundedInt(int min, int max) {
+        output.printf("> [ERROR] Invalid input. Enter a number between %d and %d: ", min, max);
+    }
 }

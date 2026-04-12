@@ -6,4 +6,6 @@ public interface InputView {
     void showInvalidBotChoice();
 
     void showInvalidCellChoice();
+
+    void showInvalidBoundedInt(int min, int max);
 }
