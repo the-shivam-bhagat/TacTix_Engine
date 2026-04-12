@@ -673,4 +673,9 @@ public class EngineRenderer implements EngineView {
     public void showCommandIneligible(String command) {
         output.printf("%n> [ERROR] Command '%s' cannot be used here.%n", command);
     }
+
+    @Override
+    public void showCommandIsBlocked() {
+        output.printf("%n> [ERROR] Command 'undo' is blocked for this session.%n");
+    }
 }

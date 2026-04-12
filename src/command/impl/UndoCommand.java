@@ -19,15 +19,22 @@ public class UndoCommand implements Command {
         this.renderer = renderer;
     }
 
+    @SuppressWarnings("ConstantValue")
     @Override
     public void execute() {
         if (context.isUndoEnabled() && context.isInRound()) {
             Logger.info("Undo command executed");
             throw new UndoRequestException();
-        } else {
-            Logger.warn("Undo ineligible: undoEnabled=" + context.isUndoEnabled()
-                    + ", inRound=" + context.isInRound());
+        }
+
+        else if (!context.isInRound()) {
+            Logger.warn("Undo ineligible: inRound=" + context.isInRound());
             renderer.showCommandIneligible("undo");
+        }
+
+        else {
+            Logger.warn("Undo ineligible: undoEnabled=" + context.isUndoEnabled());
+            renderer.showCommandIsBlocked();
         }
     }
 }
