@@ -209,11 +209,14 @@ public final class PlayerVSBotSession implements GameSession {
 
     private void declareMatchResult() {
         if (playerWins == botWins) {
-            renderer.showMatchDraw();
             result = "DRAW";
+            renderer.showMatchDraw();
+        } else if (playerWins > botWins) {
+            result = player.getName();
+            renderer.showPlayerWinnerBox(result);
         } else {
-            result = (playerWins > botWins) ? player.getName() : bot.getNameWithMode();
-            renderer.showMatchWinnerBox(result);
+            result = bot.getNameWithMode();
+            renderer.showBotWinnerBox(result);
         }
     }
 

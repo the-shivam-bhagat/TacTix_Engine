@@ -192,7 +192,7 @@ public final class PlayerVSPlayerSession implements GameSession {
             result = "DRAW";
         } else {
             result = wins1 > wins2 ? p1.getName() : p2.getName();
-            renderer.showMatchWinnerBox(result);
+            renderer.showPlayerWinnerBox(result);
         }
     }
 

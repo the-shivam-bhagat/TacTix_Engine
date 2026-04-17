@@ -151,17 +151,53 @@ public class SessionRenderer implements SessionView {
     // FINAL MATCH RESULT
     // ================================
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
-    public void showMatchWinnerBox(String name) {
+    public void showPlayerWinnerBox(String name) {
         String line1 = "<< MATCH RESULT >>";
         String line2 = "Congratulations, " + name + "!";
         String line3 = "You dominated this match!";
 
-        int innerWidth = Math.max(line2.length(), line3.length()) + 4;
+        @SuppressWarnings("DataFlowIssue")
+        int innerWidth = Math.max(
+                Math.max(
+                        line1.length(),
+                        line2.length()
+                ), line3.length()
+        ) + 4;
+
+        int leftPad = (innerWidth - line1.length()) / 2;
+        int rightPad = innerWidth - line1.length() - leftPad;
 
         output.println();
         output.println("╔" + "═".repeat(innerWidth) + "╗");
-        output.printf("║ %-" + (innerWidth - 2) + "s ║%n", line1);
+        output.println("║" + " ".repeat(leftPad) + line1 + " ".repeat(rightPad) + "║");
+        output.println("╠" + "═".repeat(innerWidth) + "╣");
+        output.printf("║ %-" + (innerWidth - 2) + "s ║%n", line2);
+        output.printf("║ %-" + (innerWidth - 2) + "s ║%n", line3);
+        output.println("╚" + "═".repeat(innerWidth) + "╝");
+    }
+
+    @SuppressWarnings("DuplicatedCode")
+    @Override
+    public void showBotWinnerBox(String name) {
+        String line1 = "<< MATCH RESULT >>";
+        String line2 = "Match Winner : " + name;
+        String line3 = name + " dominated this match!";
+
+        int innerWidth = Math.max(
+                Math.max(
+                        line1.length(),
+                        line2.length()
+                ), line3.length()
+        ) + 4;
+
+        int leftPad = (innerWidth - line1.length()) / 2;
+        int rightPad = innerWidth - line1.length() - leftPad;
+
+        output.println();
+        output.println("╔" + "═".repeat(innerWidth) + "╗");
+        output.println("║" + " ".repeat(leftPad) + line1 + " ".repeat(rightPad) + "║");
         output.println("╠" + "═".repeat(innerWidth) + "╣");
         output.printf("║ %-" + (innerWidth - 2) + "s ║%n", line2);
         output.printf("║ %-" + (innerWidth - 2) + "s ║%n", line3);
@@ -185,11 +221,11 @@ public class SessionRenderer implements SessionView {
     @Override
     public void showUndoOffer() {
         output.print("""
-            
-            > [SETUP] Enable undo for this session?
-            > [INFO]  If enabled, wins in this specific game will NOT be updated on Leaderboard.
-            
-            > [INPUT] Enable undo? (Y/N):\s""");
+                
+                > [SETUP] Enable undo for this session?
+                > [INFO]  If enabled, wins in this specific game will NOT be updated on Leaderboard.
+                
+                > [INPUT] Enable undo? (Y/N):\s""");
     }
 
     @Override

@@ -161,7 +161,7 @@ public final class BotVSBotSession implements GameSession {
         } else {
             Bot matchWinner = wins1 > wins2 ? bot1 : bot2;
             result = matchWinner.getNameWithMode();
-            renderer.showMatchWinnerBox(result);
+            renderer.showBotWinnerBox(result);
         }
     }
 

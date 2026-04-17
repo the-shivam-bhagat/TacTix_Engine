@@ -19,7 +19,7 @@ public interface SessionView {
 
     void showMatchDraw();
 
-    void showMatchWinnerBox(String name);
+    void showPlayerWinnerBox(String name);
 
     @SuppressWarnings("unused")
     void prompt(String message);
@@ -40,4 +40,6 @@ public interface SessionView {
     void showUndoDisabled();
 
     void showUndoNotAvailable();
+
+    void showBotWinnerBox(String result);
 }

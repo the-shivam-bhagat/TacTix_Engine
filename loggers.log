@@ -1,67 +1,57 @@
-[INFO  2026-04-12 10:09:23] Application started
-[INFO  2026-04-12 10:09:23] Game Engine: System started
-[INFO  2026-04-12 10:09:23] Created engine renderer
-[INFO  2026-04-12 10:09:23] Created board renderer
-[INFO  2026-04-12 10:09:23] Created history renderer
-[INFO  2026-04-12 10:09:23] Created replay renderer
-[INFO  2026-04-12 10:09:23] Loading players from storage
-[INFO  2026-04-12 10:09:23] Reading players from file
-[INFO  2026-04-12 10:09:23] Created players registry
-[INFO  2026-04-12 10:09:23] Created session context
-[INFO  2026-04-12 10:09:23] Created command handler
-[INFO  2026-04-12 10:09:23] Created input handler
-[INFO  2026-04-12 10:09:23] Created auth service
-[INFO  2026-04-12 10:09:23] Created session factory
-[INFO  2026-04-12 10:09:23] Created replay engine
-[INFO  2026-04-12 10:09:23] Created game history
-[INFO  2026-04-12 10:09:23] Initialization complete
-[WARN  2026-04-12 10:09:25] Unknown command: 
-[WARN  2026-04-12 10:09:27] Unknown command: 
-[WARN  2026-04-12 10:09:27] Unknown command: 
-[WARN  2026-04-12 10:09:27] Unknown command: 
-[WARN  2026-04-12 10:09:27] Unknown command: 
-[WARN  2026-04-12 10:09:28] Unknown command: 
-[INFO  2026-04-12 10:09:28] Entering main game loop
-[WARN  2026-04-12 10:09:28] Unknown command: 
-[WARN  2026-04-12 10:09:28] Invalid session choice: 
-[WARN  2026-04-12 10:09:28] Unknown command: 
-[WARN  2026-04-12 10:09:28] Invalid session choice: 
-[WARN  2026-04-12 10:09:28] Unknown command: 
-[WARN  2026-04-12 10:09:28] Invalid session choice: 
-[WARN  2026-04-12 10:09:29] Unknown command: 1
-[WARN  2026-04-12 10:09:31] Unknown command: 1
-[INFO  2026-04-12 10:09:31] Existing player loaded: 1
-[WARN  2026-04-12 10:09:31] Unknown command: 2
-[INFO  2026-04-12 10:09:31] Existing player loaded: 2
-[INFO  2026-04-12 10:09:31] Players selected: 1 vs 2
-[INFO  2026-04-12 10:09:31] Starting Game 1
-[INFO  2026-04-12 10:09:31] New PvP session: 1 vs 2
-[WARN  2026-04-12 10:09:32] Unknown command: 
-[WARN  2026-04-12 10:09:33] Unknown command: 
-[WARN  2026-04-12 10:09:34] Unknown command: 
-[INFO  2026-04-12 10:09:34] PvP Round 1 started
-[WARN  2026-04-12 10:09:35] Unknown command: 1
-[WARN  2026-04-12 10:09:35] Unknown command: 2
-[WARN  2026-04-12 10:09:36] Unknown command: 3
-[WARN  2026-04-12 10:09:36] Unknown command: 4
-[WARN  2026-04-12 10:09:36] Unknown command: 5
-[WARN  2026-04-12 10:09:37] Unknown command: 6
-[WARN  2026-04-12 10:09:37] Unknown command: 7
-[INFO  2026-04-12 10:09:37] Win recorded for player: 1
-[INFO  2026-04-12 10:09:37] Round winner: 1
-[WARN  2026-04-12 10:09:37] Unknown command: 
-[WARN  2026-04-12 10:09:38] Unknown command: 
-[WARN  2026-04-12 10:09:38] Unknown command: 
-[WARN  2026-04-12 10:09:38] Unknown command: 
-[INFO  2026-04-12 10:09:38] PvP Round 2 started
-[WARN  2026-04-12 10:09:39] Unknown command: 
-[WARN  2026-04-12 10:09:40] Unknown command: 1
-[WARN  2026-04-12 10:09:41] Unknown command: 2
-[WARN  2026-04-12 10:09:41] Unknown command: 3
-[INFO  2026-04-12 10:09:43] Command executed: end
-[INFO  2026-04-12 10:09:43] End command executed — terminating session
-[INFO  2026-04-12 10:09:43] Session ended by user command
-[WARN  2026-04-12 10:09:45] Unknown command: N
-[WARN  2026-04-12 10:09:46] Unknown command: 
-[WARN  2026-04-12 10:09:49] Unknown command: Y
-[WARN  2026-04-12 10:09:51] Unknown command: 1
+[INFO  2026-04-14 01:35:41] Application started
+[INFO  2026-04-14 01:35:41] Game Engine: System started
+[INFO  2026-04-14 01:35:41] Created engine renderer
+[INFO  2026-04-14 01:35:41] Created board renderer
+[INFO  2026-04-14 01:35:41] Created history renderer
+[INFO  2026-04-14 01:35:41] Created replay renderer
+[INFO  2026-04-14 01:35:41] Loading players from storage
+[INFO  2026-04-14 01:35:41] Reading players from file
+[INFO  2026-04-14 01:35:41] Created players registry
+[INFO  2026-04-14 01:35:41] Created session context
+[INFO  2026-04-14 01:35:41] Created command handler
+[INFO  2026-04-14 01:35:41] Created input handler
+[INFO  2026-04-14 01:35:41] Created auth service
+[INFO  2026-04-14 01:35:41] Created session factory
+[INFO  2026-04-14 01:35:41] Created replay engine
+[INFO  2026-04-14 01:35:41] Created game history
+[INFO  2026-04-14 01:35:41] Initialization complete
+[WARN  2026-04-14 01:35:48] Unknown command: 
+[WARN  2026-04-14 01:35:48] Unknown command: 
+[WARN  2026-04-14 01:35:49] Unknown command: 
+[WARN  2026-04-14 01:35:49] Unknown command: 
+[WARN  2026-04-14 01:35:49] Unknown command: 
+[WARN  2026-04-14 01:35:49] Unknown command: 
+[INFO  2026-04-14 01:35:49] Entering main game loop
+[WARN  2026-04-14 01:35:49] Unknown command: 
+[WARN  2026-04-14 01:35:49] Invalid session choice: 
+[WARN  2026-04-14 01:35:49] Unknown command: 
+[WARN  2026-04-14 01:35:49] Invalid session choice: 
+[WARN  2026-04-14 01:35:51] Unknown command: 1
+[WARN  2026-04-14 01:35:52] Unknown command: 1
+[INFO  2026-04-14 01:35:52] Existing player loaded: 1
+[WARN  2026-04-14 01:35:53] Unknown command: 2
+[INFO  2026-04-14 01:35:53] Existing player loaded: 2
+[INFO  2026-04-14 01:35:53] Players selected: 1 vs 2
+[INFO  2026-04-14 01:35:53] Starting Game 1
+[INFO  2026-04-14 01:35:53] New PvP session: 1 vs 2
+[WARN  2026-04-14 01:35:54] Unknown command: 
+[WARN  2026-04-14 01:35:54] Unknown command: 
+[WARN  2026-04-14 01:35:55] Unknown command: 
+[INFO  2026-04-14 01:35:55] PvP Round 1 started
+[WARN  2026-04-14 01:35:56] Unknown command: 1
+[WARN  2026-04-14 01:35:56] Unknown command: 2
+[WARN  2026-04-14 01:35:57] Unknown command: 3
+[WARN  2026-04-14 01:35:57] Unknown command: 4
+[WARN  2026-04-14 01:35:57] Unknown command: 5
+[WARN  2026-04-14 01:35:57] Unknown command: 6
+[WARN  2026-04-14 01:35:58] Unknown command: 7
+[INFO  2026-04-14 01:35:58] Win recorded for player: 1
+[INFO  2026-04-14 01:35:58] Round winner: 1
+[WARN  2026-04-14 01:36:01] Unknown command: 
+[WARN  2026-04-14 01:36:02] Unknown command: N
+[INFO  2026-04-14 01:36:02] Match result: 1
+[WARN  2026-04-14 01:36:03] Unknown command: N
+[WARN  2026-04-14 01:36:04] Unknown command: 
+[WARN  2026-04-14 01:36:06] Unknown command: Y
+[WARN  2026-04-14 01:36:08] Unknown command: 1
+[WARN  2026-04-14 01:36:10] Unknown command: 1

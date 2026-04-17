@@ -8,39 +8,45 @@ public final class Strings {
             
             ╔ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ╗
             
-              ████████╗██╗ ██████╗      ████████╗ █████╗  ██████╗      ████████╗ ██████╗ ███████╗
-              ╚══██╔══╝██║██╔════╝      ╚══██╔══╝██╔══██╗██╔════╝      ╚══██╔══╝██╔═══██╗██╔════╝
-                 ██║   ██║██║              ██║   ███████║██║              ██║   ██║   ██║█████╗
-                 ██║   ██║██║              ██║   ██╔══██║██║              ██║   ██║   ██║██╔══╝
-                 ██║   ██║╚██████╗         ██║   ██║  ██║╚██████╗         ██║   ╚██████╔╝███████╗
-                 ╚═╝   ╚═╝ ╚═════╝         ╚═╝   ╚═╝  ╚═╝ ╚═════╝         ╚═╝    ╚═════╝ ╚══════╝
+                 ████████╗ █████╗  ██████╗ ████████╗██╗██╗  ██╗    ███████╗███╗   ██╗ ██████╗
+                 ╚══██╔══╝██╔══██╗██╔════╝ ╚══██╔══╝██║╚██╗██╔╝    ██╔════╝████╗  ██║██╔════╝
+                    ██║   ███████║██║         ██║   ██║ ╚███╔╝     █████╗  ██╔██╗ ██║██║  ███╗
+                    ██║   ██╔══██║██║         ██║   ██║ ██╔██╗     ██╔══╝  ██║╚██╗██║██║   ██║
+                    ██║   ██║  ██║╚██████╗    ██║   ██║██╔╝ ██╗    ███████╗██║ ╚████║╚██████╔╝
+                    ╚═╝   ╚═╝  ╚═╝ ╚═════╝    ╚═╝   ╚═╝╚═╝  ╚═╝    ╚══════╝╚═╝  ╚═══╝ ╚═════╝
             
             ╚ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ═ ╝
             
             ╔═════════════════════════════════════════════════════════════════════════════════════╗
-            ║                        << TIC-TAC-TOE AI ENGINE SYSTEM >>                           ║
+            ║                         << TACTIX ENGINE INITIALIZATION >>                          ║
             ╠═════════════════════════════════════════════════════════════════════════════════════╣
             ║                                                                                     ║
-            ║  • This system is a modular and extensible implementation of Tic-Tac-Toe            ║
-            ║    featuring multiple gameplay modes and AI-driven decision engines.                ║
+            ║  ► Production-grade adversarial Tic-Tac-Toe engine built in Java.                   ║
+            ║    Designed to showcase clean architecture, AI systems, and CLI engineering.        ║
             ║                                                                                     ║
-            ║  • It demonstrates structured programming, game flow control, and adversarial       ║
-            ║    decision-making within a well-defined execution environment.                     ║
+            ║  ► Supports multiple execution modes:                                               ║
+            ║    Player vs Player | Player vs Bot | Bot vs Bot Simulation                         ║
             ║                                                                                     ║
-            ║  • The engine supports both interactive and automated sessions, including           ║
-            ║    Player vs Player, Bot vs Player, and Bot vs Bot simulations.                     ║
+            ║  ► Includes persistent player registry, authentication, replay history,             ║
+            ║    leaderboard tracking, admin controls, and recoverable runtime flow.              ║
             ║                                                                                     ║
-            ║  • Each component is designed to reflect clean architecture, modular design         ║
-            ║    principles, and scalable decision logic systems.                                 ║
+            ║  ► Multi-tier bot ladder ranges from beginner randomness to perfect                 ║
+            ║    alpha-beta minimax decision systems.                                             ║
             ║                                                                                     ║
-            ║  • Developed by: Shivam Bhagat                                                      ║
-            ║    B.Tech CSE | Java Development | Data Structures & Algorithms                     ║
-            ║    Linkedin -> shivam-bhagat- | LeetCode -> shivam_bhagat_                          ║
+            ║  ► Built with modular packages, interface-driven rendering,                         ║
+            ║    command interception pipeline, and scalable component design.                    ║
             ║                                                                                     ║
-            ║  • This project represents a progression from fundamental programming concepts      ║
-            ║    to advanced AI-driven gameplay systems and design thinking.                      ║
+            ║  ► Developed by Shivam Bhagat                                                       ║
+            ║    B.Tech CSE | Java Developer | DSA Enthusiast                                     ║
+            ║    LinkedIn : shivam-bhagat- | LeetCode : shivam_bhagat_                            ║
             ║                                                                                     ║
+            ║  ► This project reflects progression from core programming                          ║
+            ║    fundamentals to system-level engineering mindset.                                ║
+            ║                                                                                     ║
+            ╠═════════════════════════════════════════════════════════════════════════════════════╣
+            ║ STATUS : BOOTING   │ MODULES : LOADING   │ STORAGE : CHECKING   │ AI CORE : READY   ║
             ╚═════════════════════════════════════════════════════════════════════════════════════╝
+            
             """;
     public static final String FEATURES_STRING = """
             
@@ -48,46 +54,48 @@ public final class Strings {
             ║                         << SYSTEM HIGHLIGHTS / FEATURES >>                          ║
             ╠═════════════════════════════════════════════════════════════════════════════════════╣
             ║                                                                                     ║
-            ║  01)  Three Game Session Modes                                                      ║
-            ║       Supports Player vs Player, Player vs Bot, and Bot vs Bot sessions,            ║
-            ║       each with independent round control, scoreboard, and match result.            ║
+            ║  01)  Six-Tier Adversarial AI System                                                ║
+            ║       RAVE → GREX → WIRE → FLINT → PROBE & STALL, spanning random play to           ║
+            ║       alpha-beta pruned minimax with EquiSelect output and draw optimization.       ║
             ║                                                                                     ║
-            ║  02)  Six Engineered AI Bots                                                        ║
-            ║       RAVE, GREX, WIRE, FLINT, PROBE, and STALL — each tuned to a distinct          ║
-            ║       difficulty using 100,000-match simulations and ELO-based calibration.         ║
+            ║  02)  Three Independent Session Modes                                               ║
+            ║       Player vs Player, Player vs Bot, and Bot vs Bot — each with its own           ║
+            ║       round loop, undo policy, scoreboard, and replayable match record.             ║
             ║                                                                                     ║
-            ║  03)  Persistent Player Registry                                                    ║
-            ║       Player names, wins, and rankings persist across sessions using a              ║
-            ║       custom encoded file store with automatic load and save lifecycle.             ║
+            ║  03)  Command Pipeline with Mid-Game Interception                                   ║
+            ║       Every input passes through a CommandProcessor. Type exit, manage, end,        ║
+            ║       or undo at any prompt — no session interruption required.                     ║
             ║                                                                                     ║
-            ║  04)  Ranked Leaderboard with Automatic Ordering                                    ║
-            ║       Players are ranked by lifetime wins using sorted data structures and          ║
-            ║       custom comparison logic, trimmed to a configurable maximum capacity.          ║
+            ║  04)  Snapshot-Based Undo with Full State Restoration                               ║
+            ║       GameBoard snapshots the full board state before every move. Undo              ║
+            ║       restores freq[], visual board, and stepCount in O(1) per move.                ║
             ║                                                                                     ║
-            ║  05)  Complete Player Management                                                    ║
-            ║       A password-protected admin panel allows viewing and deleting players          ║
-            ║       mid-session without interrupting or restarting the game.                      ║
+            ║  05)  Persistent Player Registry with Custom Encoding                               ║
+            ║       Players persist across restarts via a char-pair encoded flat file.            ║
+            ║       SHA-256 + salt password hashing with backward-compatible deserialization.     ║
             ║                                                                                     ║
-            ║  06)  SOLID, OOP, and LLD Design Principles                                         ║
-            ║       Registry, RankingView, PlayerStore, SessionView, EngineView, and              ║
-            ║       CommandProcessor interfaces enforce dependency inversion throughout.          ║
+            ║  06)  Password-Protected Admin Panel — Accessible Mid-Session                       ║
+            ║       Select players by name or rank. Change name, manage password, set             ║
+            ║       wins, or delete — all without restarting or affecting session state.          ║
             ║                                                                                     ║
-            ║  07)  UI Abstraction Layer                                                          ║
-            ║       All rendering is routed through view interfaces, fully decoupling             ║
-            ║       display logic so the console layer can be swapped for GUI or web.             ║
+            ║  07)  Full Match Replay Engine                                                      ║
+            ║       Step through any round from any historical match cell-by-cell.                ║
+            ║       Abandoned rounds are detected and reported gracefully.                        ║
             ║                                                                                     ║
-            ║  08)  Fault-Tolerant Input and Command Pipeline                                     ║
-            ║       A defensive input system intercepts commands like exit at any prompt          ║
-            ║       and handles invalid input without interrupting the session flow.              ║
+            ║  08)  Fully Decoupled Rendering Layer                                               ║
+            ║       13 view interfaces isolate all output. No System.out in business logic.       ║
+            ║       Swap the console renderer for GUI or web without touching game code.          ║
             ║                                                                                     ║
-            ║  09)  Self-Recovering Execution and Structured Logging                              ║
-            ║       Runtime exceptions trigger a controlled restart path. All system              ║
-            ║       events, warnings, and errors are written to a timestamped log file.           ║
+            ║  09)  Typed Exception Hierarchy with Structured Error Codes                         ║
+            ║       GameErrorCode enum drives 6 typed exception classes. Failures are             ║
+            ║       recovered, restarted, or surfaced — never silently swallowed.                 ║
             ║                                                                                     ║
-            ║  10)  Session History and Match Result Tracking                                     ║
-            ║       Every completed match is stored in-session and displayed as a                 ║
-            ║       formatted summary at the end, alongside the updated leaderboard.              ║
+            ║  10)  Ranked Leaderboard and Session History Tracking                               ║
+            ║       TreeSet-backed ranking auto-sorts by lifetime wins. Wins are withheld         ║
+            ║       when undo is enabled — fairness enforced at the registry level.               ║
             ║                                                                                     ║
+            ╠═════════════════════════════════════════════════════════════════════════════════════╣
+            ║ STATUS : BOOTING   │ MODULES : LOADING   │ STORAGE : CHECKING   │ AI CORE : READY   ║
             ╚═════════════════════════════════════════════════════════════════════════════════════╝
             
             """;
@@ -96,7 +104,7 @@ public final class Strings {
     public static final String BOTS_INTRODUCTION_PANEL = """
             
             ╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗
-            ║                                                     << ADVANCED AI BOT SYSTEM >>                                                     ║
+            ║                                          << TACTIX ENGINE ::: MULTI-TIER AI DECISION LAB >>                                          ║
             ╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣
             ║   Level - 1                        Level - 2                        Level - 3                        Level - 4                       ║
             ║  ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐  ║
@@ -116,11 +124,11 @@ public final class Strings {
             ║   Level - 5                                        Level - ??                                                                        ║
             ║  ┌─────────────────────────────────────────────┐  ┌───────────────────────────────────────────────────────────────────────────────┐  ║
             ║  │  PROBE                          [ELO 2000]  │  │  STALL                                                   [Special - ELO ?? ]  │  ║
-            ║  │                                             │  │  Draw Optimization Engine — Non-Competitive & Never-Loosing                   │  ║
+            ║  │                                             │  │  Draw Optimization Engine — Non-Competitive & Never-Losing                    │  ║
             ║  │  GOAL -> Never losing — optimal play with   │  │  ( In progress - 70 % success rate )                                          │  ║
             ║  │               controlled variability        │  │                                                                               │  ║
-            ║  │                                             │  │  GOAL                                 │ ALGORITHM          │ OVERALL DAR      │  ║
-            ║  │  DIFFICULTY - UNBEATABLE                    │  │  Always draw — win avoidance system   │ Modified minimax   │ 69.7% (soon 100%)│  ║
+            ║  │                                             │  │  GOAL                                │ ALGORITHM         │ OVERALL DAR        │  ║
+            ║  │  DIFFICULTY - UNBEATABLE                    │  │  Always draw — win avoidance system  │ Modified minimax  │ 69.7% (Improving)  │  ║
             ║  │  100%                                       │  │                                                                               │  ║
             ║  │  ███████████████████████████████████████    │  │  DRAW ACHIEVEMENT RATE BY OPPONENT                                            │  ║
             ║  │                                             │  │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ │  ║
@@ -136,39 +144,53 @@ public final class Strings {
     public static final String INSTRUCTION_STRING = """
             
             ╔═════════════════════════════════════════════════════════════════════════════════════╗
-            ║                              << INSTRUCTIONS / GUIDE >>                             ║
+            ║                            << SYSTEM OPERATIONS MANUAL >>                           ║
             ╠═════════════════════════════════════════════════════════════════════════════════════╣
             ║                                                                                     ║
-            ║  01)  Turn on Full-Screen mode before starting — the game board requires            ║
-            ║       a wide terminal to render correctly without wrapping.                         ║
+            ║  [01] DISPLAY MODE                                                                  ║
+            ║       Run in Full-Screen / Maximized terminal for perfect board rendering.          ║
+            ║       Narrow consoles may shift borders or wrap large visuals.                      ║
             ║                                                                                     ║
-            ║  02)  At any input prompt, type  exit  and press Enter to safely quit.              ║
-            ║       The system will save all player data before closing.                          ║
+            ║  [02] UNIVERSAL COMMANDS                                                            ║
+            ║       exit   → Save registry + shutdown engine safely                               ║
+            ║       manage → Open admin control panel (password required)                         ║
+            ║       end    → Terminate current match only                                         ║
+            ║       undo   → Revert previous move(s) if session allows                            ║
             ║                                                                                     ║
-            ║  03)  Type  manage  at any input prompt to open the admin panel.                    ║
-            ║       A password is required. Use this to view or delete registered players.        ║
+            ║  [03] SMART INPUT PIPELINE                                                          ║
+            ║       Commands execute before normal input reading.                                 ║
+            ║       After command completion, your original prompt returns automatically.         ║
             ║                                                                                     ║
-            ║  04)  Player names are optional — press Enter to receive an auto-assigned           ║
-            ║       default name. Names are stored and tracked across all sessions.               ║
+            ║  [04] MOVE ENTRY                                                                    ║
+            ║       Use digits 1-9 matching board cells.                                          ║
+            ║       Occupied / invalid / text entries are rejected and re-requested.              ║
             ║                                                                                     ║
-            ║  05)  For any Y/N prompt, pressing Enter alone counts as Y.                         ║
-            ║       Use N or any other key to decline.                                            ║
+            ║  [05] UNDO PROTOCOL                                                                 ║
+            ║       Works only during active rounds when enabled at match start.                  ║
+            ║       PvB mode reverses both human + bot turns together.                            ║
             ║                                                                                     ║
-            ║  06)  Choose your session type at the start of each game:                           ║
-            ║       Player vs Player  /  Player vs Bot  /  Bot vs Bot.                            ║
+            ║  [06] PLAYER IDENTITY                                                               ║
+            ║       Names auto-normalize to UPPERCASE.                                            ║
+            ║       Empty entry may assign auto-generated player identity.                        ║
             ║                                                                                     ║
-            ║  07)  When playing against a bot, select its difficulty level.                      ║
-            ║       Six bots are available ranging from Beginner to Unbeatable.                   ║
+            ║  [07] SECURITY LAYER                                                                ║
+            ║       Passwords remain case-sensitive.                                              ║
+            ║       4 failed login attempts lock that account for this session.                   ║
             ║                                                                                     ║
-            ║  08)  In Bot vs Bot mode, choose which bot moves first each match.                  ║
-            ║       The first mover alternates automatically each round thereafter.               ║
+            ║  [08] QUICK CONFIRM RULE                                                            ║
+            ║       On Y/N prompts: Enter = YES by default.                                       ║
+            ║       Use N to decline actions explicitly.                                          ║
             ║                                                                                     ║
-            ║  09)  To place a move, enter a number from 1 to 9 matching the board cell.          ║
-            ║       Occupied cells are rejected — the prompt will repeat until valid.             ║
+            ║  [09] BOT SIMULATION MODE                                                           ║
+            ║       Choose which bot starts first, then bots continue automatically.              ║
+            ║       Random think delays (1.5s-2.5s) simulate live decision pacing.                ║
             ║                                                                                     ║
-            ║  10)  Match scores are shown after every round. A full history of all               ║
-            ║       completed matches and the updated leaderboard appear at the end.              ║
+            ║  [10] DATA + HISTORY                                                                ║
+            ║       Finished or aborted matches are preserved.                                    ║
+            ║       Previous printed boards remain viewable in terminal scrollback.               ║
             ║                                                                                     ║
+            ╠═════════════════════════════════════════════════════════════════════════════════════╣
+            ║  STATUS : READY   │ INPUT ENGINE : ACTIVE   │ REGISTRY : LOADED   │ LOGGING : ON    ║
             ╚═════════════════════════════════════════════════════════════════════════════════════╝
             
             """;
@@ -183,6 +205,7 @@ public final class Strings {
             ╠═════════════════════════╣
             ║  No registered players  ║
             ╚═════════════════════════╝
+            
             """;
 
     public static final String WELCOME_REGISTERED_PLAYER_1 = """
