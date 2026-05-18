@@ -11,11 +11,7 @@ import renderer.view.EngineView;
 import renderer.view.PlayBoardView;
 import renderer.view.SessionView;
 import renderer.view.SetupView;
-import sessions.BotVSBotSession;
-import sessions.GameSession;
-import sessions.PlayerVSBotSession;
-import sessions.PlayerVSPlayerSession;
-import sessions.SessionContext;
+import sessions.*;
 import utility.Config;
 import utility.Logger;
 
@@ -49,7 +45,7 @@ public class SessionFactory {
     }
 
     @SuppressWarnings("UnnecessaryDefault")
-    public GameSession createGameSession(SessionType type) {
+    public Game createGameSession(SessionType type) {
         return switch (type) {
             case PLAYER_VS_PLAYER -> getPlayerVSPlayerSession();
             case PLAYER_VS_BOT   -> getPlayerVSBotSession();
@@ -61,7 +57,7 @@ public class SessionFactory {
         };
     }
 
-    private GameSession getPlayerVSPlayerSession() {
+    private Game getPlayerVSPlayerSession() {
         renderer.showSessionTypeInitialization(SessionType.PLAYER_VS_PLAYER.toString());
 
         Player p1 = playerCreator.createPlayer("", 1);
@@ -75,7 +71,7 @@ public class SessionFactory {
         );
     }
 
-    private GameSession getPlayerVSBotSession() {
+    private Game getPlayerVSBotSession() {
         renderer.showSessionTypeInitialization(SessionType.PLAYER_VS_BOT.toString());
 
         Player player = playerCreator.createPlayer("", 1);
@@ -102,7 +98,7 @@ public class SessionFactory {
         );
     }
 
-    private GameSession getBotVSBotSession() {
+    private Game getBotVSBotSession() {
         renderer.showSessionTypeInitialization(SessionType.BOT_VS_BOT.toString());
         renderer.showBotsPanelViewMessage();
         renderer.showBotIntroduction(

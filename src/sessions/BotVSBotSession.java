@@ -3,7 +3,6 @@ package sessions;
 import bot.Bot;
 import core.GameBoard;
 import core.GameResult;
-import core.SessionType;
 import exception.GameErrorCode;
 import exception.GameException;
 import exception.SessionEndException;
@@ -16,12 +15,9 @@ import utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class BotVSBotSession implements GameSession {
+public final class BotVSBotSession extends GameSession {
     private final Bot bot1;
     private final Bot bot2;
-    private final Input input;
-    private final SessionView renderer;
-    private final PlayBoardView playBoardView;
 
     private Bot first;
     private Bot second;
@@ -32,20 +28,13 @@ public final class BotVSBotSession implements GameSession {
 
     private String result = "[Match Abandoned]";
 
-    // Per-round parallel lists — same index = same round, null = abandoned round
-    private final List<List<Integer>> allRoundMoves = new ArrayList<>();
-    private final List<String> allRoundFirstPlayerStarts = new ArrayList<>(); // bot name who went first
-    private final List<String> allRoundWinners = new ArrayList<>();
-
     private static final int DOT_DELAY = Config.BotData.BOT_THINK_DOT_DELAY_MS_BVB;
 
     public BotVSBotSession(Bot bot1, Bot bot2, Input input,
                            SessionView renderer, PlayBoardView playBoardView) {
+        super(input, renderer, playBoardView, SessionType.BOT_VS_BOT);
         this.bot1 = bot1;
         this.bot2 = bot2;
-        this.input = input;
-        this.renderer = renderer;
-        this.playBoardView = playBoardView;
     }
 
     @Override
@@ -171,12 +160,7 @@ public final class BotVSBotSession implements GameSession {
                 String.format("%s [%s]", bot1.getName(), bot1.getMode()),
                 String.format("%s [%s]", bot2.getName(), bot2.getMode()),
                 wins1, wins2, result,
-                allRoundMoves, allRoundFirstPlayerStarts, allRoundWinners
+                getAllRoundMoves(), getAllRoundFirstPlayerStarts(), getAllRoundWinners()
         );
-    }
-
-    @Override
-    public SessionType getSessionType() {
-        return SessionType.BOT_VS_BOT;
     }
 }

@@ -2,7 +2,6 @@ package sessions;
 
 import core.GameBoard;
 import core.GameResult;
-import core.SessionType;
 import exception.SessionEndException;
 import exception.UndoRequestException;
 import input.Input;
@@ -16,14 +15,11 @@ import utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PlayerVSPlayerSession implements GameSession {
+public final class PlayerVSPlayerSession extends GameSession {
 
     private final Player p1;
     private final Player p2;
-    private final Input input;
     private final Registry registry;
-    private final SessionView renderer;
-    private final PlayBoardView playBoardView;
     private final SessionContext context;
 
     private Player first;
@@ -35,21 +31,14 @@ public final class PlayerVSPlayerSession implements GameSession {
 
     private String result = "[Match Abandoned]";
 
-    // Per-round parallel lists — all same length, same index = same round
-    private final List<List<Integer>> allRoundMoves = new ArrayList<>();
-    private final List<String> allRoundFirstPlayerStarts = new ArrayList<>();
-    private final List<String> allRoundWinners = new ArrayList<>();
-
     public PlayerVSPlayerSession(Player p1, Player p2,
                                  Input input, Registry registry,
                                  SessionView renderer, PlayBoardView playBoardView,
                                  SessionContext context) {
+        super(input, renderer, playBoardView, SessionType.PLAYER_VS_PLAYER);
         this.first = this.p1 = p1;
         this.second = this.p2 = p2;
-        this.input = input;
         this.registry = registry;
-        this.renderer = renderer;
-        this.playBoardView = playBoardView;
         this.context = context;
     }
 
@@ -200,12 +189,7 @@ public final class PlayerVSPlayerSession implements GameSession {
     public GameResult toResult() {
         return new GameResult(
                 p1.getName(), p2.getName(), wins1, wins2, result,
-                allRoundMoves, allRoundFirstPlayerStarts, allRoundWinners
+                getAllRoundMoves(), getAllRoundFirstPlayerStarts(), getAllRoundWinners()
         );
-    }
-
-    @Override
-    public SessionType getSessionType() {
-        return SessionType.PLAYER_VS_PLAYER;
     }
 }

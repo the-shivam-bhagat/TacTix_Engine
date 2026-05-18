@@ -1,57 +1,44 @@
-[INFO  2026-04-14 01:35:41] Application started
-[INFO  2026-04-14 01:35:41] Game Engine: System started
-[INFO  2026-04-14 01:35:41] Created engine renderer
-[INFO  2026-04-14 01:35:41] Created board renderer
-[INFO  2026-04-14 01:35:41] Created history renderer
-[INFO  2026-04-14 01:35:41] Created replay renderer
-[INFO  2026-04-14 01:35:41] Loading players from storage
-[INFO  2026-04-14 01:35:41] Reading players from file
-[INFO  2026-04-14 01:35:41] Created players registry
-[INFO  2026-04-14 01:35:41] Created session context
-[INFO  2026-04-14 01:35:41] Created command handler
-[INFO  2026-04-14 01:35:41] Created input handler
-[INFO  2026-04-14 01:35:41] Created auth service
-[INFO  2026-04-14 01:35:41] Created session factory
-[INFO  2026-04-14 01:35:41] Created replay engine
-[INFO  2026-04-14 01:35:41] Created game history
-[INFO  2026-04-14 01:35:41] Initialization complete
-[WARN  2026-04-14 01:35:48] Unknown command: 
-[WARN  2026-04-14 01:35:48] Unknown command: 
-[WARN  2026-04-14 01:35:49] Unknown command: 
-[WARN  2026-04-14 01:35:49] Unknown command: 
-[WARN  2026-04-14 01:35:49] Unknown command: 
-[WARN  2026-04-14 01:35:49] Unknown command: 
-[INFO  2026-04-14 01:35:49] Entering main game loop
-[WARN  2026-04-14 01:35:49] Unknown command: 
-[WARN  2026-04-14 01:35:49] Invalid session choice: 
-[WARN  2026-04-14 01:35:49] Unknown command: 
-[WARN  2026-04-14 01:35:49] Invalid session choice: 
-[WARN  2026-04-14 01:35:51] Unknown command: 1
-[WARN  2026-04-14 01:35:52] Unknown command: 1
-[INFO  2026-04-14 01:35:52] Existing player loaded: 1
-[WARN  2026-04-14 01:35:53] Unknown command: 2
-[INFO  2026-04-14 01:35:53] Existing player loaded: 2
-[INFO  2026-04-14 01:35:53] Players selected: 1 vs 2
-[INFO  2026-04-14 01:35:53] Starting Game 1
-[INFO  2026-04-14 01:35:53] New PvP session: 1 vs 2
-[WARN  2026-04-14 01:35:54] Unknown command: 
-[WARN  2026-04-14 01:35:54] Unknown command: 
-[WARN  2026-04-14 01:35:55] Unknown command: 
-[INFO  2026-04-14 01:35:55] PvP Round 1 started
-[WARN  2026-04-14 01:35:56] Unknown command: 1
-[WARN  2026-04-14 01:35:56] Unknown command: 2
-[WARN  2026-04-14 01:35:57] Unknown command: 3
-[WARN  2026-04-14 01:35:57] Unknown command: 4
-[WARN  2026-04-14 01:35:57] Unknown command: 5
-[WARN  2026-04-14 01:35:57] Unknown command: 6
-[WARN  2026-04-14 01:35:58] Unknown command: 7
-[INFO  2026-04-14 01:35:58] Win recorded for player: 1
-[INFO  2026-04-14 01:35:58] Round winner: 1
-[WARN  2026-04-14 01:36:01] Unknown command: 
-[WARN  2026-04-14 01:36:02] Unknown command: N
-[INFO  2026-04-14 01:36:02] Match result: 1
-[WARN  2026-04-14 01:36:03] Unknown command: N
-[WARN  2026-04-14 01:36:04] Unknown command: 
-[WARN  2026-04-14 01:36:06] Unknown command: Y
-[WARN  2026-04-14 01:36:08] Unknown command: 1
-[WARN  2026-04-14 01:36:10] Unknown command: 1
+[INFO  2026-04-25 15:16:43] Application started
+[INFO  2026-04-25 15:16:43] Game Engine: System started
+[INFO  2026-04-25 15:16:43] Created engine renderer
+[INFO  2026-04-25 15:16:43] Created board renderer
+[INFO  2026-04-25 15:16:43] Created history renderer
+[INFO  2026-04-25 15:16:43] Created replay renderer
+[INFO  2026-04-25 15:16:43] Loading players from storage
+[INFO  2026-04-25 15:16:43] Reading players from file
+[INFO  2026-04-25 15:16:43] Created players registry
+[INFO  2026-04-25 15:16:43] Created session context
+[INFO  2026-04-25 15:16:43] Created command handler
+[INFO  2026-04-25 15:16:43] Created input handler
+[INFO  2026-04-25 15:16:43] Created auth service
+[INFO  2026-04-25 15:16:43] Created session factory
+[INFO  2026-04-25 15:16:43] Created replay engine
+[INFO  2026-04-25 15:16:43] Created game history
+[INFO  2026-04-25 15:16:43] Initialization complete
+[WARN  2026-04-25 15:17:07] Unknown command: 
+[WARN  2026-04-25 15:17:23] Unknown command: Y
+[WARN  2026-04-25 15:17:38] Unknown command: 
+[WARN  2026-04-25 15:17:38] Unknown command: 
+[WARN  2026-04-25 15:17:42] Unknown command: 
+[WARN  2026-04-25 15:18:15] Unknown command: 
+[INFO  2026-04-25 15:18:15] Entering main game loop
+[WARN  2026-04-25 15:18:15] Unknown command: 
+[WARN  2026-04-25 15:18:15] Invalid session choice: 
+[WARN  2026-04-25 15:18:24] Unknown command: 2
+[WARN  2026-04-25 15:18:28] Unknown command: VED
+[INFO  2026-04-25 15:18:28] New player registered: VED
+[WARN  2026-04-25 15:18:35] Unknown command: N
+[WARN  2026-04-25 15:18:39] Unknown command: 
+[WARN  2026-04-25 15:18:44] Unknown command: 3
+[INFO  2026-04-25 15:18:44] Starting Game 1
+[INFO  2026-04-25 15:18:44] New PvB session: VED vs WIRE (MEDIUM_BOT)
+[WARN  2026-04-25 15:19:05] Unknown command: N
+[WARN  2026-04-25 15:19:06] Unknown command: 
+[WARN  2026-04-25 15:19:10] Unknown command: Y\
+[INFO  2026-04-25 15:19:10] PvB Round 1 started
+[WARN  2026-04-25 15:19:26] Unknown command: 3
+[WARN  2026-04-25 15:19:48] Unknown command: 9
+[WARN  2026-04-25 15:19:58] Unknown command: 4
+[WARN  2026-04-25 15:20:05] Unknown command: 8
+[WARN  2026-04-25 15:20:11] Unknown command: 1
+[INFO  2026-04-25 15:20:11] Round ended in tie

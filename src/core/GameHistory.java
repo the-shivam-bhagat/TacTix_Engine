@@ -2,7 +2,7 @@ package core;
 
 import replay.ReplayEngine;
 import renderer.view.HistoryView;
-import sessions.GameSession;
+import sessions.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public final class GameHistory {
         this.replayEngine  = replayEngine;
     }
 
-    public void add(GameSession session) {
+    public void add(Game session) {
         sessions.add(session.toResult());
     }
 

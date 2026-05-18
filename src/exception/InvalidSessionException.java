@@ -1,6 +1,6 @@
 package exception;
 
-import core.SessionType;
+import sessions.SessionType;
 
 /**
  * Thrown when an unrecognized or unsupported game session type is requested.

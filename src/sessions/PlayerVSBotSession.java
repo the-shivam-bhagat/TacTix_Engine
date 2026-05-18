@@ -3,7 +3,6 @@ package sessions;
 import bot.Bot;
 import core.GameBoard;
 import core.GameResult;
-import core.SessionType;
 import exception.GameErrorCode;
 import exception.GameException;
 import exception.SessionEndException;
@@ -19,15 +18,12 @@ import utility.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class PlayerVSBotSession implements GameSession {
+public final class PlayerVSBotSession extends GameSession {
+    private final Registry registry;
+    private final SessionContext context;
 
     private final Player player;
     private final Bot bot;
-    private final Input input;
-    private final Registry registry;
-    private final SessionView renderer;
-    private final PlayBoardView playBoardView;
-    private final SessionContext context;
 
     private int playerWins = 0;
     private int botWins = 0;
@@ -36,20 +32,13 @@ public final class PlayerVSBotSession implements GameSession {
     private String result = "[Match Abandoned]";
     private static final int DOT_DELAY = Config.BotData.BOT_THINK_DOT_DELAY_MS_PVG;
 
-    // Per-round parallel lists — same index = same round
-    private final List<List<Integer>> allRoundMoves = new ArrayList<>();
-    private final List<String> allRoundFirstPlayerStarts = new ArrayList<>();
-    private final List<String> allRoundWinners = new ArrayList<>();
-
     public PlayerVSBotSession(Player player, Bot bot, Input input,
                               Registry registry, SessionView renderer,
                               PlayBoardView playBoardView, SessionContext context) {
+        super(input, renderer, playBoardView, SessionType.PLAYER_VS_BOT);
         this.player = player;
         this.bot = bot;
-        this.input = input;
         this.registry = registry;
-        this.renderer = renderer;
-        this.playBoardView = playBoardView;
         this.context = context;
     }
 
@@ -226,12 +215,7 @@ public final class PlayerVSBotSession implements GameSession {
                 player.getName(),
                 String.format("%s [%s]", bot.getName(), bot.getMode()),
                 playerWins, botWins, result,
-                allRoundMoves, allRoundFirstPlayerStarts, allRoundWinners
+                getAllRoundMoves(), getAllRoundFirstPlayerStarts(), getAllRoundWinners()
         );
-    }
-
-    @Override
-    public SessionType getSessionType() {
-        return SessionType.PLAYER_VS_BOT;
     }
 }

@@ -19,8 +19,9 @@ import renderer.view.PlayerTableView;
 import replay.ReplayView;
 import replay.ReplayEngine;
 import replay.ReplayRenderer;
-import sessions.GameSession;
+import sessions.Game;
 import sessions.SessionContext;
+import sessions.SessionType;
 import utility.Logger;
 import utility.Strings;
 
@@ -177,7 +178,7 @@ public final class GameEngine {
                 int choice = input.readSessionChoice();
                 SessionType type = SessionType.fromIntValue(choice);
 
-                GameSession session = sessionFactory.createGameSession(type);
+                Game session = sessionFactory.createGameSession(type);
 
                 engineRenderer.showGameStart(++gameNumber, session.getSessionType().toString());
                 Logger.info("Starting Game " + gameNumber);
